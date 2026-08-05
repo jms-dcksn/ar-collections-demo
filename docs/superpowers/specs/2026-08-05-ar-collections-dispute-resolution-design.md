@@ -96,7 +96,7 @@ Each specialist returns the same fields so all branches can join a common approv
 | `evidenceSummary` | string | Facts used to support the recommendation |
 | `rootCause` | string | Concise cause of the payment blocker |
 | `recommendedAction` | string | Proposed resolution |
-| `actionCode` | string | Machine-readable update action |
+| `actionCode` | string | `ISSUE_CREDIT`, `PROVIDE_POD`, or `REALLOCATE_PAYMENT` |
 | `adjustmentAmount` | number | Financial adjustment, or `0` when none is needed |
 | `confidence` | number | Specialist confidence from `0.0` to `1.0` |
 | `approvalSummary` | string | Collector-facing summary |
@@ -114,6 +114,7 @@ The agent model is an implementation binding. Any supported model selected in th
 - Outstanding balance: `$48,750`
 - Evidence: the invoice exceeds its purchase order by `$1,500`
 - Expected classification: `po_mismatch`
+- Expected action code: `ISSUE_CREDIT`
 - Expected proposal: issue a `$1,500` credit or correction and request payment of the corrected balance
 
 ### `AR-POD-002` — Missing proof of delivery
@@ -123,6 +124,7 @@ The agent model is an implementation binding. Any supported model selected in th
 - Outstanding balance: `$22,400`
 - Evidence: delivered June 18, 2026, signed by M. Chen, with shipment and invoice quantities matching
 - Expected classification: `missing_pod`
+- Expected action code: `PROVIDE_POD`
 - Expected proposal: provide the delivery facts and request release of the invoice for payment with no financial adjustment
 
 The email body includes the synthetic proof-of-delivery details. A binary file attachment is out of scope.
@@ -134,6 +136,7 @@ The email body includes the synthetic proof-of-delivery details. A binary file a
 - Outstanding balance: `$36,800`
 - Evidence: a `$36,800` payment was received but applied to another invoice
 - Expected classification: `payment_misapplication`
+- Expected action code: `REALLOCATE_PAYMENT`
 - Expected proposal: reallocate the payment and confirm a zero balance
 
 ### Hidden negative fixture
