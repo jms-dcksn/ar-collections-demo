@@ -470,6 +470,55 @@ def test_collector_approval_routes_rejection_and_approval_to_their_business_exit
     assert len(quick_forms) == 1
     quick_form = quick_forms[0]
 
+    fields = {field["id"]: field for field in quick_form["inputs"]["schema"]["fields"]}
+    expected_input_fields = {
+        "customerName": ("string", "vars.loadSampleCase.output.customerName"),
+        "invoiceNumber": ("string", "vars.loadSampleCase.output.invoiceNumber"),
+        "outstandingBalance": ("number", "vars.loadSampleCase.output.outstandingBalance"),
+        "disputeType": ("string", "vars.triageAgent.output.disputeType"),
+        "triageRationale": ("string", "vars.triageAgent.output.rationale"),
+        "triageConfidence": ("number", "vars.triageAgent.output.confidence"),
+        "evidenceSummary": ("string", "vars.normalizeProposal.output.evidenceSummary"),
+        "rootCause": ("string", "vars.normalizeProposal.output.rootCause"),
+        "recommendedAction": ("string", "vars.normalizeProposal.output.recommendedAction"),
+        "actionCode": ("string", "vars.normalizeProposal.output.actionCode"),
+        "adjustmentAmount": ("number", "vars.normalizeProposal.output.adjustmentAmount"),
+        "specialistConfidence": ("number", "vars.normalizeProposal.output.confidence"),
+        "emailSubject": ("string", "vars.normalizeProposal.output.emailSubject"),
+        "emailBody": ("string", "vars.normalizeProposal.output.emailBody"),
+    }
+    assert set(fields) == set(expected_input_fields) | {"approvedBy", "approvalComments"}
+    for field_id, (field_type, binding) in expected_input_fields.items():
+        assert fields[field_id]["type"] == field_type
+        assert fields[field_id]["direction"] == "input"
+        assert fields[field_id]["binding"] == binding
+        assert fields[field_id]["label"].strip()
+    for field_id, variable in {
+        "approvedBy": "vars.approvedBy",
+        "approvalComments": "vars.approvalCommentsInput",
+    }.items():
+        assert fields[field_id]["type"] == "string"
+        assert fields[field_id]["direction"] == "output"
+        assert fields[field_id]["variable"] == variable
+        assert fields[field_id]["required"] is True
+        assert fields[field_id]["label"].strip()
+    assert quick_form["inputs"]["schema"]["outcomes"] == [
+        {
+            "id": "approve",
+            "name": "Approve",
+            "type": "string",
+            "isPrimary": True,
+            "action": "Continue",
+        },
+        {
+            "id": "reject",
+            "name": "Reject",
+            "type": "string",
+            "isPrimary": False,
+            "action": "End",
+        },
+    ]
+
     normalize_edges = outgoing(flow, normalize["id"], "success")
     assert len(normalize_edges) == 1
     assert normalize_edges[0]["targetNodeId"] == quick_form["id"]
@@ -730,6 +779,14 @@ def test_agent_resources_registry_bindings_and_generated_variables_are_complete(
         ("paymentMisapplicationAgent", "error"),
         ("normalizeProposal", "output"),
         ("normalizeProposal", "error"),
+        ("reviewArDisputeResolution1", "output"),
+        ("reviewArDisputeResolution1", "status"),
+        ("isResolutionApproved", "matchedCase"),
+        ("isResolutionApproved", "matchedCaseId"),
+        ("mockUpdateDispute1", "output"),
+        ("mockUpdateDispute1", "error"),
+        ("sendEmail1", "output"),
+        ("sendEmail1", "error"),
     }
     assert required_bindings <= set(generated_bindings)
     for node_id, output_id in required_bindings:
