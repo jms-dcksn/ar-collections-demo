@@ -1,0 +1,22 @@
+{
+  "DocVersion": "1.0.0",
+  "StudioMinVersion": "2025.10.0",
+  "SolutionId": "2155b48d-62d4-42d6-888f-7c7854865be9",
+  "Projects": [
+    {
+      "Type": "Flow",
+      "ProjectRelativePath": "ARCollectionsDisputeResolution/project.uiproj",
+      "Id": "0db80011-c481-493c-b4da-aa6944b3373b"
+    },
+    {
+      "Type": "Api",
+      "ProjectRelativePath": "LookupPaymentApplication/project.uiproj",
+      "Id": "61301115-9557-4ff8-98d0-ff4230ba479f"
+    },
+    {
+      "Type": "Api",
+      "ProjectRelativePath": "MockUpdateDispute/project.uiproj",
+      "Id": "4915ce21-658b-4816-85ef-8fb3bf5c8f99"
+    }
+  ]
+}
