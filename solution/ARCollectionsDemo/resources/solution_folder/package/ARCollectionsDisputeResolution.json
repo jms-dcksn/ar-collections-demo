@@ -1,0 +1,22 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "ARCollectionsDisputeResolution",
+    "kind": "package",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "projectKey": "0db80011-c481-493c-b4da-aa6944b3373b",
+    "dependencies": [],
+    "runtimeDependencies": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "name": "ARCollectionsDisputeResolution"
+    },
+    "locks": [],
+    "key": "25d0ab5e-5146-40c6-8e9f-2153cec62616",
+    "files": []
+  }
+}

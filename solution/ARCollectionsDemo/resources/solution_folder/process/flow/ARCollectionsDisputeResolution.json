@@ -1,0 +1,38 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "ARCollectionsDisputeResolution",
+    "kind": "process",
+    "type": "flow",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "projectKey": "0db80011-c481-493c-b4da-aa6944b3373b",
+    "dependencies": [
+      {
+        "kind": "package",
+        "name": "ARCollectionsDisputeResolution"
+      }
+    ],
+    "runtimeDependencies": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "type": "Flow",
+      "name": "ARCollectionsDisputeResolution",
+      "package": {
+        "key": "25d0ab5e-5146-40c6-8e9f-2153cec62616"
+      },
+      "packageName": "ARCollectionsDemo.flow.ARCollectionsDisputeResolution",
+      "targetFrameworkValue": "Portable",
+      "retentionAction": "Delete",
+      "retentionPeriod": 30,
+      "staleRetentionAction": "Delete",
+      "staleRetentionPeriod": 180
+    },
+    "locks": [],
+    "key": "865ea465-3bc7-4f60-b908-839aded022b9",
+    "files": []
+  }
+}

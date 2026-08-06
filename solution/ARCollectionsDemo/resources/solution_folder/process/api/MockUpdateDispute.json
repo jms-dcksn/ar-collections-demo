@@ -1,0 +1,38 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "MockUpdateDispute",
+    "kind": "process",
+    "type": "api",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "projectKey": "4915ce21-658b-4816-85ef-8fb3bf5c8f99",
+    "dependencies": [
+      {
+        "kind": "package",
+        "name": "MockUpdateDispute"
+      }
+    ],
+    "runtimeDependencies": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "type": "Api",
+      "name": "MockUpdateDispute",
+      "package": {
+        "key": "cfb060f2-d77f-4a66-8a50-1d5f92935529"
+      },
+      "packageName": "ARCollectionsDemo.api.MockUpdateDispute",
+      "targetFrameworkValue": "Portable",
+      "retentionAction": "Delete",
+      "retentionPeriod": 30,
+      "staleRetentionAction": "Delete",
+      "staleRetentionPeriod": 180
+    },
+    "locks": [],
+    "key": "e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
+    "files": []
+  }
+}

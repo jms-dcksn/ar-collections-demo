@@ -1,0 +1,22 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "LookupPaymentApplication",
+    "kind": "package",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "projectKey": "61301115-9557-4ff8-98d0-ff4230ba479f",
+    "dependencies": [],
+    "runtimeDependencies": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "name": "LookupPaymentApplication"
+    },
+    "locks": [],
+    "key": "63e36735-efb4-4788-9bfe-f748a72d471e",
+    "files": []
+  }
+}

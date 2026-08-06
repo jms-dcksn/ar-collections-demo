@@ -8,14 +8,14 @@
       "bucket": "ar-dispute-triage-kb",
       "bucketKey": "9ebe576c-c8b9-4e82-bd47-32be23a1cdc0",
       "index": "ar-dispute-triage-index",
-      "indexKey": ""
+      "indexKey": "9e46f4a3-6c15-4cab-9030-08def39d8059"
     },
     {
       "source": "knowledge/payment/payment-misapplication-resolution-playbook.txt",
       "bucket": "ar-payment-resolution-kb",
       "bucketKey": "8bdec5fc-9b40-4053-b879-a74ab933b9bc",
       "index": "ar-payment-resolution-index",
-      "indexKey": ""
+      "indexKey": "469965c2-8382-4521-9031-08def39d8059"
     }
   ]
 }

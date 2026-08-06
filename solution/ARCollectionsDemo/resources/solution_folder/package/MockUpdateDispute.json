@@ -1,0 +1,22 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "MockUpdateDispute",
+    "kind": "package",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "projectKey": "4915ce21-658b-4816-85ef-8fb3bf5c8f99",
+    "dependencies": [],
+    "runtimeDependencies": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "name": "MockUpdateDispute"
+    },
+    "locks": [],
+    "key": "cfb060f2-d77f-4a66-8a50-1d5f92935529",
+    "files": []
+  }
+}
