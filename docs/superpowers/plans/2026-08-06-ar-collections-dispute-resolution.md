@@ -2,6 +2,8 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+> **For the root integrator:** REQUIRED SUB-SKILL: Use superpowers:dispatching-parallel-agents at each parallel wave. The wave schedule, not numeric task order, controls execution. The root owns integration barriers and performs the two-stage review required by subagent-driven development.
+
 **Goal:** Build, validate, package, and deploy a demo-grade UiPath solution that resolves one of three curated AR disputes through grounded agent triage, a specialist recommendation, collector approval, a mocked update, and a real presenter-addressed Outlook email.
 
 **Architecture:** One Maestro Flow owns deterministic case loading, grounded triage, exclusive specialist routing, the human approval, side-effect ordering, and business exits. Four inline agents perform triage and specialist reasoning; the payment specialist alone uses a grounded playbook plus an agent-callable API Workflow. A second API Workflow is invoked by the Flow only after approval. Two version-controlled text articles back two Context Grounding indexes in `JD_Demos/demos`.
@@ -22,6 +24,10 @@
 - Use fictional case/customer data only. Never derive the email recipient from a sample customer record.
 - Preserve CLI-generated UUIDs. Record them in configuration files instead of renaming generated inline-agent directories.
 - After each Flow edit, run `uip maestro flow format` and `uip maestro flow validate`. After each agent edit, run `uip agent refresh` and `uip agent validate`.
+- Run no more than three child subagents concurrently because the root occupies the fourth available execution slot.
+- Subagents may read the repository but may write only their assigned allowlist. They must not stage, commit, refresh shared Flow bindings, mutate cloud resources, deploy, or send email.
+- The root alone owns `ARCollectionsDemo.uipx`, the main `.flow`, Flow-level `project.uiproj` and `bindings_v2.json`, both config manifests, `.local/`, live UiPath mutations, deployment evidence, and Git commits.
+- The root must review every subagent diff and verification result before crossing a barrier. A subagent completion message is not verification evidence.
 
 ## Expected Repository Layout
 
@@ -57,14 +63,19 @@ ar-collections-demo/
 │       ├── entry-points.json
 │       └── project.uiproj
 ├── tests/
-│   ├── agents/test_agent_contracts.py
+│   ├── agents/
+│   │   ├── test_basic_specialists.py
+│   │   ├── test_payment_agent.py
+│   │   └── test_triage_agent.py
 │   ├── api_workflows/
 │   │   ├── lookup-payment-input.json
 │   │   ├── lookup-payment-expected.json
 │   │   ├── mock-update-input.json
 │   │   ├── mock-update-expected.json
-│   │   ├── test_api_workflows.py
-│   │   └── verify_fixture_runs.py
+│   │   ├── test_lookup_payment.py
+│   │   ├── test_mock_update.py
+│   │   ├── verify_lookup_payment.py
+│   │   └── verify_mock_update.py
 │   ├── flow/test_flow_contract.py
 │   ├── knowledge/test_knowledge_articles.py
 │   ├── platform/test_platform_manifest.py
@@ -78,9 +89,103 @@ ar-collections-demo/
 
 The UUID directory names cannot be known before `uip agent init` runs. `config/agent-projects.json` is the stable source of truth that maps the four logical names to the exact generated IDs and therefore makes every later file operation deterministic.
 
+## Parallel Execution Model
+
+### Ownership model
+
+Implementation uses a shared workspace with disjoint write ownership. This avoids the UUID, solution-manifest, and generated-binding merge conflicts that separate worktrees would create. The root integrator dispatches fresh subagents, reviews their diffs, runs the barrier verification, and makes all commits.
+
+| Owner | Write allowlist | Explicit exclusions |
+|---|---|---|
+| Root | `.gitignore`, `pyproject.toml`, `uv.lock`, `tests/test_solution_structure.py`, `tests/platform/`, `solution/ARCollectionsDemo/ARCollectionsDemo.uipx`, all initial CLI scaffolds, main Flow files, Flow `bindings_v2.json`, `config/`, `docs/build-evidence/`, `.local/` | None; root is the sole integrator and may make reviewed barrier fixes after a lane stops writing |
+| Knowledge lane `K` | `knowledge/`, `tests/knowledge/` | No solution or platform files |
+| Lookup lane `API-L` | `solution/ARCollectionsDemo/LookupPaymentApplication/`, lookup fixtures/test/verifier under `tests/api_workflows/` | No `.uipx`, mock-update, Flow, or shared test files |
+| Update lane `API-U` | `solution/ARCollectionsDemo/MockUpdateDispute/`, update fixtures/test/verifier under `tests/api_workflows/` | No `.uipx`, lookup, Flow, or shared test files |
+| Triage lane `A-T` | mapped triage UUID directory, `tests/agents/test_triage_agent.py` | No Flow-level bindings or other agent directories |
+| Payment lane `A-P` | mapped payment UUID directory, `tests/agents/test_payment_agent.py` | No Flow-level bindings or other agent directories |
+| Basic specialists lane `A-B` | mapped PO and POD UUID directories, `tests/agents/test_basic_specialists.py` | No Flow-level bindings or other agent directories |
+| Flow-test lane `F` | `tests/flow/test_flow_contract.py` | No `.flow`, bindings, or agent resources |
+| Documentation lane `D` | `docs/demo-runbook.md` | No build evidence or runtime configuration |
+| Review lane `R` | Read-only | No writes |
+
+Every subagent dispatch must include: the exact allowlist above, its consumed interfaces, the expected verification command, a prohibition on Git/cloud mutations, and a request to report changed files plus full test output. If a worker discovers that an excluded file must change, it stops and messages the root instead of editing it.
+
+### Dependency graph
+
+```mermaid
+flowchart TD
+    W0["Wave 0: root solution scaffold"] --> K["K: knowledge articles"]
+    W0 --> L["API-L: payment lookup workflow"]
+    W0 --> U["API-U: mock update workflow"]
+    W0 --> P["Root: platform manifest and read-only preflight"]
+    W0 --> I["Root: initialize four agent UUID projects"]
+    K --> BA["Barrier A: review, tests, and Context Grounding provision"]
+    L --> BA
+    U --> BA
+    P --> BA
+    I --> BA
+    BA --> AT["A-T: triage agent"]
+    BA --> AP["A-P: payment agent"]
+    BA --> AB["A-B: PO and POD agents"]
+    BA --> FB["Root: case loader and Flow foundation"]
+    AT --> BB["Barrier B: sequential refresh and agent validation"]
+    AP --> BB
+    AB --> BB
+    FB --> BB
+    BB --> FC["Root: routing, approval, update, and Outlook Flow"]
+    BB --> FT["F: Flow contract tests"]
+    BB --> DR["D: presenter runbook draft"]
+    FC --> BC["Barrier C: full local validation and package dry-run"]
+    FT --> BC
+    DR --> BC
+    FC --> RR["R: read-only conformance review after Flow write pause"]
+    FT --> RR
+    RR --> BC
+    BC --> W4["Wave 4: root publish, deploy, and consented smoke"]
+```
+
+### Wave schedule and barriers
+
+| Wave | Root lane | Child lane 1 | Child lane 2 | Child lane 3 | Exit condition |
+|---|---|---|---|---|---|
+| 0 | Complete Task 1 and commit the CLI scaffold | — | — | — | Structure test passes and generated metadata is committed |
+| 1 | Task 4 Steps 1–4; initialize the four Task 5 agent projects and record UUIDs | Task 2 (`K`) | Task 3 lookup packet (`API-L`) | Task 3 update packet (`API-U`) | All lane-local tests pass; no worker touched an excluded file |
+| Barrier A | Review all diffs; run the combined tests; commit lane outputs; complete Task 4 Steps 5–8; refresh solution resources | Idle/available for fixes | Idle/available for fixes | Idle/available for fixes | Both indexes are `Successful`, both searches pass, both API Workflows validate/run/build |
+| 2 | Task 6 Flow foundation and case loader, without editing agent directories | Task 5 triage packet (`A-T`) | Task 5 payment packet (`A-P`) | Task 5 PO/POD packet (`A-B`) | Agent-local static tests pass and root Flow test reaches its expected red/green state |
+| Barrier B | Review agent diffs; run all `uip agent refresh` calls sequentially into the shared Flow bindings; validate four agents; format/validate the Flow; commit | Idle/available for fixes | Idle/available for fixes | Idle/available for fixes | Four agents validate and shared bindings contain exactly the intended resources |
+| 3 | Tasks 6–7 main Flow implementation; begin with read-only registry/connection discovery | Task 6–7 Flow tests (`F`) | Task 9 Step 1 runbook draft (`D`) | Reserved until the Flow candidate is stable, then read-only review (`R`) | Flow tests, full pytest, Flow validation, and solution dry-run all pass |
+| Barrier C | Review and integrate; close review findings; commit Flow and runbook | Idle/available for fixes | Idle/available for fixes | Idle/available for fixes | Clean local acceptance gate before any publish |
+| 4 | Task 8 and Task 9 Steps 2–6; root alone publishes, links, deploys, requests email consent, and runs smoke | Read-only help only when requested | Read-only help only when requested | Read-only help only when requested | Deployment, traces, one approved email, evidence, and final repository checks pass |
+
+### Integration protocol
+
+1. Root creates the scaffold and all CLI-generated project identities before delegating writes into those generated directories.
+2. Root dispatches a wave's independent lanes together with `superpowers:dispatching-parallel-agents`.
+3. Each worker performs its own red/green test cycle but does not run Git or mutate shared bindings/cloud state.
+4. Root waits for all lanes in the wave, inspects `git diff -- <lane allowlist>` separately, and rejects out-of-scope edits.
+5. Root runs the combined barrier commands from a fresh shell. Failures return only the affected packet to its original worker when possible.
+6. Root stages exact allowlisted paths and commits only after barrier evidence is green.
+7. Root performs shared metadata refreshes sequentially after worker edits are complete; workers never edit while a refresh/format operation is running.
+8. Wave 4 remains serial because package publication, deployment, Action Center tasks, and Outlook affect shared external state.
+
+### Exact review-lane packet
+
+Lane `R` receives a read-only assignment late in Wave 3, only after the root pauses Flow writes and Lane `F` has delivered its candidate tests. It compares the approved spec with the stable candidate repository and reports, without editing files:
+
+1. count and identity of one Flow, two API Workflows, four mapped agents, two knowledge files, and three enabled agent resources;
+2. graph reachability showing manual triage and rejection cannot reach either side effect;
+3. graph order showing approval reaches `MockUpdateDispute` before Outlook;
+4. exact schemas for triage, specialist proposals, both API Workflows, and all End results;
+5. direct Outlook recipient binding to Start `recipientEmail`;
+6. any unexplained generated binding, connector, error branch, unsupported case, or incomplete marker.
+
+The lane returns a severity-ranked findings list with file paths and evidence. An empty list must be stated as `No conformance findings`; it is not allowed to edit the artifacts it reviews.
+
+Numeric task order below groups detailed instructions by artifact. The wave schedule above is authoritative for orchestration.
+
 ---
 
-## Task 1: Establish the Test Harness and UiPath Solution Skeleton
+## Task 1: Establish the Test Harness and UiPath Solution Skeleton — Wave 0, Root Only
 
 **Files:**
 
@@ -207,7 +312,7 @@ uv run pytest tests/test_solution_structure.py
 
 Expected: PASS.
 
-- [ ] **Step 7: Commit the scaffold**
+- [ ] **Step 7: Root commits the scaffold**
 
 ```bash
 git add .gitignore pyproject.toml uv.lock tests/test_solution_structure.py solution/ARCollectionsDemo
@@ -216,7 +321,7 @@ git commit -m "build: scaffold AR collections UiPath solution"
 
 ---
 
-## Task 2: Author and Test the Two Knowledge Articles
+## Task 2: Author and Test the Two Knowledge Articles — Wave 1, Lane K
 
 **Files:**
 
@@ -312,7 +417,7 @@ uv run pytest tests/knowledge/test_knowledge_articles.py
 
 Expected: 2 passed.
 
-- [ ] **Step 6: Commit the knowledge sources**
+- [ ] **Step 6: Report the verified lane to root; root commits at Barrier A**
 
 ```bash
 git add knowledge tests/knowledge
@@ -321,7 +426,7 @@ git commit -m "feat: add AR dispute grounding articles"
 
 ---
 
-## Task 3: Implement and Verify Both Deterministic API Workflows
+## Task 3: Implement and Verify Both Deterministic API Workflows — Wave 1, Lanes API-L and API-U
 
 **Files:**
 
@@ -335,10 +440,14 @@ git commit -m "feat: add AR dispute grounding articles"
 - Create: `tests/api_workflows/lookup-payment-expected.json`
 - Create: `tests/api_workflows/mock-update-input.json`
 - Create: `tests/api_workflows/mock-update-expected.json`
-- Create: `tests/api_workflows/test_api_workflows.py`
-- Create: `tests/api_workflows/verify_fixture_runs.py`
+- Create: `tests/api_workflows/test_lookup_payment.py`
+- Create: `tests/api_workflows/test_mock_update.py`
+- Create: `tests/api_workflows/verify_lookup_payment.py`
+- Create: `tests/api_workflows/verify_mock_update.py`
 
-- [ ] **Step 1: Add the four input/output fixtures**
+`API-L` owns only the Lookup project, its two fixtures, `test_lookup_payment.py`, and `verify_lookup_payment.py`. `API-U` owns only the Mock Update project, its two fixtures, `test_mock_update.py`, and `verify_mock_update.py`. The lanes run concurrently and must not create a shared helper file.
+
+- [ ] **Step 1: Each API lane adds its own input/output fixtures**
 
 `lookup-payment-input.json`:
 
@@ -391,9 +500,9 @@ git commit -m "feat: add AR dispute grounding articles"
 }
 ```
 
-- [ ] **Step 2: Write failing static contract tests**
+- [ ] **Step 2: Each API lane writes its failing static contract test**
 
-Create `tests/api_workflows/test_api_workflows.py` to load both `Workflow.json` files and assert:
+Create `test_lookup_payment.py` for `LookupPaymentApplication` and `test_mock_update.py` for `MockUpdateDispute`. Each file recursively inspects only its owned `Workflow.json`, verifies its exact input/output schema below, requires a `Response` activity, and rejects connector/resource bindings or network-call activities:
 
 ```python
 EXPECTED = {
@@ -415,17 +524,17 @@ EXPECTED = {
 }
 ```
 
-The test must recursively inspect the generated JSON rather than assume property order, verify both schemas contain the exact field sets, and verify the workflow contains a `Response` activity. It must also assert that neither workflow contains connector/resource bindings or network-call activities.
+Do not introduce a common test helper in Wave 1; duplicating the small recursive JSON walker keeps both write sets independent.
 
 - [ ] **Step 3: Run the static test and observe the expected failure**
 
 ```bash
-uv run pytest tests/api_workflows/test_api_workflows.py
+uv run pytest tests/api_workflows/test_lookup_payment.py tests/api_workflows/test_mock_update.py
 ```
 
 Expected: FAIL because the scaffolds do not expose the required contracts.
 
-- [ ] **Step 4: Implement `LookupPaymentApplication` from the generated API Workflow shape**
+- [ ] **Step 4: Lane API-L implements `LookupPaymentApplication` from the generated API Workflow shape**
 
 Keep the generated `Sequence` root. Add an input contract with the four input names, a deterministic JavaScript/Assign body, and a `Response` output. The core mapping must be equivalent to:
 
@@ -449,7 +558,7 @@ return {
 
 This JavaScript lives inside `Workflow.json`; it is not a standalone `.js` file, so the workspace `npm test` rule is not triggered.
 
-- [ ] **Step 5: Implement `MockUpdateDispute` from the same generated shape**
+- [ ] **Step 5: Lane API-U implements `MockUpdateDispute` from the generated API Workflow shape**
 
 Validate `actionCode` against `ISSUE_CREDIT`, `PROVIDE_POD`, and `REALLOCATE_PAYMENT`. Return the deterministic receipt:
 
@@ -464,7 +573,7 @@ return {
 
 No external resource or connector is permitted in either workflow.
 
-- [ ] **Step 6: Validate, build, and run each workflow directly**
+- [ ] **Step 6: Each API lane validates, builds, and runs its owned workflow directly**
 
 ```bash
 UIPATH_CLI_DISABLE_VERSION_SYNC=1 uip api-workflow validate solution/ARCollectionsDemo/LookupPaymentApplication/Workflow.json --output json
@@ -477,18 +586,19 @@ UIPATH_CLI_DISABLE_VERSION_SYNC=1 uip api-workflow build solution/ARCollectionsD
 
 Expected: both validations and builds report success; each runtime result equals its expected fixture after unwrapping the CLI envelope.
 
-- [ ] **Step 7: Automate fixture execution and run the API test suite**
+- [ ] **Step 7: Each API lane automates its own fixture execution**
 
-Create `verify_fixture_runs.py` using `subprocess.run` with argument arrays, `check=True`, and `UIPATH_CLI_DISABLE_VERSION_SYNC=1`. It must invoke the two exact `uip api-workflow run ... --no-auth --output json` commands, normalize the CLI response envelope and PascalCase wrapper keys if present, and compare the business output to the expected JSON fixtures.
+Create `verify_lookup_payment.py` and `verify_mock_update.py` independently using `subprocess.run` with argument arrays, `check=True`, and `UIPATH_CLI_DISABLE_VERSION_SYNC=1`. Each script invokes only its owned exact `uip api-workflow run ... --no-auth --output json` command, normalizes the CLI response envelope and PascalCase wrapper keys if present, and compares the business output to its expected JSON fixture.
 
 ```bash
-uv run pytest tests/api_workflows/test_api_workflows.py
-uv run python tests/api_workflows/verify_fixture_runs.py
+uv run pytest tests/api_workflows/test_lookup_payment.py tests/api_workflows/test_mock_update.py
+uv run python tests/api_workflows/verify_lookup_payment.py
+uv run python tests/api_workflows/verify_mock_update.py
 ```
 
-Expected: all static tests pass and the script prints `2 API Workflow fixtures passed`.
+Expected: both static tests pass; the scripts print `LookupPaymentApplication fixture passed` and `MockUpdateDispute fixture passed`.
 
-- [ ] **Step 8: Commit the API Workflows**
+- [ ] **Step 8: Both lanes report verification; root reviews and commits at Barrier A**
 
 ```bash
 git add solution/ARCollectionsDemo/LookupPaymentApplication solution/ARCollectionsDemo/MockUpdateDispute tests/api_workflows
@@ -497,7 +607,7 @@ git commit -m "feat: add deterministic dispute API workflows"
 
 ---
 
-## Task 4: Define and Provision the Context Grounding Resources
+## Task 4: Define and Provision the Context Grounding Resources — Wave 1 Root Preflight, Barrier A Root Provisioning
 
 **Files:**
 
@@ -602,7 +712,7 @@ Expected: the returned passages identify the payment, wrong invoice, target invo
 
 Update only the empty key fields in `config/platform-resources.json` with IDs returned by the CLI. Write `docs/build-evidence/context-grounding.md` with the date, tenant/folder, bucket/index names and keys, final ingestion statuses, exact smoke-search queries, and concise summaries of the returned passages. Do not paste authentication tokens or full CLI envelopes.
 
-- [ ] **Step 8: Re-run the manifest test and commit**
+- [ ] **Step 8: Re-run the manifest test and root commits the provisioned resource evidence**
 
 ```bash
 uv run pytest tests/platform/test_platform_manifest.py
@@ -612,7 +722,7 @@ git commit -m "build: provision dispute grounding resources"
 
 ---
 
-## Task 5: Scaffold the Four Inline Agents and Enforce Their Contracts
+## Task 5: Scaffold the Four Inline Agents and Enforce Their Contracts — Wave 1 Root Scaffold, Wave 2 Parallel Agent Lanes
 
 **Files:**
 
@@ -621,12 +731,16 @@ git commit -m "build: provision dispute grounding resources"
 - Create: triage Context Grounding `resource.json`
 - Create: payment Context Grounding `resource.json`
 - Create: payment `LookupPaymentApplication` tool `resource.json`
-- Create: `tests/agents/test_agent_contracts.py`
+- Create: `tests/agents/test_triage_agent.py`
+- Create: `tests/agents/test_payment_agent.py`
+- Create: `tests/agents/test_basic_specialists.py`
 - Modify: Flow-project and agent-level `bindings_v2.json` files
 
-- [ ] **Step 1: Write the failing agent-contract test**
+Wave ordering intentionally runs Step 3 in Wave 1 before Steps 1–2 in Wave 2. The red test is still meaningful: it runs against real CLI scaffolds and must fail because their default prompts, schemas, and resources do not yet meet the contracts.
 
-Create `tests/agents/test_agent_contracts.py`. It must load `config/agent-projects.json`, resolve each generated directory, and require logical names `triage`, `poMismatch`, `missingPod`, and `paymentMisapplication`. Assert:
+- [ ] **Step 1: Agent lanes write three disjoint failing contract tests**
+
+Each test loads `config/agent-projects.json`, resolves only its owned generated directories, and validates its own contract. `test_triage_agent.py` owns `triage`; `test_payment_agent.py` owns `paymentMisapplication`; `test_basic_specialists.py` owns `poMismatch` and `missingPod`. Across the three files assert:
 
 - every mapped directory and `agent.json` exists;
 - each agent has a non-empty system prompt, user prompt, input schema, and output schema;
@@ -637,15 +751,15 @@ Create `tests/agents/test_agent_contracts.py`. It must load `config/agent-projec
 - PO and POD have no API tools and no Context Grounding resources;
 - prompts require resource use where attached and forbid unsupported factual invention.
 
-- [ ] **Step 2: Run the test and observe the expected failure**
+- [ ] **Step 2: Run the three tests and observe the expected failures**
 
 ```bash
-uv run pytest tests/agents/test_agent_contracts.py
+uv run pytest tests/agents/test_triage_agent.py tests/agents/test_payment_agent.py tests/agents/test_basic_specialists.py
 ```
 
-Expected: FAIL because the mapping and agents are absent.
+Expected: FAIL before agent implementation because the generated scaffolds do not satisfy their schemas/prompts/resources. If the root has not yet created the mapping, absence of the mapping is the expected first failure.
 
-- [ ] **Step 3: Discover an available model and scaffold four inline agents**
+- [ ] **Step 3: Root discovers an available model and scaffolds four inline agents before Wave 2 dispatch**
 
 ```bash
 UIPATH_CLI_DISABLE_VERSION_SYNC=1 uip agent model list --output json
@@ -654,7 +768,7 @@ UIPATH_CLI_DISABLE_VERSION_SYNC=1 uip agent init solution/ARCollectionsDemo/ARCo
 
 Run the `agent init` command four times. Record each returned `ProjectId` immediately in `config/agent-projects.json` under, in order, `triage`, `poMismatch`, `missingPod`, and `paymentMisapplication`. Every value must be the concrete UUID returned by the CLI; make the contract test enforce the UUID format. Choose a currently supported general-purpose model suitable for structured tool use; prefer `gpt-5.6-terra` if it remains available in `uipathlabs/Playground`.
 
-- [ ] **Step 4: Define the triage agent**
+- [ ] **Step 4: Lane A-T defines and tests the triage agent**
 
 Set its input schema to one object field, `casePacket`, and exact output schema:
 
@@ -673,7 +787,7 @@ Set its input schema to one object field, `casePacket`, and exact output schema:
 
 The system prompt must say: search the attached taxonomy on every run; classify only from the packet and retrieved taxonomy; cite the taxonomy category/example in `rationale`; return `unsupported` when evidence is ambiguous, unsupported, or confidence is below `0.75`; never call tools or propose a resolution. The user prompt must include the serialized Flow case packet and explicitly ask for the three-field JSON contract.
 
-- [ ] **Step 5: Define the common specialist schema and three specialist prompts**
+- [ ] **Step 5: Lanes A-P and A-B independently define their specialist schemas and prompts**
 
 Use this exact output field set for all specialists:
 
@@ -698,7 +812,9 @@ Add specialist rules:
 - Missing POD: use delivery date `2026-06-18`, signer `M. Chen`, and matching quantities; return `PROVIDE_POD` and `adjustmentAmount: 0`.
 - Payment misapplication: call `LookupPaymentApplication` and search `ar-payment-resolution-index` before reasoning; require both resources to support the recommendation; return `REALLOCATE_PAYMENT`, `adjustmentAmount: 0`, and state that reallocation will clear `INV-30915`.
 
-- [ ] **Step 6: Attach resources using generated resource directories**
+Lane A-P edits only the mapped payment directory and `test_payment_agent.py`. Lane A-B edits only the mapped PO/POD directories and `test_basic_specialists.py`. Each lane repeats the complete common schema in its owned `agent.json` files; it must not introduce a shared generated-agent file.
+
+- [ ] **Step 6: Lanes A-T and A-P attach resources only inside their owned agent directories**
 
 Create the triage context resource with `type: context`, `contextType: index`, folder `JD_Demos/demos`, index `ar-dispute-triage-index`, semantic retrieval, result count `5`, and a description focused on classification.
 
@@ -707,27 +823,27 @@ Create two resources for payment:
 1. Context resource for `ar-payment-resolution-index`, semantic retrieval, result count `5`.
 2. API tool resource with `type: api`, `location: solution`, `processName: LookupPaymentApplication`, `folderPath: solution_folder`, the exact four-input/nine-output schema from Task 3, and a description that says it is a read-only lookup for cash-application evidence.
 
-Use actual CLI-generated resource UUID directories and record their exact references in agent `bindings_v2.json`. Refresh solution resources first so the local API Workflow receives a real solution resource key:
+Use actual CLI-generated resource UUID directories and record their exact references in each owned agent-level `bindings_v2.json`. The root refreshes solution resources before Wave 2 so the local API Workflow has a real solution resource key:
 
 ```bash
 UIPATH_CLI_DISABLE_VERSION_SYNC=1 uip solution resources refresh --solution-folder solution/ARCollectionsDemo --output json
 ```
 
-- [ ] **Step 7: Refresh and validate all four agents**
+- [ ] **Step 7: Root performs Barrier B refresh and validation sequentially**
 
 For each exact ID in `config/agent-projects.json`, run `uip agent refresh` on its concrete directory with `--inline-in-flow --bindings-target solution/ARCollectionsDemo/ARCollectionsDisputeResolution/bindings_v2.json --output json`, followed by `uip agent validate` on the same concrete directory with `--inline-in-flow --output json`. Use four explicit commands containing the UUIDs from the mapping; do not save a symbolic ID token in any artifact or script. Expected: four successful validations and bindings containing the three intended resource references.
 
-- [ ] **Step 8: Run tests and commit**
+- [ ] **Step 8: Root runs combined tests, reviews the three lane diffs, and commits**
 
 ```bash
-uv run pytest tests/agents/test_agent_contracts.py
+uv run pytest tests/agents/test_triage_agent.py tests/agents/test_payment_agent.py tests/agents/test_basic_specialists.py
 git add config/agent-projects.json tests/agents solution/ARCollectionsDemo/ARCollectionsDisputeResolution
 git commit -m "feat: add grounded AR dispute agents"
 ```
 
 ---
 
-## Task 6: Build Deterministic Case Loading, Grounded Triage, and Exclusive Routing
+## Task 6: Build Deterministic Case Loading, Grounded Triage, and Exclusive Routing — Wave 2 Root Flow Foundation, Wave 3 Lane F Tests
 
 **Files:**
 
@@ -736,7 +852,7 @@ git commit -m "feat: add grounded AR dispute agents"
 - Modify: `solution/ARCollectionsDemo/ARCollectionsDisputeResolution/bindings_v2.json`
 - Create: `tests/flow/test_flow_contract.py`
 
-- [ ] **Step 1: Snapshot the installed Flow node definitions**
+- [ ] **Step 1: Root snapshots the installed Flow node definitions while Lane F writes tests**
 
 Before hand-editing the Flow, retrieve and use the installed definitions for:
 
@@ -748,7 +864,7 @@ UIPATH_CLI_DISABLE_VERSION_SYNC=1 uip maestro flow registry get uipath.agent.aut
 
 Also inspect the scaffolded Start, Script, and End nodes. Copy registry definitions verbatim; do not type their schema from memory. Every edge must declare the correct `targetPort`.
 
-- [ ] **Step 2: Write failing Flow contract tests**
+- [ ] **Step 2: Lane F writes failing Flow contract tests without editing the Flow**
 
 `tests/flow/test_flow_contract.py` must parse the `.flow` JSON and assert all of the following without depending on visual coordinates:
 
@@ -762,7 +878,7 @@ Also inspect the scaffolded Start, Script, and End nodes. Copy registry definiti
 - all three specialist outputs expose the exact common proposal contract;
 - all designed End outputs contain the result-contract fields from the spec.
 
-- [ ] **Step 3: Run the Flow tests and observe the expected failure**
+- [ ] **Step 3: Root runs Lane F's tests and observes the expected failure before Flow edits**
 
 ```bash
 uv run pytest tests/flow/test_flow_contract.py
@@ -830,7 +946,7 @@ uv run pytest tests/flow/test_flow_contract.py
 
 Expected: formatting succeeds, validation has no warnings/errors, tests pass. Do not debug-run yet because later tasks add the only intended deployed bindings and side effects.
 
-- [ ] **Step 8: Commit the core orchestration**
+- [ ] **Step 8: Root commits the core orchestration after reviewing Lane F's tests**
 
 ```bash
 git add solution/ARCollectionsDemo/ARCollectionsDisputeResolution tests/flow
@@ -839,7 +955,7 @@ git commit -m "feat: route grounded disputes to specialists"
 
 ---
 
-## Task 7: Add Collector Approval, Mock Update, Outlook, and Business Exits
+## Task 7: Add Collector Approval, Mock Update, Outlook, and Business Exits — Wave 3 Root Flow Owner with Lane F Tests
 
 **Files:**
 
@@ -848,7 +964,7 @@ git commit -m "feat: route grounded disputes to specialists"
 - Modify: `tests/flow/test_flow_contract.py`
 - Modify: `config/platform-resources.json`
 
-- [ ] **Step 1: Extend the tests before changing the Flow**
+- [ ] **Step 1: Lane F extends the tests while root performs read-only registry and connection discovery**
 
 Add assertions that:
 
@@ -869,6 +985,8 @@ uv run pytest tests/flow/test_flow_contract.py
 ```
 
 Expected: FAIL on the new assertions.
+
+Root must wait for this expected failing result before making the Task 7 Flow changes. During that wait, root may run only the read-only discovery commands in Steps 2, 4, and 5.
 
 - [ ] **Step 2: Retrieve the exact Quick Form definition and add the approval**
 
@@ -935,7 +1053,7 @@ uv run pytest
 
 Expected: Flow validation reports no warnings/errors and the full test suite passes.
 
-- [ ] **Step 8: Commit the complete Flow**
+- [ ] **Step 8: Root reviews Lane F's diff and commits the complete Flow**
 
 ```bash
 git add solution/ARCollectionsDemo/ARCollectionsDisputeResolution tests/flow config/platform-resources.json
@@ -944,7 +1062,7 @@ git commit -m "feat: add approval and approved resolution effects"
 
 ---
 
-## Task 8: Package, Link, Deploy, and Verify the Demo
+## Task 8: Package, Link, Deploy, and Verify the Demo — Wave 4, Root Only
 
 **Files:**
 
@@ -956,7 +1074,8 @@ git commit -m "feat: add approval and approved resolution effects"
 ```bash
 git status --short
 uv run pytest
-uv run python tests/api_workflows/verify_fixture_runs.py
+uv run python tests/api_workflows/verify_lookup_payment.py
+uv run python tests/api_workflows/verify_mock_update.py
 UIPATH_CLI_DISABLE_VERSION_SYNC=1 uip api-workflow validate solution/ARCollectionsDemo/LookupPaymentApplication/Workflow.json --output json
 UIPATH_CLI_DISABLE_VERSION_SYNC=1 uip api-workflow validate solution/ARCollectionsDemo/MockUpdateDispute/Workflow.json --output json
 UIPATH_CLI_DISABLE_VERSION_SYNC=1 uip maestro flow format solution/ARCollectionsDemo/ARCollectionsDisputeResolution/ARCollectionsDisputeResolution.flow --output json
@@ -1030,7 +1149,7 @@ Confirm receipt in the destination mailbox without sending a second message.
 
 Create `docs/build-evidence/deployment-and-smoke.md` with CLI version, target tenant/folder, package/deployment versions, validation results, scenario outcomes, one approved email-send result, and the final audit status. Include run/trace IDs only when they are safe to retain; never include tokens, raw email content, or personal mailbox data beyond the approved recipient label.
 
-- [ ] **Step 10: Commit generated bindings and evidence**
+- [ ] **Step 10: Root commits generated bindings and evidence**
 
 ```bash
 git add solution/ARCollectionsDemo docs/build-evidence/deployment-and-smoke.md
@@ -1039,13 +1158,13 @@ git commit -m "build: deploy and verify AR collections demo"
 
 ---
 
-## Task 9: Create the Presenter Runbook and Final Acceptance Check
+## Task 9: Create the Presenter Runbook and Final Acceptance Check — Wave 3 Lane D Draft, Wave 4 Root Acceptance
 
 **Files:**
 
 - Create: `docs/demo-runbook.md`
 
-- [ ] **Step 1: Write the concise 10–12 minute runbook**
+- [ ] **Step 1: Lane D writes the concise 10–12 minute runbook during Wave 3**
 
 Use these sections and timing:
 
@@ -1063,7 +1182,8 @@ Include exact start inputs, expected payment values, what to point out on the ca
 
 ```bash
 uv run pytest
-uv run python tests/api_workflows/verify_fixture_runs.py
+uv run python tests/api_workflows/verify_lookup_payment.py
+uv run python tests/api_workflows/verify_mock_update.py
 UIPATH_CLI_DISABLE_VERSION_SYNC=1 uip maestro flow validate solution/ARCollectionsDemo/ARCollectionsDisputeResolution/ARCollectionsDisputeResolution.flow --output json
 UIPATH_CLI_DISABLE_VERSION_SYNC=1 uip solution pack solution/ARCollectionsDemo --dry-run --output json
 git status --short
@@ -1084,7 +1204,7 @@ rg -n -i "access[_-]?token|refresh[_-]?token|authorization: bearer|client_secret
 
 Expected: no incomplete implementation markers and no credentials. Intentional prose examples in knowledge articles must not use any forbidden marker.
 
-- [ ] **Step 5: Commit the presenter handoff**
+- [ ] **Step 5: Root reviews and commits the presenter handoff**
 
 ```bash
 git add docs/demo-runbook.md
@@ -1117,3 +1237,4 @@ Expected: clean working tree with task-level commits visible and no untracked pa
 | Only one explicit error-handling moment | Manual-triage decision and absence-of-error-branch tests in Tasks 6 and 7 |
 | Two buckets and two indexes | Stable manifest plus ingestion/search evidence in Task 4 |
 | Demo-grade, mixed-audience story | Timed runbook and business-readable audit outputs in Task 9 |
+| Parallel construction without generated-file collisions | Disjoint lane allowlists, root-only shared metadata, and Barriers A–C in the Parallel Execution Model |
