@@ -416,7 +416,7 @@
         "status": {
           "source": "=js:\"needs_manual_triage\""
         },
-        "caseId": {
+        "resultCaseId": {
           "source": "=js:$vars.start.output.caseId"
         },
         "disputeType": {
@@ -452,18 +452,254 @@
       }
     },
     {
-      "id": "proposalReady",
+      "id": "reviewArDisputeResolution1",
+      "type": "uipath.human-in-the-loop.quick-form",
+      "typeVersion": "1.0",
+      "display": {
+        "label": "Review AR dispute resolution"
+      },
+      "inputs": {
+        "title": "Review AR dispute resolution",
+        "recipient": {
+          "channels": [
+            "Email",
+            "ActionCenter"
+          ],
+          "connections": {},
+          "assignee": {
+            "type": "group"
+          }
+        },
+        "priority": "Medium",
+        "labels": "ar-collections,demo",
+        "schema": {
+          "schemaId": "9ec41cf8-bae1-4b34-9756-cdb2c91aee1a",
+          "fields": [
+            {
+              "id": "customerName",
+              "label": "Customer",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.loadSampleCase.output.customerName"
+            },
+            {
+              "id": "invoiceNumber",
+              "label": "Invoice",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.loadSampleCase.output.invoiceNumber"
+            },
+            {
+              "id": "outstandingBalance",
+              "label": "Outstanding balance",
+              "type": "number",
+              "direction": "input",
+              "binding": "vars.loadSampleCase.output.outstandingBalance"
+            },
+            {
+              "id": "disputeType",
+              "label": "Triage type",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.triageAgent.output.disputeType"
+            },
+            {
+              "id": "triageRationale",
+              "label": "Triage rationale",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.triageAgent.output.rationale"
+            },
+            {
+              "id": "triageConfidence",
+              "label": "Triage confidence",
+              "type": "number",
+              "direction": "input",
+              "binding": "vars.triageAgent.output.confidence"
+            },
+            {
+              "id": "evidenceSummary",
+              "label": "Specialist evidence",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.normalizeProposal.output.evidenceSummary"
+            },
+            {
+              "id": "rootCause",
+              "label": "Root cause",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.normalizeProposal.output.rootCause"
+            },
+            {
+              "id": "recommendedAction",
+              "label": "Recommended action",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.normalizeProposal.output.recommendedAction"
+            },
+            {
+              "id": "actionCode",
+              "label": "Action code",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.normalizeProposal.output.actionCode"
+            },
+            {
+              "id": "adjustmentAmount",
+              "label": "Adjustment amount",
+              "type": "number",
+              "direction": "input",
+              "binding": "vars.normalizeProposal.output.adjustmentAmount"
+            },
+            {
+              "id": "specialistConfidence",
+              "label": "Specialist confidence",
+              "type": "number",
+              "direction": "input",
+              "binding": "vars.normalizeProposal.output.confidence"
+            },
+            {
+              "id": "emailSubject",
+              "label": "Email subject preview",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.normalizeProposal.output.emailSubject"
+            },
+            {
+              "id": "emailBody",
+              "label": "Email body preview",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.normalizeProposal.output.emailBody"
+            },
+            {
+              "id": "approvedBy",
+              "label": "Approved by",
+              "type": "string",
+              "direction": "output",
+              "variable": "vars.approvedBy",
+              "required": true
+            },
+            {
+              "id": "approvalComments",
+              "label": "Approval comments",
+              "type": "string",
+              "direction": "output",
+              "variable": "vars.approvalCommentsInput",
+              "required": true
+            }
+          ],
+          "outcomes": [
+            {
+              "id": "approve",
+              "name": "Approve",
+              "type": "string",
+              "isPrimary": true,
+              "action": "Continue"
+            },
+            {
+              "id": "reject",
+              "name": "Reject",
+              "type": "string",
+              "isPrimary": false,
+              "action": "End"
+            }
+          ]
+        }
+      },
+      "outputs": {
+        "output": {
+          "type": "object",
+          "description": "Task result data",
+          "source": "=result",
+          "var": "output",
+          "properties": {
+            "approvedBy": {
+              "type": "string"
+            },
+            "approvalComments": {
+              "type": "string"
+            },
+            "Action": {
+              "type": "string",
+              "enum": [
+                "Approve",
+                "Reject"
+              ],
+              "default": "Approve"
+            }
+          }
+        },
+        "status": {
+          "type": "string",
+          "description": "Task completion status",
+          "source": "=result.Action",
+          "var": "status",
+          "enum": [
+            "Approve",
+            "Reject"
+          ],
+          "default": "Approve"
+        }
+      }
+    },
+    {
+      "id": "isResolutionApproved",
+      "type": "core.logic.decision",
+      "typeVersion": "1.2",
+      "display": {
+        "label": "Resolution approved?"
+      },
+      "inputs": {
+        "expression": "=js:$vars.reviewArDisputeResolution1.status === \"Approve\"",
+        "trueLabel": "Approved",
+        "falseLabel": "Needs rework"
+      }
+    },
+    {
+      "id": "mockUpdateDispute1",
+      "type": "uipath.core.api-workflow.e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
+      "typeVersion": "1.0.0",
+      "display": {
+        "label": "MockUpdateDispute"
+      },
+      "inputs": {
+        "caseId": "=js:$vars.normalizeProposal.output.caseId",
+        "disputeType": "=js:$vars.normalizeProposal.output.disputeType",
+        "actionCode": "=js:$vars.normalizeProposal.output.actionCode",
+        "adjustmentAmount": "=js:$vars.normalizeProposal.output.adjustmentAmount",
+        "approvedBy": "=js:$vars.reviewArDisputeResolution1.output.approvedBy",
+        "approvalComments": "=js:$vars.reviewArDisputeResolution1.output.approvalComments"
+      },
+      "outputs": {
+        "output": {
+          "type": "object",
+          "description": "The return value of the API workflow",
+          "source": "=result.response",
+          "var": "output"
+        },
+        "error": {
+          "type": "object",
+          "description": "Error information if the API workflow fails",
+          "source": "=result.Error",
+          "var": "error"
+        }
+      }
+    },
+    {
+      "id": "needsRework",
       "type": "core.control.end",
       "typeVersion": "1.0",
       "display": {
-        "label": "Proposal Ready for Approval"
+        "label": "Needs Rework"
       },
       "inputs": {},
       "outputs": {
         "status": {
           "source": "=js:\"needs_rework\""
         },
-        "caseId": {
+        "resultCaseId": {
           "source": "=js:$vars.start.output.caseId"
         },
         "disputeType": {
@@ -479,10 +715,10 @@
           "source": "=js:$vars.normalizeProposal.output.recommendedAction"
         },
         "approvalDecision": {
-          "source": "=js:null"
+          "source": "=js:$vars.reviewArDisputeResolution1.status"
         },
         "approvalComments": {
-          "source": "=js:null"
+          "source": "=js:$vars.reviewArDisputeResolution1.output.approvalComments"
         },
         "updateResult": {
           "source": "=js:null"
@@ -494,7 +730,103 @@
           "source": "=js:$vars.normalizeProposal.output.resourcesUsed"
         },
         "auditSummary": {
-          "source": "=js:\"Proposal normalized; collector approval and side effects are added in the next build wave.\""
+          "source": "=js:\"Collector rejected the proposal; no back-office update or email side effect ran.\""
+        }
+      }
+    },
+    {
+      "id": "resolved",
+      "type": "core.control.end",
+      "typeVersion": "1.0",
+      "display": {
+        "label": "Resolved"
+      },
+      "inputs": {},
+      "outputs": {
+        "status": {
+          "source": "=js:\"resolved\""
+        },
+        "resultCaseId": {
+          "source": "=js:$vars.start.output.caseId"
+        },
+        "disputeType": {
+          "source": "=js:$vars.triageAgent.output.disputeType"
+        },
+        "triageRationale": {
+          "source": "=js:$vars.triageAgent.output.rationale"
+        },
+        "triageConfidence": {
+          "source": "=js:$vars.triageAgent.output.confidence"
+        },
+        "recommendedAction": {
+          "source": "=js:$vars.normalizeProposal.output.recommendedAction"
+        },
+        "approvalDecision": {
+          "source": "=js:$vars.reviewArDisputeResolution1.status"
+        },
+        "approvalComments": {
+          "source": "=js:$vars.reviewArDisputeResolution1.output.approvalComments"
+        },
+        "updateResult": {
+          "source": "=js:$vars.mockUpdateDispute1.output"
+        },
+        "emailSent": {
+          "source": "=js:true"
+        },
+        "resourcesUsed": {
+          "source": "=js:$vars.normalizeProposal.output.resourcesUsed"
+        },
+        "auditSummary": {
+          "source": "=js:\"Collector approved the proposal; mock update completed and the Outlook response was sent.\""
+        }
+      }
+    },
+    {
+      "id": "sendEmail1",
+      "type": "uipath.connector.uipath-microsoft-outlook365.send-email",
+      "typeVersion": "1.0.0",
+      "display": {
+        "label": "Send Email"
+      },
+      "inputs": {
+        "detail": {
+          "connector": "uipath-microsoft-outlook365",
+          "connectionId": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+          "connectionResourceId": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+          "connectionFolderKey": "67fc19c3-e3a7-4523-aac0-fa63ea83d261",
+          "method": "POST",
+          "endpoint": "/hubs/productivity/send-mail-v2",
+          "bodyParameters": {
+            "message.toRecipients": "=js:$vars.start.output.recipientEmail",
+            "message.subject": "=js:$vars.normalizeProposal.output.emailSubject",
+            "message.body.content": "=js:$vars.normalizeProposal.output.emailBody",
+            "saveToSentItems": true
+          },
+          "queryParameters": {
+            "saveAsDraft": false,
+            "includeMessageDetails": true
+          },
+          "uiPathActivityTypeId": "c7ce0a96-2091-3d94-b16f-706ebb1eb351",
+          "errorState": {
+            "issues": []
+          },
+          "configuration": "=jsonString:{\"essentialConfiguration\":{\"instanceParameters\":{\"connectorKey\":\"uipath-microsoft-outlook365\",\"objectName\":\"send-mail-v2\",\"httpMethod\":\"POST\",\"activityType\":\"Curated\",\"version\":\"1.0.0\",\"supportsStreaming\":false,\"subType\":\"standard\"},\"objectName\":\"send-mail-v2\",\"operation\":\"create\",\"httpMethod\":\"POST\",\"path\":\"/hubs/productivity/send-mail-v2\",\"packageVersion\":\"1.0.0\",\"connectorVersion\":null,\"executionType\":null,\"customFieldsRequestDetails\":null,\"unifiedTypesCompatible\":true}}",
+          "multipartParameters": [
+            {
+              "name": "file",
+              "dataType": "file"
+            },
+            {
+              "name": "body",
+              "dataType": "string"
+            }
+          ],
+          "inputMetadata": {
+            "type": "multipart",
+            "multipart": {
+              "bodyFieldName": "body"
+            }
+          }
         }
       }
     }
@@ -599,10 +931,45 @@
       "targetPort": "input"
     },
     {
-      "id": "edge_normalizeProposal_proposalReady",
+      "id": "edge_normalizeProposal_reviewArDisputeResolution1",
       "sourceNodeId": "normalizeProposal",
       "sourcePort": "success",
-      "targetNodeId": "proposalReady",
+      "targetNodeId": "reviewArDisputeResolution1",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_reviewArDisputeResolution1_isResolutionApproved",
+      "sourceNodeId": "reviewArDisputeResolution1",
+      "sourcePort": "completed",
+      "targetNodeId": "isResolutionApproved",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_isResolutionApproved_needsRework",
+      "sourceNodeId": "isResolutionApproved",
+      "sourcePort": "false",
+      "targetNodeId": "needsRework",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_isResolutionApproved_mockUpdateDispute1",
+      "sourceNodeId": "isResolutionApproved",
+      "sourcePort": "true",
+      "targetNodeId": "mockUpdateDispute1",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_mockUpdateDispute1_sendEmail1",
+      "sourceNodeId": "mockUpdateDispute1",
+      "sourcePort": "output",
+      "targetNodeId": "sendEmail1",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_sendEmail1_resolved",
+      "sourceNodeId": "sendEmail1",
+      "sourcePort": "output",
+      "targetNodeId": "resolved",
       "targetPort": "input"
     }
   ],
@@ -2419,6 +2786,538 @@
         }
       },
       "outputDefinition": {}
+    },
+    {
+      "nodeType": "uipath.human-in-the-loop.quick-form",
+      "version": "1.0",
+      "category": "human-task",
+      "description": "Fast inline approvals with inline debug",
+      "tags": [
+        "human-task",
+        "hitl",
+        "human-in-the-loop",
+        "quick-form",
+        "approval"
+      ],
+      "sortOrder": 27,
+      "display": {
+        "label": "Quick Form",
+        "icon": "users",
+        "shape": "square"
+      },
+      "handleConfiguration": [
+        {
+          "position": "left",
+          "handles": [
+            {
+              "id": "input",
+              "type": "target",
+              "handleType": "input"
+            }
+          ],
+          "visible": true
+        },
+        {
+          "position": "right",
+          "handles": [
+            {
+              "id": "completed",
+              "type": "source",
+              "handleType": "output",
+              "showButton": true,
+              "constraints": {
+                "forbiddenTargetCategories": [
+                  "trigger"
+                ]
+              }
+            }
+          ],
+          "visible": true
+        }
+      ],
+      "model": {
+        "type": "bpmn:UserTask",
+        "serviceType": "Actions.HITL"
+      },
+      "inputDefaults": {
+        "schema": {
+          "fields": [],
+          "outcomes": [
+            {
+              "id": "submit",
+              "name": "Submit",
+              "type": "string",
+              "isPrimary": true,
+              "action": "Continue"
+            }
+          ]
+        },
+        "recipient": {
+          "channels": [
+            "Email",
+            "ActionCenter"
+          ],
+          "connections": {},
+          "assignee": {
+            "type": "group"
+          }
+        }
+      },
+      "outputDefinition": {
+        "output": {
+          "type": "object",
+          "description": "Task result data",
+          "source": "=result",
+          "var": "output"
+        },
+        "status": {
+          "type": "string",
+          "description": "Task completion status (completed, cancelled, timeout)",
+          "source": "=result.Action",
+          "var": "status"
+        }
+      },
+      "form": {
+        "id": "hitl-quick-form-properties",
+        "title": "Quick Form Task Configuration",
+        "sections": [
+          {
+            "id": "delivery",
+            "title": "Task delivery",
+            "collapsible": true,
+            "defaultExpanded": true,
+            "fields": [
+              {
+                "name": "inputs.recipient",
+                "type": "custom",
+                "component": "hitl-channel-selector",
+                "label": "Delivery Channels",
+                "description": "Select where the task should be sent"
+              }
+            ]
+          },
+          {
+            "id": "schema",
+            "title": "Schema",
+            "collapsible": true,
+            "defaultExpanded": true,
+            "fields": [
+              {
+                "name": "inputs.schema",
+                "type": "custom",
+                "component": "hitl-schema-editor",
+                "label": "Task Schema",
+                "description": "Define the input and output parameters for this task"
+              }
+            ]
+          },
+          {
+            "id": "additional-properties",
+            "title": "Additional properties",
+            "collapsible": true,
+            "defaultExpanded": true,
+            "fields": [
+              {
+                "name": "inputs.title",
+                "type": "text",
+                "label": "Task title"
+              },
+              {
+                "name": "inputs.priority",
+                "type": "select",
+                "label": "Priority",
+                "options": [
+                  {
+                    "label": "Low",
+                    "value": "Low"
+                  },
+                  {
+                    "label": "Medium",
+                    "value": "Medium"
+                  },
+                  {
+                    "label": "High",
+                    "value": "High"
+                  }
+                ]
+              },
+              {
+                "name": "inputs.labels",
+                "type": "text",
+                "label": "Labels",
+                "placeholder": "Comma-separated (e.g. finance,approval)"
+              }
+            ]
+          }
+        ]
+      },
+      "runtimeConstraints": {
+        "exclude": [
+          "api-function"
+        ]
+      }
+    },
+    {
+      "nodeType": "uipath.core.api-workflow.e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
+      "version": "1.0.0",
+      "category": "api-workflow",
+      "runtimeConstraints": {
+        "exclude": [
+          "api-function"
+        ]
+      },
+      "description": "(In-solution) MockUpdateDispute",
+      "tags": [
+        "in-solution",
+        "local"
+      ],
+      "sortOrder": 510,
+      "supportsErrorHandling": true,
+      "display": {
+        "label": "MockUpdateDispute",
+        "icon": "api"
+      },
+      "handleConfiguration": [
+        {
+          "position": "left",
+          "handles": [
+            {
+              "id": "input",
+              "type": "target",
+              "handleType": "input"
+            }
+          ]
+        },
+        {
+          "position": "right",
+          "handles": [
+            {
+              "id": "output",
+              "type": "source",
+              "handleType": "output"
+            }
+          ]
+        }
+      ],
+      "toolbarExtensions": {
+        "design": {
+          "actions": [
+            {
+              "id": "open-workflow",
+              "icon": "external-link",
+              "label": "Open"
+            }
+          ]
+        }
+      },
+      "projectId": "4915ce21-658b-4816-85ef-8fb3bf5c8f99",
+      "model": {
+        "type": "bpmn:ServiceTask",
+        "serviceType": "Orchestrator.ExecuteApiWorkflowAsync",
+        "version": "v2",
+        "bindings": {
+          "resource": "process",
+          "resourceSubType": "Api",
+          "resourceKey": "e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
+          "orchestratorType": "api",
+          "values": [
+            {
+              "name": "name",
+              "propertyAttribute": "name",
+              "default": "MockUpdateDispute"
+            },
+            {
+              "name": "folderPath",
+              "propertyAttribute": "folderPath",
+              "default": ""
+            }
+          ]
+        },
+        "projectId": "4915ce21-658b-4816-85ef-8fb3bf5c8f99",
+        "projectName": "MockUpdateDispute",
+        "context": [
+          {
+            "name": "name",
+            "type": "string",
+            "value": "<bindings.name>"
+          },
+          {
+            "name": "folderPath",
+            "type": "string",
+            "value": "<bindings.folderPath>"
+          },
+          {
+            "name": "_label",
+            "type": "string",
+            "value": "MockUpdateDispute"
+          }
+        ]
+      },
+      "inputDefinition": {},
+      "inputDefaults": {},
+      "outputDefinition": {
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "source": "=Error",
+          "var": "error",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "debug": {
+        "runtime": "bpmnEngine"
+      }
+    },
+    {
+      "nodeType": "uipath.connector.uipath-microsoft-outlook365.send-email",
+      "version": "1.0.0",
+      "category": "connector.113595",
+      "tags": [
+        "connector",
+        "activity",
+        "API.File.Upload.Optional"
+      ],
+      "sortOrder": 515,
+      "supportsErrorHandling": true,
+      "description": "Send an email message based on the input parameters",
+      "display": {
+        "label": "Send Email",
+        "description": "Send an email message based on the input parameters",
+        "icon": "https://cloud.uipath.com/a17c9af1-091d-4dd2-9cec-ed787c6601c8/studio_/typecache/icons/160499b52f7cea190b530fe6f40da7ee03455a8d3fb72dd7f4f68d61e7865a3a.svg",
+        "sourceDisplayName": "Microsoft Outlook 365"
+      },
+      "handleConfiguration": [
+        {
+          "position": "left",
+          "handles": [
+            {
+              "id": "input",
+              "type": "target",
+              "handleType": "input",
+              "label": ""
+            }
+          ]
+        },
+        {
+          "position": "right",
+          "handles": [
+            {
+              "id": "output",
+              "type": "source",
+              "handleType": "output",
+              "label": ""
+            },
+            {
+              "id": "error",
+              "label": "Error",
+              "type": "source",
+              "handleType": "output",
+              "visible": "{inputs.errorHandlingEnabled}",
+              "constraints": {
+                "maxConnections": 1
+              }
+            }
+          ]
+        }
+      ],
+      "model": {
+        "type": "bpmn:SendTask",
+        "serviceType": "Intsvc.ActivityExecution",
+        "bindings": {
+          "resource": "connection",
+          "resourceKey": "",
+          "values": [
+            {
+              "name": "uipath-microsoft-outlook365 connection",
+              "propertyAttribute": "ConnectionId"
+            },
+            {
+              "name": "FolderKey",
+              "propertyAttribute": "FolderKey"
+            }
+          ]
+        },
+        "context": [
+          {
+            "name": "connectorKey",
+            "type": "string",
+            "value": "uipath-microsoft-outlook365"
+          },
+          {
+            "name": "operation",
+            "type": "string"
+          },
+          {
+            "name": "objectName",
+            "value": "send-mail-v2",
+            "type": "string"
+          },
+          {
+            "name": "method",
+            "type": "string",
+            "value": "POST"
+          },
+          {
+            "name": "connection",
+            "type": "string",
+            "value": "<bindings.uipath-microsoft-outlook365 connection>"
+          },
+          {
+            "name": "folderKey",
+            "type": "string",
+            "value": "<bindings.FolderKey>"
+          },
+          {
+            "name": "activityConfigurationVersion",
+            "type": "string",
+            "value": "v1"
+          },
+          {
+            "name": "metadata",
+            "body": {
+              "telemetryData": {
+                "connectorKey": "uipath-microsoft-outlook365",
+                "connectorName": "Send Email"
+              },
+              "inputMetadata": {},
+              "errorState": {
+                "hasError": true
+              }
+            },
+            "type": "json"
+          }
+        ]
+      },
+      "form": {
+        "id": "connector-properties",
+        "title": "Connector configuration",
+        "sections": [
+          {
+            "id": "connector",
+            "title": "Connector",
+            "collapsible": true,
+            "defaultExpanded": true,
+            "fields": [
+              {
+                "label": "",
+                "name": "inputs.detail",
+                "type": "custom",
+                "component": "dap-config",
+                "componentProps": {
+                  "connectorDetail": {
+                    "isAppActivity": false,
+                    "packageId": "113595",
+                    "svgIconUrl": "icons/160499b52f7cea190b530fe6f40da7ee03455a8d3fb72dd7f4f68d61e7865a3a.svg",
+                    "displayName": "Send Email",
+                    "assemblyQualifiedName": "UiPath.IntegrationService.Activities.Runtime.Activities.ConnectorActivity, UiPath.IntegrationService.Activities.Runtime, Version=1.29.0.0, Culture=neutral, PublicKeyToken=null",
+                    "description": "Send an email message based on the input parameters",
+                    "category": "",
+                    "activityColor": "#E56D5C",
+                    "configuration": "{\"connectorKey\":\"uipath-microsoft-outlook365\",\"objectName\":\"send-mail-v2\",\"httpMethod\":\"POST\",\"activityType\":\"Curated\",\"version\":\"1.0.0\",\"supportsStreaming\":false,\"subType\":\"standard\"}",
+                    "uiPathActivityTypeId": "c7ce0a96-2091-3d94-b16f-706ebb1eb351",
+                    "isExperimental": false,
+                    "helpUrlTemplate": "https://docs.uipath.com/{0}/activities/other/latest/integration-service/uipath-microsoft-outlook365-Send-Email",
+                    "isEnabled": true,
+                    "targetPlatform": "CrossPlatform",
+                    "isAdvanced": false,
+                    "isRestricted": false,
+                    "hasWpfOnlyDesigner": false,
+                    "tags": [
+                      "API.File.Upload.Optional"
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "inputDefinition": {},
+      "inputDefaults": {},
+      "outputDefinition": {
+        "output": {
+          "type": "object",
+          "description": "The return value of the connector.",
+          "source": "=result.response",
+          "var": "output"
+        },
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "source": "=Error",
+          "var": "error",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "debug": {
+        "runtime": "bpmnEngine"
+      }
     }
   ],
   "bindings": [
@@ -2441,15 +3340,53 @@
       "default": "solution_folder",
       "propertyAttribute": "folderPath",
       "resourceSubType": "Api"
+    },
+    {
+      "id": "bMockUpdateDisputeName",
+      "name": "name",
+      "type": "string",
+      "resource": "process",
+      "resourceKey": "e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
+      "default": "MockUpdateDispute",
+      "propertyAttribute": "name",
+      "resourceSubType": "Api"
+    },
+    {
+      "id": "bMockUpdateDisputeFolderPath",
+      "name": "folderPath",
+      "type": "string",
+      "resource": "process",
+      "resourceKey": "e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
+      "default": "solution_folder",
+      "propertyAttribute": "folderPath",
+      "resourceSubType": "Api"
+    },
+    {
+      "id": "b8yXxkPUV",
+      "name": "uipath-microsoft-outlook365 connection",
+      "type": "string",
+      "resource": "connection",
+      "resourceKey": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+      "propertyAttribute": "ConnectionId",
+      "default": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c"
+    },
+    {
+      "id": "bqXep0d1f",
+      "name": "FolderKey",
+      "type": "string",
+      "resource": "connection",
+      "resourceKey": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+      "propertyAttribute": "FolderKey",
+      "default": "67fc19c3-e3a7-4523-aac0-fa63ea83d261"
     }
   ],
   "variables": {
     "globals": [
       {
         "id": "caseId",
-        "direction": "inout",
+        "direction": "in",
         "type": "string",
-        "description": "One supported demo case identifier returned with the result",
+        "description": "One supported demo case identifier supplied at Start",
         "triggerNodeId": "start"
       },
       {
@@ -2463,6 +3400,12 @@
         "id": "status",
         "direction": "out",
         "type": "string"
+      },
+      {
+        "id": "resultCaseId",
+        "direction": "out",
+        "type": "string",
+        "description": "Original Start case identifier returned for traceability"
       },
       {
         "id": "disputeType",
@@ -2882,11 +3825,11 @@
         }
       },
       {
-        "id": "needsManualTriage.caseId",
+        "id": "needsManualTriage.resultCaseId",
         "type": "string",
         "binding": {
           "nodeId": "needsManualTriage",
-          "outputId": "caseId"
+          "outputId": "resultCaseId"
         }
       },
       {
@@ -2970,99 +3913,301 @@
         }
       },
       {
-        "id": "proposalReady.status",
-        "type": "string",
+        "id": "reviewArDisputeResolution1.output",
+        "type": "object",
+        "description": "Task result data",
         "binding": {
-          "nodeId": "proposalReady",
+          "nodeId": "reviewArDisputeResolution1",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "reviewArDisputeResolution1.status",
+        "type": "string",
+        "description": "Task completion status",
+        "binding": {
+          "nodeId": "reviewArDisputeResolution1",
           "outputId": "status"
         }
       },
       {
-        "id": "proposalReady.caseId",
+        "id": "isResolutionApproved.matchedCase",
         "type": "string",
+        "description": "The label of the matched branch (true/false label)",
         "binding": {
-          "nodeId": "proposalReady",
-          "outputId": "caseId"
+          "nodeId": "isResolutionApproved",
+          "outputId": "matchedCase"
         }
       },
       {
-        "id": "proposalReady.disputeType",
+        "id": "isResolutionApproved.matchedCaseId",
+        "type": "string",
+        "description": "The branch that was taken (true or false)",
+        "binding": {
+          "nodeId": "isResolutionApproved",
+          "outputId": "matchedCaseId"
+        }
+      },
+      {
+        "id": "mockUpdateDispute1.output",
+        "type": "object",
+        "description": "The return value of the API workflow",
+        "binding": {
+          "nodeId": "mockUpdateDispute1",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "mockUpdateDispute1.error",
+        "type": "object",
+        "description": "Error information if the API workflow fails",
+        "binding": {
+          "nodeId": "mockUpdateDispute1",
+          "outputId": "error"
+        }
+      },
+      {
+        "id": "needsRework.status",
         "type": "string",
         "binding": {
-          "nodeId": "proposalReady",
+          "nodeId": "needsRework",
+          "outputId": "status"
+        }
+      },
+      {
+        "id": "needsRework.resultCaseId",
+        "type": "string",
+        "binding": {
+          "nodeId": "needsRework",
+          "outputId": "resultCaseId"
+        }
+      },
+      {
+        "id": "needsRework.disputeType",
+        "type": "string",
+        "binding": {
+          "nodeId": "needsRework",
           "outputId": "disputeType"
         }
       },
       {
-        "id": "proposalReady.triageRationale",
+        "id": "needsRework.triageRationale",
         "type": "string",
         "binding": {
-          "nodeId": "proposalReady",
+          "nodeId": "needsRework",
           "outputId": "triageRationale"
         }
       },
       {
-        "id": "proposalReady.triageConfidence",
+        "id": "needsRework.triageConfidence",
         "type": "string",
         "binding": {
-          "nodeId": "proposalReady",
+          "nodeId": "needsRework",
           "outputId": "triageConfidence"
         }
       },
       {
-        "id": "proposalReady.recommendedAction",
+        "id": "needsRework.recommendedAction",
         "type": "string",
         "binding": {
-          "nodeId": "proposalReady",
+          "nodeId": "needsRework",
           "outputId": "recommendedAction"
         }
       },
       {
-        "id": "proposalReady.approvalDecision",
+        "id": "needsRework.approvalDecision",
         "type": "string",
         "binding": {
-          "nodeId": "proposalReady",
+          "nodeId": "needsRework",
           "outputId": "approvalDecision"
         }
       },
       {
-        "id": "proposalReady.approvalComments",
+        "id": "needsRework.approvalComments",
         "type": "string",
         "binding": {
-          "nodeId": "proposalReady",
+          "nodeId": "needsRework",
           "outputId": "approvalComments"
         }
       },
       {
-        "id": "proposalReady.updateResult",
+        "id": "needsRework.updateResult",
         "type": "string",
         "binding": {
-          "nodeId": "proposalReady",
+          "nodeId": "needsRework",
           "outputId": "updateResult"
         }
       },
       {
-        "id": "proposalReady.emailSent",
+        "id": "needsRework.emailSent",
         "type": "string",
         "binding": {
-          "nodeId": "proposalReady",
+          "nodeId": "needsRework",
           "outputId": "emailSent"
         }
       },
       {
-        "id": "proposalReady.resourcesUsed",
+        "id": "needsRework.resourcesUsed",
         "type": "string",
         "binding": {
-          "nodeId": "proposalReady",
+          "nodeId": "needsRework",
           "outputId": "resourcesUsed"
         }
       },
       {
-        "id": "proposalReady.auditSummary",
+        "id": "needsRework.auditSummary",
         "type": "string",
         "binding": {
-          "nodeId": "proposalReady",
+          "nodeId": "needsRework",
           "outputId": "auditSummary"
+        }
+      },
+      {
+        "id": "resolved.status",
+        "type": "string",
+        "binding": {
+          "nodeId": "resolved",
+          "outputId": "status"
+        }
+      },
+      {
+        "id": "resolved.resultCaseId",
+        "type": "string",
+        "binding": {
+          "nodeId": "resolved",
+          "outputId": "resultCaseId"
+        }
+      },
+      {
+        "id": "resolved.disputeType",
+        "type": "string",
+        "binding": {
+          "nodeId": "resolved",
+          "outputId": "disputeType"
+        }
+      },
+      {
+        "id": "resolved.triageRationale",
+        "type": "string",
+        "binding": {
+          "nodeId": "resolved",
+          "outputId": "triageRationale"
+        }
+      },
+      {
+        "id": "resolved.triageConfidence",
+        "type": "string",
+        "binding": {
+          "nodeId": "resolved",
+          "outputId": "triageConfidence"
+        }
+      },
+      {
+        "id": "resolved.recommendedAction",
+        "type": "string",
+        "binding": {
+          "nodeId": "resolved",
+          "outputId": "recommendedAction"
+        }
+      },
+      {
+        "id": "resolved.approvalDecision",
+        "type": "string",
+        "binding": {
+          "nodeId": "resolved",
+          "outputId": "approvalDecision"
+        }
+      },
+      {
+        "id": "resolved.approvalComments",
+        "type": "string",
+        "binding": {
+          "nodeId": "resolved",
+          "outputId": "approvalComments"
+        }
+      },
+      {
+        "id": "resolved.updateResult",
+        "type": "string",
+        "binding": {
+          "nodeId": "resolved",
+          "outputId": "updateResult"
+        }
+      },
+      {
+        "id": "resolved.emailSent",
+        "type": "string",
+        "binding": {
+          "nodeId": "resolved",
+          "outputId": "emailSent"
+        }
+      },
+      {
+        "id": "resolved.resourcesUsed",
+        "type": "string",
+        "binding": {
+          "nodeId": "resolved",
+          "outputId": "resourcesUsed"
+        }
+      },
+      {
+        "id": "resolved.auditSummary",
+        "type": "string",
+        "binding": {
+          "nodeId": "resolved",
+          "outputId": "auditSummary"
+        }
+      },
+      {
+        "id": "sendEmail1.output",
+        "type": "object",
+        "description": "The return value of the connector.",
+        "binding": {
+          "nodeId": "sendEmail1",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "sendEmail1.error",
+        "type": "object",
+        "description": "Error information if the node fails",
+        "schema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "required": [
+            "code",
+            "message",
+            "detail",
+            "category",
+            "status"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "Error code as a string"
+            },
+            "message": {
+              "type": "string",
+              "description": "High-level error message"
+            },
+            "detail": {
+              "type": "string",
+              "description": "Detailed error description"
+            },
+            "category": {
+              "type": "string",
+              "description": "Error category"
+            },
+            "status": {
+              "type": "integer",
+              "description": "HTTP status code"
+            }
+          },
+          "additionalProperties": false
+        },
+        "binding": {
+          "nodeId": "sendEmail1",
+          "outputId": "error"
         }
       }
     ],
@@ -3083,8 +4228,8 @@
       },
       "loadSampleCase": {
         "position": {
-          "x": 1536,
-          "y": -336
+          "x": 0,
+          "y": 0
         },
         "size": {
           "width": 96,
@@ -3093,18 +4238,18 @@
       },
       "triageAgent": {
         "position": {
-          "x": 1536,
-          "y": -336
+          "x": 192,
+          "y": -96
         },
         "size": {
-          "width": 96,
+          "width": 288,
           "height": 96
         }
       },
       "isSupportedTriage": {
         "position": {
-          "x": 1536,
-          "y": -336
+          "x": 576,
+          "y": 0
         },
         "size": {
           "width": 96,
@@ -3113,8 +4258,8 @@
       },
       "routeByDisputeType": {
         "position": {
-          "x": 1536,
-          "y": -336
+          "x": 768,
+          "y": -96
         },
         "size": {
           "width": 96,
@@ -3123,38 +4268,38 @@
       },
       "poMismatchAgent": {
         "position": {
-          "x": 1536,
+          "x": 960,
           "y": -336
         },
         "size": {
-          "width": 96,
+          "width": 288,
           "height": 96
         }
       },
       "missingPodAgent": {
         "position": {
-          "x": 1536,
-          "y": -336
+          "x": 960,
+          "y": -144
         },
         "size": {
-          "width": 96,
+          "width": 288,
           "height": 96
         }
       },
       "paymentMisapplicationAgent": {
         "position": {
-          "x": 1536,
-          "y": -336
+          "x": 960,
+          "y": 48
         },
         "size": {
-          "width": 96,
+          "width": 288,
           "height": 96
         }
       },
       "triageTaxonomyContext": {
         "position": {
-          "x": 1536,
-          "y": -336
+          "x": 240,
+          "y": 96
         },
         "size": {
           "width": 96,
@@ -3163,8 +4308,8 @@
       },
       "paymentResolutionContext": {
         "position": {
-          "x": 1536,
-          "y": -336
+          "x": 960,
+          "y": 240
         },
         "size": {
           "width": 96,
@@ -3173,8 +4318,8 @@
       },
       "lookupPaymentTool": {
         "position": {
-          "x": 1536,
-          "y": -336
+          "x": 1152,
+          "y": 240
         },
         "size": {
           "width": 96,
@@ -3183,7 +4328,7 @@
       },
       "normalizeProposal": {
         "position": {
-          "x": 1536,
+          "x": 1344,
           "y": -336
         },
         "size": {
@@ -3193,18 +4338,68 @@
       },
       "needsManualTriage": {
         "position": {
-          "x": 1536,
-          "y": -336
+          "x": 768,
+          "y": 96
         },
         "size": {
           "width": 96,
           "height": 96
         }
       },
-      "proposalReady": {
+      "reviewArDisputeResolution1": {
         "position": {
-          "x": 1536,
-          "y": -336
+          "x": 2304,
+          "y": -432
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "isResolutionApproved": {
+        "position": {
+          "x": 2304,
+          "y": -432
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "mockUpdateDispute1": {
+        "position": {
+          "x": 2304,
+          "y": -432
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "needsRework": {
+        "position": {
+          "x": 2304,
+          "y": -432
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "resolved": {
+        "position": {
+          "x": 2304,
+          "y": -432
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "sendEmail1": {
+        "position": {
+          "x": 2112,
+          "y": -432
         },
         "size": {
           "width": 96,

@@ -2,29 +2,15 @@
   "version": "2.0",
   "resources": [
     {
-      "resource": "index",
-      "key": "ar-dispute-triage-index",
+      "resource": "process",
+      "key": "cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
+      "id": "processcc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
       "value": {
-        "name": {
-          "defaultValue": "ar-dispute-triage-index",
-          "isExpression": false,
-          "displayName": "Index Name"
-        },
         "folderPath": {
-          "defaultValue": "JD_Demos/demos",
+          "defaultValue": "solution_folder",
           "isExpression": false,
           "displayName": "Folder path"
-        }
-      },
-      "metadata": {
-        "bindingsVersion": "2.2",
-        "solutionsSupport": "true"
-      }
-    },
-    {
-      "resource": "process",
-      "key": "LookupPaymentApplication",
-      "value": {
+        },
         "name": {
           "defaultValue": "LookupPaymentApplication",
           "isExpression": false,
@@ -32,29 +18,30 @@
         }
       },
       "metadata": {
-        "subType": "api",
-        "bindingsVersion": "2.2",
-        "solutionsSupport": "true"
+        "ActivityName": "Lookup Payment Application",
+        "BindingsVersion": "2.2",
+        "DisplayLabel": "name",
+        "SolutionsSupport": "true",
+        "subType": "Api"
       }
     },
     {
-      "resource": "index",
-      "key": "ar-payment-resolution-index",
+      "resource": "connection",
+      "key": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+      "id": "connectionc61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
       "value": {
-        "name": {
-          "defaultValue": "ar-payment-resolution-index",
+        "ConnectionId": {
+          "defaultValue": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
           "isExpression": false,
-          "displayName": "Index Name"
-        },
-        "folderPath": {
-          "defaultValue": "JD_Demos/demos",
-          "isExpression": false,
-          "displayName": "Folder path"
+          "displayName": "uipath-microsoft-outlook365 connection"
         }
       },
       "metadata": {
-        "bindingsVersion": "2.2",
-        "solutionsSupport": "true"
+        "ActivityName": "Send Email",
+        "BindingsVersion": "2.2",
+        "DisplayLabel": "uipath-microsoft-outlook365 connection",
+        "UseConnectionService": "true",
+        "Connector": "uipath-microsoft-outlook365"
       }
     }
   ]

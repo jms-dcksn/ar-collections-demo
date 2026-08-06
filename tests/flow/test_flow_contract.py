@@ -33,7 +33,7 @@ PROPOSAL_FIELDS = {
 }
 RESULT_FIELDS = {
     "status",
-    "caseId",
+    "resultCaseId",
     "disputeType",
     "triageRationale",
     "triageConfidence",
@@ -150,6 +150,46 @@ def string_array_sets(script):
     return arrays
 
 
+def values_named(value, name):
+    """Return configured values for a key or [key, value] parameter pair."""
+    values = []
+
+    def visit(current):
+        if isinstance(current, dict):
+            for key, child in current.items():
+                if key.casefold() == name.casefold():
+                    values.append(child)
+                visit(child)
+        elif isinstance(current, list):
+            if (
+                len(current) == 2
+                and isinstance(current[0], str)
+                and current[0].casefold() == name.casefold()
+            ):
+                values.append(current[1])
+            for child in current:
+                visit(child)
+        elif isinstance(current, str) and current.startswith("=jsonString:"):
+            visit(json.loads(current.removeprefix("=jsonString:")))
+
+    visit(value)
+    return values
+
+
+def end_with_status(flow, status):
+    matches = [
+        node
+        for node in nodes_of_type(flow, "core.control.end")
+        if status.casefold() in json.dumps(node.get("outputs", {}).get("status")).casefold()
+    ]
+    assert len(matches) == 1, f"expected one End with status {status!r}"
+    return matches[0]
+
+
+def bindings_in(value):
+    return re.findall(r"=js:\$vars\.[A-Za-z0-9_.-]+", json.dumps(value))
+
+
 def test_start_contract_and_deterministic_loader_cover_all_approved_fixtures():
     flow, _, _ = load_contract()
     starts = nodes_of_type(flow, "core.trigger.manual")
@@ -164,6 +204,7 @@ def test_start_contract_and_deterministic_loader_cover_all_approved_fixtures():
     }
     assert set(start_inputs) == {"caseId", "recipientEmail"}
     for variable in start_inputs.values():
+        assert variable["direction"] == "in"
         assert variable["type"] == "string"
         assert variable["triggerNodeId"] == start["id"]
 
@@ -289,9 +330,10 @@ def test_supported_decision_and_switch_route_exclusively_to_one_specialist():
     flow, mapping, nodes = load_contract()
     decisions = nodes_of_type(flow, "core.logic.decision")
     switches = nodes_of_type(flow, "core.logic.switch")
-    assert len(decisions) == 1
+    assert len(decisions) == 2
     assert len(switches) == 1
-    decision = decisions[0]
+    decision = node_with_label(flow, "Supported and confident?")
+    assert decision["type"] == "core.logic.decision"
     switch = switches[0]
 
     expression = compact(decision["inputs"]["expression"])
@@ -377,7 +419,8 @@ def test_normalize_proposal_selects_one_branch_and_verifies_exact_contract():
 
 def test_manual_triage_is_side_effect_free_and_every_end_maps_result_contract():
     flow, mapping, nodes = load_contract()
-    decision = nodes_of_type(flow, "core.logic.decision")[0]
+    decision = node_with_label(flow, "Supported and confident?")
+    assert decision["type"] == "core.logic.decision"
     false_edges = outgoing(flow, decision["id"], "false")
     assert len(false_edges) == 1
     assert false_edges[0]["targetPort"] == "input"
@@ -412,8 +455,145 @@ def test_manual_triage_is_side_effect_free_and_every_end_maps_result_contract():
 
     ends = nodes_of_type(flow, "core.control.end")
     assert ends
+    start = nodes_of_type(flow, "core.trigger.manual")[0]
     for end in ends:
         assert set(end.get("outputs", {})) == RESULT_FIELDS
+        assert f"=js:$vars.{start['id']}.output.caseId" in json.dumps(
+            end["outputs"]["resultCaseId"]
+        )
+
+
+def test_collector_approval_routes_rejection_and_approval_to_their_business_exits():
+    flow, _, nodes = load_contract()
+    normalize = node_with_label(flow, "Normalize Proposal")
+    quick_forms = nodes_of_type(flow, "uipath.human-in-the-loop.quick-form")
+    assert len(quick_forms) == 1
+    quick_form = quick_forms[0]
+
+    normalize_edges = outgoing(flow, normalize["id"], "success")
+    assert len(normalize_edges) == 1
+    assert normalize_edges[0]["targetNodeId"] == quick_form["id"]
+    assert normalize_edges[0]["targetPort"] == "input"
+
+    update_nodes = [
+        node
+        for node in flow["nodes"]
+        if node["type"].startswith("uipath.core.api-workflow.")
+    ]
+    assert len(update_nodes) == 1
+    update = update_nodes[0]
+
+    outlook_nodes = [
+        node
+        for node in flow["nodes"]
+        if node["type"].startswith("uipath.connector.")
+        and "uipath-microsoft-outlook365" in node["type"].casefold()
+        and "send-email" in node["type"].casefold()
+    ]
+    assert len(outlook_nodes) == 1
+    outlook = outlook_nodes[0]
+
+    needs_rework = end_with_status(flow, "needs_rework")
+    resolved = end_with_status(flow, "resolved")
+    ends = nodes_of_type(flow, "core.control.end")
+    assert len(ends) == 3
+    assert {
+        end["id"] for end in ends
+    } == {
+        end_with_status(flow, "needs_manual_triage")["id"],
+        needs_rework["id"],
+        resolved["id"],
+    }
+
+    completed_edges = outgoing(flow, quick_form["id"], "completed")
+    assert len(completed_edges) == 1
+    completed_edge = completed_edges[0]
+    assert completed_edge["targetPort"] == "input"
+    approval_decision = nodes[completed_edge["targetNodeId"]]
+    assert approval_decision["type"] == "core.logic.decision"
+
+    rejection_edges = outgoing(flow, approval_decision["id"], "false")
+    assert len(rejection_edges) == 1
+    rejection_edge = rejection_edges[0]
+    assert rejection_edge["targetNodeId"] == needs_rework["id"]
+    rejection_reachable = reachable(flow, rejection_edge["targetNodeId"])
+    assert {
+        node_id for node_id in rejection_reachable if nodes[node_id]["type"] == "core.control.end"
+    } == {needs_rework["id"]}
+    assert update["id"] not in rejection_reachable
+    assert outlook["id"] not in rejection_reachable
+
+    approval_edges = outgoing(flow, approval_decision["id"], "true")
+    assert len(approval_edges) == 1
+    approval_edge = approval_edges[0]
+    assert approval_edge["targetNodeId"] == update["id"]
+    approval_reachable = reachable(flow, approval_edge["targetNodeId"])
+    assert {
+        node_id for node_id in approval_reachable if nodes[node_id]["type"] == "core.control.end"
+    } == {resolved["id"]}
+    assert {node_id for node_id in approval_reachable if node_id == update["id"]} == {
+        update["id"]
+    }
+    assert {node_id for node_id in approval_reachable if node_id == outlook["id"]} == {
+        outlook["id"]
+    }
+
+    update_edges = outgoing(flow, update["id"])
+    assert len(update_edges) == 1
+    assert update_edges[0]["targetNodeId"] == outlook["id"]
+    outlook_edges = outgoing(flow, outlook["id"])
+    assert len(outlook_edges) == 1
+    assert outlook_edges[0]["targetNodeId"] == resolved["id"]
+
+    expected_update_bindings = {
+        "caseId": f"=js:$vars.{normalize['id']}.output.caseId",
+        "disputeType": f"=js:$vars.{normalize['id']}.output.disputeType",
+        "actionCode": f"=js:$vars.{normalize['id']}.output.actionCode",
+        "adjustmentAmount": f"=js:$vars.{normalize['id']}.output.adjustmentAmount",
+        "approvedBy": f"=js:$vars.{quick_form['id']}.output.approvedBy",
+        "approvalComments": f"=js:$vars.{quick_form['id']}.output.approvalComments",
+    }
+    for input_name, expected_binding in expected_update_bindings.items():
+        configured_values = values_named(update, input_name)
+        assert configured_values, f"missing MockUpdateDispute input {input_name}"
+        assert expected_binding in json.dumps(configured_values)
+
+    start = nodes_of_type(flow, "core.trigger.manual")[0]
+    recipient_binding = f"=js:$vars.{start['id']}.output.recipientEmail"
+    to_values = values_named(outlook, "message.toRecipients")
+    assert to_values
+    assert bindings_in(to_values) == [recipient_binding]
+    assert "caseid" not in json.dumps(to_values).casefold()
+    assert "customer" not in json.dumps(to_values).casefold()
+
+    subject_values = values_named(outlook, "message.subject")
+    body_values = values_named(outlook, "message.body.content")
+    assert subject_values
+    assert body_values
+    assert bindings_in(subject_values) == [
+        f"=js:$vars.{normalize['id']}.output.emailSubject"
+    ]
+    assert bindings_in(body_values) == [f"=js:$vars.{normalize['id']}.output.emailBody"]
+    assert values_named(outlook, "saveAsDraft") == [False]
+
+    resolved_outputs = resolved["outputs"]
+    assert "true" in json.dumps(resolved_outputs["emailSent"]).casefold()
+    assert f"=js:$vars.{update['id']}.output" in json.dumps(
+        resolved_outputs["updateResult"]
+    )
+
+    rework_outputs = needs_rework["outputs"]
+    assert "false" in json.dumps(rework_outputs["emailSent"]).casefold()
+    assert "null" in json.dumps(rework_outputs["updateResult"]).casefold()
+    assert f"=js:$vars.{quick_form['id']}.output.approvalComments" in json.dumps(
+        rework_outputs["approvalComments"]
+    )
+
+    for node in flow["nodes"]:
+        node_text = f"{node['type']} {node.get('display', {}).get('label', '')}".casefold()
+        assert "retry" not in node_text
+        assert "catch" not in node_text
+        assert "technical error" not in node_text
 
 
 def test_agent_resources_registry_bindings_and_generated_variables_are_complete():
@@ -467,7 +647,7 @@ def test_agent_resources_registry_bindings_and_generated_variables_are_complete(
         (expected_resources["lookupPaymentTool"][0], "1.0.0")
     ]
     assert api_definition["model"]["bindings"]["resourceKey"] == api_resource_key
-    assert flow["bindings"] == [
+    expected_lookup_bindings = [
         {
             "id": "bLookupPaymentName",
             "name": "name",
@@ -489,6 +669,46 @@ def test_agent_resources_registry_bindings_and_generated_variables_are_complete(
             "resourceSubType": "Api",
         },
     ]
+    mock_update_key = "e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd"
+    expected_mock_update_bindings = [
+        {
+            "id": "bMockUpdateDisputeName",
+            "name": "name",
+            "type": "string",
+            "resource": "process",
+            "resourceKey": mock_update_key,
+            "default": "MockUpdateDispute",
+            "propertyAttribute": "name",
+            "resourceSubType": "Api",
+        },
+        {
+            "id": "bMockUpdateDisputeFolderPath",
+            "name": "folderPath",
+            "type": "string",
+            "resource": "process",
+            "resourceKey": mock_update_key,
+            "default": "solution_folder",
+            "propertyAttribute": "folderPath",
+            "resourceSubType": "Api",
+        },
+    ]
+    assert [
+        binding for binding in flow["bindings"] if binding["resource"] == "process"
+    ] == expected_lookup_bindings + expected_mock_update_bindings
+
+    outlook_bindings = [
+        binding for binding in flow["bindings"] if binding["resource"] == "connection"
+    ]
+    assert len(outlook_bindings) == 2
+    assert {binding["propertyAttribute"] for binding in outlook_bindings} == {
+        "ConnectionId",
+        "FolderKey",
+    }
+    assert {binding["resourceKey"] for binding in outlook_bindings} == {
+        binding["default"]
+        for binding in outlook_bindings
+        if binding["propertyAttribute"] == "ConnectionId"
+    }
 
     node_variables = flow["variables"]["nodes"]
     assert len({variable["id"] for variable in node_variables}) == len(node_variables)

@@ -1,7 +1,7 @@
 {
   "folderPath": "JD_Demos/demos",
   "outlookConnection": "james.dickson@uipath.com",
-  "connectionKey": "",
+  "connectionKey": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
   "resources": [
     {
       "source": "knowledge/triage/ar-dispute-taxonomy-and-examples.txt",
