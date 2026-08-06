@@ -1,0 +1,34 @@
+Payment misapplication resolution playbook
+
+Required evidence
+
+Obtain the payment reference, payment amount, payment date, customer account, remittance, and intended target invoice. Obtain source-system evidence that identifies the currently applied invoice, target invoice, application status, remittance match, and recommended action. A customer's statement is a lead, not proof of the payment-system application.
+
+Matching rules
+
+Match the payment reference exactly to the source-system record. Confirm that the payment amount agrees with the remittance and that the remittance identifies the same customer account and target invoice. Confirm that the reported payment date is plausible for the source record. Any conflicting amount, reference, account, or remittance requires investigation rather than reallocation.
+
+Controls before reallocation
+
+Reallocation may be recommended only when all of the following are true: the payment amount matches; the payment reference matches; the remittance matches; the wrong applied invoice is identified; the intended target invoice is identified; and the source evidence reports MISAPPLIED. Confirm that the applied invoice and target invoice are different, retain the source-system evidence in the case, and require collector approval before execution. Do not recommend reallocation when any required evidence is absent or inconsistent.
+
+Resolution steps
+
+1. Validate the customer, payment reference, amount, date, and remittance against the source evidence.
+2. Confirm the currently applied invoice, intended target invoice, and MISAPPLIED status.
+3. Record the proposed action as REALLOCATE_PAYMENT with no financial adjustment.
+4. Present the evidence and recommendation for collector approval.
+5. After approval, move the payment from the wrong invoice to the target invoice and verify the resulting target balance.
+6. Record the update receipt and the final balances in the case audit trail.
+
+Customer communication
+
+After approved reallocation and balance verification, tell the customer which payment reference was moved to which target invoice and state the verified remaining balance. Do not claim completion before the update succeeds. If evidence or approval is incomplete, say that the payment is under review and avoid promising a posting date.
+
+Worked example 1
+
+AR-PAY-003 is a fictional case for Summit Medical Distribution, customer account SUMMIT-4402. The customer reports payment reference PAY-77821 for $36,800 against target invoice INV-30915. The approved lookup evidence reports paymentAmount 36800, paymentDate 2026-07-02, appliedInvoiceNumber INV-30909, targetInvoiceNumber INV-30915, applicationStatus MISAPPLIED, matchedRemittance true, recommendedAction REALLOCATE_PAYMENT, and sourceSystem MockCashApplication. Because the amount, payment reference, and remittance match, both invoices are identified, and the source status is MISAPPLIED, recommend collector-approved reallocation from INV-30909 to INV-30915. After execution, verify and communicate that INV-30915 has a zero balance.
+
+Worked example 2
+
+AR-PAY-017 is a fictional neutral case for Harbor Clinical Supply, customer account HARBOR-7710. Payment reference PAY-91344 for $12,450 is supported by matching remittance for target invoice INV-88042. The cash-application record identifies INV-88031 as the wrong applied invoice, INV-88042 as the target invoice, and the application status as MISAPPLIED. With all matching and identification controls satisfied, recommend collector-approved reallocation from INV-88031 to INV-88042, then verify the target balance before customer communication.

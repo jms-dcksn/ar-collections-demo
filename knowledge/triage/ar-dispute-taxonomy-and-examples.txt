@@ -1,0 +1,65 @@
+AR dispute taxonomy and examples
+
+Classification rules
+
+Return po_mismatch only when invoice and purchase-order price, quantity, tax, or authorized amount conflict.
+Return missing_pod only when payment is blocked because delivery evidence is requested or missing.
+Return payment_misapplication only when the customer reports payment but the target invoice remains open because application is absent or incorrect.
+Return unsupported when the evidence does not establish one supported category.
+Return unsupported and request manual triage when confidence is below 0.75.
+Never infer payment-system application details from a customer's statement alone.
+
+po_mismatch
+
+Definition
+A purchase-order mismatch is a specific conflict between an invoice and the governing purchase order in price, quantity, tax, or authorized amount.
+
+Positive signals
+The invoice and purchase order are both identified, and their comparable values show a specific difference. The customer may cite an unauthorized charge, excess billed quantity, wrong unit price, tax difference, or invoice total above the authorized amount.
+
+Exclusions
+Do not use po_mismatch for a general claim that a balance looks wrong without purchase-order evidence. Do not use it when the only blocker is missing delivery evidence or when a reported payment was applied incorrectly.
+
+Example 1
+AR-PO-001: Northstar Manufacturing disputes INV-10471 because the invoice amount is $48,750 while the purchase order authorizes $47,250. The documented $1,500 conflict supports po_mismatch.
+
+Example 2
+Fictional neutral pattern: An invoice bills 120 units while its purchase order authorizes 100 units at the same unit price. The documented quantity conflict supports po_mismatch.
+
+missing_pod
+
+Definition
+A missing proof-of-delivery dispute exists when payment is blocked because the customer requests delivery evidence or the expected proof of delivery is absent from the case packet.
+
+Positive signals
+The customer explicitly requests proof of delivery, denies having delivery documentation, or states that payment will remain on hold until delivery date, recipient, signature, shipment, or quantity evidence is supplied.
+
+Exclusions
+Do not use missing_pod for a price or quantity conflict against a purchase order. Do not use it merely because a shipment is mentioned when the actual blocker is a reported payment that remains unapplied.
+
+Example 1
+AR-POD-002: Riverbend Retail is holding INV-20482 pending delivery evidence. The synthetic record shows delivery on June 18, 2026, signed by M. Chen, with shipment and invoice quantities matching. The request for that evidence supports missing_pod.
+
+Example 2
+Fictional neutral pattern: A customer says an invoice can be released only after receiving the carrier delivery date and recipient signature. The explicit delivery-evidence request supports missing_pod.
+
+payment_misapplication
+
+Definition
+A payment misapplication dispute exists when the customer reports a payment, the intended target invoice remains open, and payment-system evidence establishes that application is absent or incorrect.
+
+Positive signals
+The case identifies a payment reference and target invoice, while trusted cash-application evidence shows the payment is unapplied or applied to a different invoice. A matching payment amount and remittance strengthen the classification.
+
+Exclusions
+Do not infer payment-system application details from the customer's statement alone. Do not use payment_misapplication when no payment is reported, the target invoice is not identified, or the only supported conflict is with a purchase order or delivery evidence.
+
+Example 1
+AR-PAY-003: Summit Medical Distribution reports a $36,800 payment under PAY-77821 for target invoice INV-30915. The customer report alone is insufficient; payment-system evidence that the payment was applied to another invoice supports payment_misapplication.
+
+Example 2
+Fictional neutral pattern: A customer supplies payment reference PAY-54190 and remittance for INV-55230. A trusted lookup shows the matching payment on INV-55211 while INV-55230 remains open. The incorrect application supports payment_misapplication.
+
+Ambiguous and unsupported guidance
+
+AR-AMB-004 says only that the balance does not look right and asks for investigation. It contains no discriminating purchase-order, delivery-evidence, or payment-application facts, so return unsupported and request manual triage. Apply the same result whenever evidence does not establish exactly one supported category or confidence is below 0.75.
