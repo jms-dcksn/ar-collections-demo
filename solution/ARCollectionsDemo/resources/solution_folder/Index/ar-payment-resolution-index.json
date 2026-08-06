@@ -1,0 +1,38 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "ar-payment-resolution-index",
+    "kind": "index",
+    "apiVersion": "ecs.uipath.com/v2",
+    "isOverridable": true,
+    "dependencies": [
+      {
+        "kind": "Bucket",
+        "name": "ar-payment-resolution-kb"
+      }
+    ],
+    "runtimeDependencies": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "name": "ar-payment-resolution-index",
+      "description": "",
+      "storageBucketReference": {
+        "name": "ar-payment-resolution-kb",
+        "key": "8bdec5fc-9b40-4053-b879-a74ab933b9bc",
+        "folderKey": "67fc19c3-e3a7-4523-aac0-fa63ea83d261"
+      },
+      "fileNameGlob": "All",
+      "dataSourceType": "StorageBucket",
+      "includeSubfolders": true,
+      "ingestionType": "Advanced",
+      "encrypted": false
+    },
+    "locks": [],
+    "key": "469965c2-8382-4521-9031-08def39d8059",
+    "files": []
+  }
+}

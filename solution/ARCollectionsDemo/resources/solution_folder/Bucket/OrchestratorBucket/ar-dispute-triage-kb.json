@@ -1,10 +1,10 @@
 {
   "docVersion": "1.0.0",
   "resource": {
-    "name": "ARCollectionsDisputeResolution",
-    "kind": "package",
+    "name": "ar-dispute-triage-kb",
+    "kind": "bucket",
+    "type": "orchestratorBucket",
     "apiVersion": "orchestrator.uipath.com/v1",
-    "projectKey": "0db80011-c481-493c-b4da-aa6944b3373b",
     "isOverridable": true,
     "dependencies": [],
     "runtimeDependencies": [],
@@ -14,10 +14,13 @@
       }
     ],
     "spec": {
-      "name": "ARCollectionsDisputeResolution"
+      "type": "Orchestrator",
+      "name": "ar-dispute-triage-kb",
+      "description": "AR dispute taxonomy and examples for the Maestro demo",
+      "tags": []
     },
     "locks": [],
-    "key": "25d0ab5e-5146-40c6-8e9f-2153cec62616",
+    "key": "9ebe576c-c8b9-4e82-bd47-32be23a1cdc0",
     "files": []
   }
 }

@@ -1,0 +1,26 @@
+{
+  "$resourceType": "context",
+  "id": "deb897d4-bdfb-4ba0-8cbc-63b7d36bb6d3",
+  "referenceKey": null,
+  "isEnabled": true,
+  "name": "AR Dispute Triage Taxonomy",
+  "description": "Classification grounding for supported AR dispute categories and examples.",
+  "contextType": "index",
+  "folderPath": "JD_Demos/demos",
+  "indexName": "ar-dispute-triage-index",
+  "settings": {
+    "retrievalMode": "semantic",
+    "query": {
+      "variant": "dynamic",
+      "description": "Retrieve taxonomy categories and examples for dispute classification."
+    },
+    "folderPathPrefix": {
+      "variant": "static"
+    },
+    "fileExtension": {
+      "value": "All"
+    },
+    "threshold": 0,
+    "resultCount": 5
+  }
+}

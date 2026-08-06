@@ -1,0 +1,92 @@
+{
+  "$resourceType": "tool",
+  "name": "LookupPaymentApplication",
+  "description": "A read-only lookup for cash-application evidence used to verify a suspected payment misapplication.",
+  "location": "solution",
+  "type": "api",
+  "inputSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "caseId": {
+        "type": "string"
+      },
+      "customerAccountId": {
+        "type": "string"
+      },
+      "invoiceNumber": {
+        "type": "string"
+      },
+      "paymentReference": {
+        "type": "string"
+      },
+      "guardrails": {
+        "type": "array"
+      }
+    },
+    "required": [
+      "caseId",
+      "customerAccountId",
+      "invoiceNumber",
+      "paymentReference",
+      "guardrails"
+    ]
+  },
+  "outputSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "paymentReference": {
+        "type": "string"
+      },
+      "paymentAmount": {
+        "type": "number"
+      },
+      "paymentDate": {
+        "type": "string"
+      },
+      "appliedInvoiceNumber": {
+        "type": "string"
+      },
+      "targetInvoiceNumber": {
+        "type": "string"
+      },
+      "applicationStatus": {
+        "type": "string"
+      },
+      "matchedRemittance": {
+        "type": "boolean"
+      },
+      "recommendedAction": {
+        "type": "string"
+      },
+      "sourceSystem": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "paymentReference",
+      "paymentAmount",
+      "paymentDate",
+      "appliedInvoiceNumber",
+      "targetInvoiceNumber",
+      "applicationStatus",
+      "matchedRemittance",
+      "recommendedAction",
+      "sourceSystem"
+    ]
+  },
+  "settings": {},
+  "guardrail": {
+    "policies": []
+  },
+  "properties": {
+    "processName": "LookupPaymentApplication",
+    "folderPath": "solution_folder",
+    "exampleCalls": []
+  },
+  "id": "01605eeb-d428-49af-81b4-0d5ca844af2f",
+  "referenceKey": "cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
+  "isEnabled": true,
+  "argumentProperties": {}
+}

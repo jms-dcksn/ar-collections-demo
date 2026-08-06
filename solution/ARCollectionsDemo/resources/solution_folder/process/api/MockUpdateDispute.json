@@ -6,6 +6,7 @@
     "type": "api",
     "apiVersion": "orchestrator.uipath.com/v1",
     "projectKey": "4915ce21-658b-4816-85ef-8fb3bf5c8f99",
+    "isOverridable": true,
     "dependencies": [
       {
         "kind": "package",
