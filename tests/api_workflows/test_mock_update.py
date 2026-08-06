@@ -1,11 +1,17 @@
+import importlib.util
 import json
+import re
+import subprocess
 from pathlib import Path
+
+import pytest
 
 
 ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW_PATH = (
     ROOT / "solution" / "ARCollectionsDemo" / "MockUpdateDispute" / "Workflow.json"
 )
+VERIFIER_PATH = Path(__file__).with_name("verify_mock_update.py")
 
 EXPECTED_INPUT_TYPES = {
     "caseId": "string",
@@ -28,6 +34,7 @@ FORBIDDEN_RESOURCE_KEYS = {
     "savedResourceSelections",
     "solutionResourceKey",
 }
+APPROVED_ACTION_CODES = {"ISSUE_CREDIT", "PROVIDE_POD", "REALLOCATE_PAYMENT"}
 
 
 def load_workflow() -> dict:
@@ -53,6 +60,13 @@ def schema_types(workflow: dict, contract: str) -> dict[str, str]:
 def required_fields(workflow: dict, contract: str) -> set[str]:
     schema = workflow.get(contract, {}).get("schema", {}).get("document", {})
     return set(schema.get("required", []))
+
+
+def load_verifier_module():
+    spec = importlib.util.spec_from_file_location("verify_mock_update_under_test", VERIFIER_PATH)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def test_mock_update_exposes_exact_input_and_output_contracts():
@@ -86,3 +100,64 @@ def test_mock_update_contains_no_connector_or_network_resource_binding():
             continue
         assert "call" not in node
         assert not (FORBIDDEN_RESOURCE_KEYS & node.keys())
+
+
+def test_mock_update_protects_action_validation_and_receipt_construction():
+    workflow = load_workflow()
+    js_activities = [
+        node
+        for node in walk_json(workflow)
+        if isinstance(node, dict)
+        and node.get("metadata", {}).get("activityType") == "JsInvoke"
+    ]
+
+    assert len(js_activities) == 1
+    script = js_activities[0]["run"]["script"]["code"]
+    action_set = re.search(r"new Set\(\[(.*?)\]\)", script, re.DOTALL)
+    assert action_set, "JsInvoke must declare the approved action-code set"
+    declared_actions = re.findall(r"['\"]([A-Z_]+)['\"]", action_set.group(1))
+
+    assert len(declared_actions) == len(APPROVED_ACTION_CODES)
+    assert set(declared_actions) == APPROVED_ACTION_CODES
+    assert "const { caseId, actionCode } = $workflow.input;" in script
+    assert re.search(
+        r"if \(!allowedActionCodes\.has\(actionCode\)\) \{\s*"
+        r"throw new Error\(`MockUpdateDispute does not support actionCode "
+        r"\$\{actionCode\}\.`\);\s*\}",
+        script,
+    )
+    assert "`UPD-${caseId}-${actionCode}`" in script
+    assert "status: 'UPDATED'" in script
+    assert "updatedAt: '2026-08-06T12:00:00Z'" in script
+    assert "`Recorded ${actionCode} for ${caseId} in MockARDisputeSystem.`" in script
+
+
+def test_verifier_rejects_unexpected_business_output_fields():
+    verifier = load_verifier_module()
+    payload = {
+        "UpdateId": "UPD-AR-PAY-003-REALLOCATE_PAYMENT",
+        "Status": "UPDATED",
+        "UpdatedAt": "2026-08-06T12:00:00Z",
+        "Message": "Recorded REALLOCATE_PAYMENT for AR-PAY-003 in MockARDisputeSystem.",
+        "UnexpectedField": "must not be ignored",
+    }
+
+    assert verifier.find_business_output(
+        payload, {"updateId", "status", "updatedAt", "message"}
+    ) is None
+
+
+def test_verifier_bounds_runtime_and_reports_timeout_concisely(monkeypatch):
+    verifier = load_verifier_module()
+
+    def raise_timeout(command, **kwargs):
+        assert kwargs["timeout"] == 60
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+
+    monkeypatch.setattr(verifier.subprocess, "run", raise_timeout)
+
+    with pytest.raises(
+        AssertionError,
+        match="MockUpdateDispute verification timed out after 60 seconds",
+    ):
+        verifier.main()
