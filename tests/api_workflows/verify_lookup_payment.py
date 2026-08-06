@@ -37,6 +37,7 @@ completed = subprocess.run(
     check=True,
     capture_output=True,
     text=True,
+    timeout=120,
 )
 
 cli_response = json.loads(completed.stdout)
@@ -51,6 +52,20 @@ for wrapper_name in ("Data", "data", "Output", "output", "Response", "response")
 
 if isinstance(actual, str):
     actual = json.loads(actual)
+
+if not isinstance(actual, dict):
+    raise AssertionError(
+        f"LookupPaymentApplication returned {type(actual).__name__}, expected object"
+    )
+
+actual_keys = set(actual)
+expected_keys = set(expected)
+if actual_keys != expected_keys:
+    raise AssertionError(
+        "LookupPaymentApplication output keys mismatch:\n"
+        f"missing={sorted(expected_keys - actual_keys)}\n"
+        f"unexpected={sorted(actual_keys - expected_keys)}"
+    )
 
 if actual != expected:
     raise AssertionError(
