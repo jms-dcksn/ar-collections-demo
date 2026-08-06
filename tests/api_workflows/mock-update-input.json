@@ -1,0 +1,8 @@
+{
+  "caseId": "AR-PAY-003",
+  "disputeType": "payment_misapplication",
+  "actionCode": "REALLOCATE_PAYMENT",
+  "adjustmentAmount": 0,
+  "approvedBy": "Demo Collector",
+  "approvalComments": "Approved during demo verification."
+}

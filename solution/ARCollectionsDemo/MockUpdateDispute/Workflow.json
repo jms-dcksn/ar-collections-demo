@@ -11,6 +11,72 @@
       "variables": []
     }
   },
+  "input": {
+    "schema": {
+      "format": "json",
+      "document": {
+        "type": "object",
+        "properties": {
+          "caseId": {
+            "type": "string"
+          },
+          "disputeType": {
+            "type": "string"
+          },
+          "actionCode": {
+            "type": "string"
+          },
+          "adjustmentAmount": {
+            "type": "number"
+          },
+          "approvedBy": {
+            "type": "string"
+          },
+          "approvalComments": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "caseId",
+          "disputeType",
+          "actionCode",
+          "adjustmentAmount",
+          "approvedBy",
+          "approvalComments"
+        ],
+        "title": "Inputs"
+      }
+    }
+  },
+  "output": {
+    "schema": {
+      "format": "json",
+      "document": {
+        "type": "object",
+        "properties": {
+          "updateId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "updateId",
+          "status",
+          "updatedAt",
+          "message"
+        ],
+        "title": "Outputs"
+      }
+    }
+  },
   "do": [
     {
       "Sequence_1": {
@@ -29,6 +95,40 @@
                 "displayName": "Workflow start",
                 "fullName": "Assign",
                 "isTransparent": true
+              }
+            }
+          },
+          {
+            "Javascript_1": {
+              "run": {
+                "script": {
+                  "code": "const { caseId, actionCode } = $workflow.input;\nconst allowedActionCodes = new Set(['ISSUE_CREDIT', 'PROVIDE_POD', 'REALLOCATE_PAYMENT']);\nif (!allowedActionCodes.has(actionCode)) {\n  throw new Error(`MockUpdateDispute does not support actionCode ${actionCode}.`);\n}\nreturn {\n  updateId: `UPD-${caseId}-${actionCode}`,\n  status: 'UPDATED',\n  updatedAt: '2026-08-06T12:00:00Z',\n  message: `Recorded ${actionCode} for ${caseId} in MockARDisputeSystem.`\n};",
+                  "language": "javascript",
+                  "arguments": "${{ \"$context\": $context, \"$workflow\": $workflow, \"$input\": $input }}"
+                }
+              },
+              "export": {
+                "as": "{ ...$context, outputs: { ...$context?.outputs, \"Javascript_1\": $output } }"
+              },
+              "metadata": {
+                "activityType": "JsInvoke",
+                "displayName": "Create deterministic update receipt",
+                "fullName": "JsInvoke"
+              }
+            }
+          },
+          {
+            "Response_1": {
+              "response": "${$context.outputs.Javascript_1}",
+              "markJobAsFailed": false,
+              "then": "end",
+              "export": {
+                "as": "{ ...$context, outputs: { ...$context?.outputs, \"Response_1\": $output } }"
+              },
+              "metadata": {
+                "activityType": "Response",
+                "displayName": "Return update receipt",
+                "fullName": "Response"
               }
             }
           }
