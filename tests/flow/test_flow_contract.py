@@ -1,0 +1,521 @@
+import json
+import re
+from collections import defaultdict, deque
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[2]
+FLOW_PATH = (
+    ROOT
+    / "solution/ARCollectionsDemo/ARCollectionsDisputeResolution"
+    / "ARCollectionsDisputeResolution.flow"
+)
+AGENT_MAPPING_PATH = ROOT / "config/agent-projects.json"
+
+SUPPORTED_ROUTES = {
+    "po_mismatch": "poMismatch",
+    "missing_pod": "missingPod",
+    "payment_misapplication": "paymentMisapplication",
+}
+PROPOSAL_FIELDS = {
+    "caseId": "string",
+    "disputeType": "string",
+    "evidenceSummary": "string",
+    "rootCause": "string",
+    "recommendedAction": "string",
+    "actionCode": "string",
+    "adjustmentAmount": "number",
+    "confidence": "number",
+    "approvalSummary": "string",
+    "emailSubject": "string",
+    "emailBody": "string",
+    "resourcesUsed": "string",
+}
+RESULT_FIELDS = {
+    "status",
+    "caseId",
+    "disputeType",
+    "triageRationale",
+    "triageConfidence",
+    "recommendedAction",
+    "approvalDecision",
+    "approvalComments",
+    "updateResult",
+    "emailSent",
+    "resourcesUsed",
+    "auditSummary",
+}
+COMMON_CASE_FIELDS = {
+    "caseId",
+    "customerName",
+    "customerAccountId",
+    "invoiceNumber",
+    "outstandingBalance",
+    "customerReason",
+    "openedDate",
+    "evidence",
+}
+ARTIFACT_PORTS = {"context", "tool", "escalation", "memory"}
+
+
+def load_json(path: Path):
+    assert path.is_file(), f"missing required JSON file: {path}"
+    return json.loads(path.read_text())
+
+
+def load_contract():
+    flow = load_json(FLOW_PATH)
+    mapping = load_json(AGENT_MAPPING_PATH)["agents"]
+    nodes = {node["id"]: node for node in flow["nodes"]}
+    assert len(nodes) == len(flow["nodes"]), "Flow node IDs must be unique"
+    return flow, mapping, nodes
+
+
+def nodes_of_type(flow, node_type):
+    return [node for node in flow["nodes"] if node["type"] == node_type]
+
+
+def node_with_label(flow, label):
+    matches = [
+        node
+        for node in flow["nodes"]
+        if node.get("display", {}).get("label", "").casefold() == label.casefold()
+    ]
+    assert len(matches) == 1, f"expected one node labelled {label!r}, got {len(matches)}"
+    return matches[0]
+
+
+def sequential_edges(flow):
+    return [
+        edge
+        for edge in flow["edges"]
+        if edge.get("sourcePort") not in ARTIFACT_PORTS
+    ]
+
+
+def adjacency(flow):
+    graph = defaultdict(set)
+    for edge in sequential_edges(flow):
+        graph[edge["sourceNodeId"]].add(edge["targetNodeId"])
+    return graph
+
+
+def reachable(flow, start_node_id):
+    graph = adjacency(flow)
+    seen = set()
+    pending = deque([start_node_id])
+    while pending:
+        node_id = pending.popleft()
+        if node_id in seen:
+            continue
+        seen.add(node_id)
+        pending.extend(graph[node_id] - seen)
+    return seen
+
+
+def outgoing(flow, node_id, source_port=None):
+    edges = [
+        edge
+        for edge in sequential_edges(flow)
+        if edge["sourceNodeId"] == node_id
+    ]
+    if source_port is not None:
+        edges = [edge for edge in edges if edge["sourcePort"] == source_port]
+    return edges
+
+
+def compact(text):
+    return re.sub(r"\s+", "", text).casefold()
+
+
+def fixture_sections(script):
+    positions = []
+    for case_id in ("AR-PO-001", "AR-POD-002", "AR-PAY-003", "AR-AMB-004"):
+        assert case_id in script
+        positions.append((script.index(case_id), case_id))
+    positions.sort()
+    sections = {}
+    for index, (start, case_id) in enumerate(positions):
+        end = positions[index + 1][0] if index + 1 < len(positions) else len(script)
+        sections[case_id] = script[start:end]
+    return sections
+
+
+def string_array_sets(script):
+    arrays = []
+    for body in re.findall(r"\[([^\[\]]*)\]", script, flags=re.DOTALL):
+        strings = re.findall(r"['\"]([^'\"]+)['\"]", body)
+        if strings:
+            arrays.append(strings)
+    return arrays
+
+
+def test_start_contract_and_deterministic_loader_cover_all_approved_fixtures():
+    flow, _, _ = load_contract()
+    starts = nodes_of_type(flow, "core.trigger.manual")
+    assert len(starts) == 1
+    start = starts[0]
+
+    globals_ = flow.get("variables", {}).get("globals", [])
+    start_inputs = {
+        variable["id"]: variable
+        for variable in globals_
+        if variable.get("direction") in {"in", "inout"}
+    }
+    assert set(start_inputs) == {"caseId", "recipientEmail"}
+    for variable in start_inputs.values():
+        assert variable["type"] == "string"
+        assert variable["triggerNodeId"] == start["id"]
+
+    loader = node_with_label(flow, "Load Sample Case")
+    assert loader["type"] == "core.action.script"
+    script = loader["inputs"]["script"]
+    sections = fixture_sections(script)
+    for section in sections.values():
+        for field in COMMON_CASE_FIELDS:
+            assert field.casefold() in section.casefold()
+
+    expected_values = {
+        "AR-PO-001": (
+            "Northstar Manufacturing",
+            "NORTHSTAR-1701",
+            "INV-10471",
+            "48750",
+            "2026-07-07",
+            "invoiceAmount",
+            "poAuthorizedAmount",
+            "47250",
+            "difference",
+            "1500",
+        ),
+        "AR-POD-002": (
+            "Riverbend Retail",
+            "RIVERBEND-2904",
+            "INV-20482",
+            "22400",
+            "2026-07-10",
+            "2026-06-18",
+            "M. Chen",
+            "quantitiesMatch",
+            "true",
+        ),
+        "AR-PAY-003": (
+            "Summit Medical Distribution",
+            "SUMMIT-4402",
+            "INV-30915",
+            "36800",
+            "2026-07-14",
+            "reportedPayment",
+            "PAY-77821",
+        ),
+        "AR-AMB-004": (
+            "Lakeshore Components",
+            "INV-40102",
+            "12800",
+            "The balance does not look right; please investigate",
+        ),
+    }
+    for case_id, values in expected_values.items():
+        section = sections[case_id].casefold()
+        for value in values:
+            assert value.casefold() in section
+
+    payment_section = sections["AR-PAY-003"].casefold()
+    assert "applicationstatus" not in payment_section
+    assert "appliedinvoicenumber" not in payment_section
+    assert "evidence:{}" in compact(sections["AR-AMB-004"])
+    assert "throw" in script.casefold()
+    assert "caseid" in script.casefold()
+
+    start_to_loader = outgoing(flow, start["id"], "output")
+    assert len(start_to_loader) == 1
+    assert start_to_loader[0]["targetNodeId"] == loader["id"]
+    assert start_to_loader[0]["targetPort"] == "input"
+
+
+def test_flow_uses_all_mapped_inline_agents_with_exact_runtime_contracts():
+    flow, mapping, _ = load_contract()
+    agents = nodes_of_type(flow, "uipath.agent.autonomous")
+    by_source = {node.get("inputs", {}).get("source"): node for node in agents}
+    assert len(agents) == 4
+    assert set(by_source) == set(mapping.values())
+
+    triage = by_source[mapping["triage"]]
+    triage_inputs = {
+        item["id"]: item for item in triage["inputs"]["agentInputVariables"]
+    }
+    assert set(triage_inputs) == {"loadSampleCase__output__output"}
+    assert triage_inputs["loadSampleCase__output__output"]["type"] == "object"
+    assert (
+        triage_inputs["loadSampleCase__output__output"]["binding"]
+        == "=$vars.loadSampleCase.output"
+    )
+    assert {item["id"]: item["type"] for item in triage["inputs"]["agentOutputVariables"]} == {
+        "disputeType": "string",
+        "rationale": "string",
+        "confidence": "number",
+    }
+
+    specialist_inputs = {
+        "loadSampleCase__output__output": ("object", "=$vars.loadSampleCase.output"),
+        "triageAgent__output__disputeType": (
+            "string",
+            "=$vars.triageAgent.output.disputeType",
+        ),
+        "triageAgent__output__rationale": (
+            "string",
+            "=$vars.triageAgent.output.rationale",
+        ),
+        "triageAgent__output__confidence": (
+            "number",
+            "=$vars.triageAgent.output.confidence",
+        ),
+    }
+    for logical_name in SUPPORTED_ROUTES.values():
+        specialist = by_source[mapping[logical_name]]
+        inputs = {
+            item["id"]: (item["type"], item["binding"])
+            for item in specialist["inputs"]["agentInputVariables"]
+        }
+        outputs = {
+            item["id"]: item["type"]
+            for item in specialist["inputs"]["agentOutputVariables"]
+        }
+        assert inputs == specialist_inputs
+        assert outputs == PROPOSAL_FIELDS
+
+
+def test_supported_decision_and_switch_route_exclusively_to_one_specialist():
+    flow, mapping, nodes = load_contract()
+    decisions = nodes_of_type(flow, "core.logic.decision")
+    switches = nodes_of_type(flow, "core.logic.switch")
+    assert len(decisions) == 1
+    assert len(switches) == 1
+    decision = decisions[0]
+    switch = switches[0]
+
+    expression = compact(decision["inputs"]["expression"])
+    assert "$vars.triageagent.output.confidence" in expression
+    assert re.search(r"confidence>=0?\.75", expression)
+    assert "$vars.triageagent.output.disputetype" in expression
+    assert "&&" in expression
+    for dispute_type in SUPPORTED_ROUTES:
+        assert dispute_type in expression
+    assert "unsupported" not in expression
+
+    true_edges = outgoing(flow, decision["id"], "true")
+    assert len(true_edges) == 1
+    assert true_edges[0]["targetNodeId"] == switch["id"]
+    assert true_edges[0]["targetPort"] == "input"
+
+    cases = switch["inputs"]["cases"]
+    assert len(cases) == 3
+    assert len({case["id"] for case in cases}) == 3
+    route_cases = {}
+    for case in cases:
+        case_expression = compact(case["expression"])
+        assert "$vars.triageagent.output.disputetype" in case_expression
+        matched = [route for route in SUPPORTED_ROUTES if route in case_expression]
+        assert len(matched) == 1
+        route_cases[matched[0]] = case
+    assert set(route_cases) == set(SUPPORTED_ROUTES)
+
+    switch_edges = outgoing(flow, switch["id"])
+    assert {edge["sourcePort"] for edge in switch_edges} == {
+        f"case-{case['id']}" for case in cases
+    }
+
+    specialist_ids = {
+        logical_name: next(
+            node["id"]
+            for node in flow["nodes"]
+            if node.get("inputs", {}).get("source") == mapping[logical_name]
+        )
+        for logical_name in SUPPORTED_ROUTES.values()
+    }
+    normalize = node_with_label(flow, "Normalize Proposal")
+    for dispute_type, logical_name in SUPPORTED_ROUTES.items():
+        case = route_cases[dispute_type]
+        route_edges = outgoing(flow, switch["id"], f"case-{case['id']}")
+        assert len(route_edges) == 1
+        assert route_edges[0]["targetNodeId"] == specialist_ids[logical_name]
+        assert route_edges[0]["targetPort"] == "input"
+        reached = reachable(flow, route_edges[0]["targetNodeId"])
+        reached_specialists = set(specialist_ids.values()) & reached
+        assert reached_specialists == {specialist_ids[logical_name]}
+        assert normalize["id"] in reached
+        assert all(node_id in nodes for node_id in reached)
+
+
+def test_normalize_proposal_selects_one_branch_and_verifies_exact_contract():
+    flow, mapping, _ = load_contract()
+    normalize = node_with_label(flow, "Normalize Proposal")
+    assert normalize["type"] == "core.action.script"
+    script = normalize["inputs"]["script"]
+    normalized = compact(script)
+
+    specialist_nodes = [
+        node
+        for node in nodes_of_type(flow, "uipath.agent.autonomous")
+        if node.get("inputs", {}).get("source")
+        in {mapping[name] for name in SUPPORTED_ROUTES.values()}
+    ]
+    assert len(specialist_nodes) == 3
+    for node in specialist_nodes:
+        assert f"$vars.{node['id']}.output".casefold() in script.casefold()
+
+    assert ".filter(" in normalized
+    assert re.search(r"\.length(!==|!=)1", normalized)
+    assert "throw" in normalized
+    assert "object.keys" in normalized
+    assert ".every(" in normalized or ".foreach(" in normalized
+    assert any(
+        len(values) == len(PROPOSAL_FIELDS) and set(values) == set(PROPOSAL_FIELDS)
+        for values in string_array_sets(script)
+    )
+
+
+def test_manual_triage_is_side_effect_free_and_every_end_maps_result_contract():
+    flow, mapping, nodes = load_contract()
+    decision = nodes_of_type(flow, "core.logic.decision")[0]
+    false_edges = outgoing(flow, decision["id"], "false")
+    assert len(false_edges) == 1
+    assert false_edges[0]["targetPort"] == "input"
+
+    manual_end = nodes[false_edges[0]["targetNodeId"]]
+    assert manual_end["type"] == "core.control.end"
+    assert "needs_manual_triage" in json.dumps(manual_end).casefold()
+    manual_reachable = reachable(flow, manual_end["id"])
+
+    specialist_sources = {mapping[name] for name in SUPPORTED_ROUTES.values()}
+
+    def is_forbidden(node):
+        node_type = node["type"]
+        return (
+            node.get("inputs", {}).get("source") in specialist_sources
+            or node_type.startswith("uipath.core.api-workflow.")
+            or node_type == "uipath.human-in-the-loop.quick-form"
+            or node_type.startswith("uipath.connector.")
+        )
+
+    assert not any(is_forbidden(nodes[node_id]) for node_id in manual_reachable)
+
+    outputs = manual_end["outputs"]
+    assert set(outputs) == RESULT_FIELDS
+    assert "needs_manual_triage" in json.dumps(outputs["status"]).casefold()
+    assert "false" in json.dumps(outputs["emailSent"]).casefold()
+    assert "null" in json.dumps(outputs["approvalDecision"]).casefold()
+    assert "null" in json.dumps(outputs["updateResult"]).casefold()
+    audit_source = json.dumps(outputs["auditSummary"]).casefold()
+    assert "no specialist" in audit_source
+    assert "side effect" in audit_source
+
+    ends = nodes_of_type(flow, "core.control.end")
+    assert ends
+    for end in ends:
+        assert set(end.get("outputs", {})) == RESULT_FIELDS
+
+
+def test_agent_resources_registry_bindings_and_generated_variables_are_complete():
+    flow, _, nodes = load_contract()
+    expected_resources = {
+        "triageTaxonomyContext": (
+            "uipath.agent.resource.context.index.ar-dispute-triage-index.9e46f4a3-6c15-4cab-9030-08def39d8059",
+            "deb897d4-bdfb-4ba0-8cbc-63b7d36bb6d3",
+            "triageAgent",
+            "context",
+        ),
+        "paymentResolutionContext": (
+            "uipath.agent.resource.context.index.ar-payment-resolution-index.469965c2-8382-4521-9031-08def39d8059",
+            "3164f987-7d12-47bd-ba72-815bdc1dbbcd",
+            "paymentMisapplicationAgent",
+            "context",
+        ),
+        "lookupPaymentTool": (
+            "uipath.agent.resource.tool.api.cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
+            "01605eeb-d428-49af-81b4-0d5ca844af2f",
+            "paymentMisapplicationAgent",
+            "tool",
+        ),
+    }
+    definitions = {
+        (definition["nodeType"], definition["version"]): definition
+        for definition in flow["definitions"]
+    }
+    artifact_edges = {
+        (
+            edge["sourceNodeId"],
+            edge["sourcePort"],
+            edge["targetNodeId"],
+            edge["targetPort"],
+        )
+        for edge in flow["edges"]
+        if edge["sourcePort"] in ARTIFACT_PORTS
+    }
+
+    assert len(artifact_edges) == len(expected_resources)
+    for node_id, (node_type, source, parent_id, parent_port) in expected_resources.items():
+        node = nodes[node_id]
+        assert node["type"] == node_type
+        assert node["inputs"] == {"source": source}
+        definition = definitions[(node_type, node["typeVersion"])]
+        assert definition["model"]["source"] is True
+        assert (parent_id, parent_port, node_id, "input") in artifact_edges
+
+    api_resource_key = "cc99e8d4-57b5-4c6a-b563-29d6fb143b9b"
+    api_definition = definitions[
+        (expected_resources["lookupPaymentTool"][0], "1.0.0")
+    ]
+    assert api_definition["model"]["bindings"]["resourceKey"] == api_resource_key
+    assert flow["bindings"] == [
+        {
+            "id": "bLookupPaymentName",
+            "name": "name",
+            "type": "string",
+            "resource": "process",
+            "resourceKey": api_resource_key,
+            "default": "LookupPaymentApplication",
+            "propertyAttribute": "name",
+            "resourceSubType": "Api",
+        },
+        {
+            "id": "bLookupPaymentFolderPath",
+            "name": "folderPath",
+            "type": "string",
+            "resource": "process",
+            "resourceKey": api_resource_key,
+            "default": "solution_folder",
+            "propertyAttribute": "folderPath",
+            "resourceSubType": "Api",
+        },
+    ]
+
+    node_variables = flow["variables"]["nodes"]
+    assert len({variable["id"] for variable in node_variables}) == len(node_variables)
+    generated_bindings = {
+        (variable["binding"]["nodeId"], variable["binding"]["outputId"]): variable["id"]
+        for variable in node_variables
+    }
+    required_bindings = {
+        ("start", "output"),
+        ("loadSampleCase", "output"),
+        ("loadSampleCase", "error"),
+        ("triageAgent", "output"),
+        ("triageAgent", "error"),
+        ("poMismatchAgent", "output"),
+        ("poMismatchAgent", "error"),
+        ("missingPodAgent", "output"),
+        ("missingPodAgent", "error"),
+        ("paymentMisapplicationAgent", "output"),
+        ("paymentMisapplicationAgent", "error"),
+        ("normalizeProposal", "output"),
+        ("normalizeProposal", "error"),
+    }
+    assert required_bindings <= set(generated_bindings)
+    for node_id, output_id in required_bindings:
+        assert generated_bindings[(node_id, output_id)] == f"{node_id}.{output_id}"
+    for end in nodes_of_type(flow, "core.control.end"):
+        for output_id in RESULT_FIELDS:
+            assert generated_bindings[(end["id"], output_id)] == (
+                f"{end['id']}.{output_id}"
+            )

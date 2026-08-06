@@ -8,15 +8,604 @@
       "type": "core.trigger.manual",
       "typeVersion": "1.0",
       "display": {
-        "label": "Manual trigger"
+        "label": "Start AR dispute"
       },
       "inputs": {
         "entryPointId": "13a89eab-d48e-4b3e-9cf4-e902f60985bc",
         "isDefaultEntryPoint": true
       }
+    },
+    {
+      "id": "loadSampleCase",
+      "type": "core.action.script",
+      "typeVersion": "1.1",
+      "display": {
+        "label": "Load Sample Case"
+      },
+      "inputs": {
+        "script": "const cases = {\n  \"AR-PO-001\": {\n    caseId: \"AR-PO-001\",\n    customerName: \"Northstar Manufacturing\",\n    customerAccountId: \"NORTHSTAR-1701\",\n    invoiceNumber: \"INV-10471\",\n    outstandingBalance: 48750,\n    customerReason: \"The invoice exceeds our purchase order and requires correction.\",\n    openedDate: \"2026-07-07\",\n    evidence: { purchaseOrderNumber: \"PO-77124\", invoiceAmount: 48750, poAuthorizedAmount: 47250, difference: 1500 }\n  },\n  \"AR-POD-002\": {\n    caseId: \"AR-POD-002\",\n    customerName: \"Riverbend Retail\",\n    customerAccountId: \"RIVERBEND-2904\",\n    invoiceNumber: \"INV-20482\",\n    outstandingBalance: 22400,\n    customerReason: \"Payment is on hold pending proof of delivery.\",\n    openedDate: \"2026-07-10\",\n    evidence: { deliveredDate: \"2026-06-18\", signer: \"M. Chen\", shipmentQuantity: 80, invoiceQuantity: 80, quantitiesMatch: true }\n  },\n  \"AR-PAY-003\": {\n    caseId: \"AR-PAY-003\",\n    customerName: \"Summit Medical Distribution\",\n    customerAccountId: \"SUMMIT-4402\",\n    invoiceNumber: \"INV-30915\",\n    outstandingBalance: 36800,\n    customerReason: \"We paid this invoice, but the balance is still open.\",\n    openedDate: \"2026-07-14\",\n    evidence: { reportedPaymentAmount: 36800, paymentReference: \"PAY-77821\" }\n  },\n  \"AR-AMB-004\": {\n    caseId: \"AR-AMB-004\",\n    customerName: \"Lakeshore Components\",\n    customerAccountId: \"LAKESHORE-5506\",\n    invoiceNumber: \"INV-40102\",\n    outstandingBalance: 12800,\n    customerReason: \"The balance does not look right; please investigate\",\n    openedDate: \"2026-07-18\",\n    evidence: {}\n  }\n};\nconst caseId = $vars.start.output.caseId;\nif (!Object.prototype.hasOwnProperty.call(cases, caseId)) {\n  throw new Error(\"Unsupported sample caseId: \" + caseId);\n}\nreturn cases[caseId];"
+      }
+    },
+    {
+      "id": "triageAgent",
+      "type": "uipath.agent.autonomous",
+      "typeVersion": "1.3",
+      "display": {
+        "label": "Grounded Dispute Triage"
+      },
+      "inputs": {
+        "systemPrompt": "Use the configured inline triage agent project.",
+        "userPrompt": "Classify the bound AR dispute case packet.",
+        "model": "gpt-5.6-terra",
+        "source": "f7d7d1a5-0f16-43f1-b1b8-b70cef70ece9",
+        "agentInputVariables": [
+          {
+            "id": "loadSampleCase__output__output",
+            "type": "object",
+            "binding": "=$vars.loadSampleCase.output",
+            "description": "Case packet returned by Load Sample Case"
+          }
+        ],
+        "agentOutputVariables": [
+          {
+            "id": "disputeType",
+            "type": "string"
+          },
+          {
+            "id": "rationale",
+            "type": "string"
+          },
+          {
+            "id": "confidence",
+            "type": "number"
+          }
+        ]
+      }
+    },
+    {
+      "id": "isSupportedTriage",
+      "type": "core.logic.decision",
+      "typeVersion": "1.2",
+      "display": {
+        "label": "Supported and confident?"
+      },
+      "inputs": {
+        "expression": "=js:$vars.triageAgent.output.confidence >= 0.75 && [\"po_mismatch\", \"missing_pod\", \"payment_misapplication\"].indexOf($vars.triageAgent.output.disputeType) >= 0",
+        "trueLabel": "Supported",
+        "falseLabel": "Manual triage"
+      }
+    },
+    {
+      "id": "routeByDisputeType",
+      "type": "core.logic.switch",
+      "typeVersion": "1.1",
+      "display": {
+        "label": "Route by Dispute Type"
+      },
+      "inputs": {
+        "cases": [
+          {
+            "id": "po-mismatch",
+            "label": "PO mismatch",
+            "expression": "=js:$vars.triageAgent.output.disputeType === \"po_mismatch\""
+          },
+          {
+            "id": "missing-pod",
+            "label": "Missing POD",
+            "expression": "=js:$vars.triageAgent.output.disputeType === \"missing_pod\""
+          },
+          {
+            "id": "payment-misapplication",
+            "label": "Payment misapplication",
+            "expression": "=js:$vars.triageAgent.output.disputeType === \"payment_misapplication\""
+          }
+        ]
+      }
+    },
+    {
+      "id": "poMismatchAgent",
+      "type": "uipath.agent.autonomous",
+      "typeVersion": "1.3",
+      "display": {
+        "label": "PO Mismatch Specialist"
+      },
+      "inputs": {
+        "systemPrompt": "Use the configured inline PO mismatch specialist project.",
+        "userPrompt": "Prepare a resolution proposal from the bound case and triage result.",
+        "model": "gpt-5.6-terra",
+        "source": "30427850-3685-4d58-9c41-8dfb95163182",
+        "agentInputVariables": [
+          {
+            "id": "loadSampleCase__output__output",
+            "type": "object",
+            "binding": "=$vars.loadSampleCase.output"
+          },
+          {
+            "id": "triageAgent__output__disputeType",
+            "type": "string",
+            "binding": "=$vars.triageAgent.output.disputeType"
+          },
+          {
+            "id": "triageAgent__output__rationale",
+            "type": "string",
+            "binding": "=$vars.triageAgent.output.rationale"
+          },
+          {
+            "id": "triageAgent__output__confidence",
+            "type": "number",
+            "binding": "=$vars.triageAgent.output.confidence"
+          }
+        ],
+        "agentOutputVariables": [
+          {
+            "id": "caseId",
+            "type": "string"
+          },
+          {
+            "id": "disputeType",
+            "type": "string"
+          },
+          {
+            "id": "evidenceSummary",
+            "type": "string"
+          },
+          {
+            "id": "rootCause",
+            "type": "string"
+          },
+          {
+            "id": "recommendedAction",
+            "type": "string"
+          },
+          {
+            "id": "actionCode",
+            "type": "string"
+          },
+          {
+            "id": "adjustmentAmount",
+            "type": "number"
+          },
+          {
+            "id": "confidence",
+            "type": "number"
+          },
+          {
+            "id": "approvalSummary",
+            "type": "string"
+          },
+          {
+            "id": "emailSubject",
+            "type": "string"
+          },
+          {
+            "id": "emailBody",
+            "type": "string"
+          },
+          {
+            "id": "resourcesUsed",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "id": "missingPodAgent",
+      "type": "uipath.agent.autonomous",
+      "typeVersion": "1.3",
+      "display": {
+        "label": "Missing POD Specialist"
+      },
+      "inputs": {
+        "systemPrompt": "Use the configured inline missing POD specialist project.",
+        "userPrompt": "Prepare a resolution proposal from the bound case and triage result.",
+        "model": "gpt-5.6-terra",
+        "source": "81cc5d04-87bf-4a19-9a5f-ba1a2dbf006a",
+        "agentInputVariables": [
+          {
+            "id": "loadSampleCase__output__output",
+            "type": "object",
+            "binding": "=$vars.loadSampleCase.output"
+          },
+          {
+            "id": "triageAgent__output__disputeType",
+            "type": "string",
+            "binding": "=$vars.triageAgent.output.disputeType"
+          },
+          {
+            "id": "triageAgent__output__rationale",
+            "type": "string",
+            "binding": "=$vars.triageAgent.output.rationale"
+          },
+          {
+            "id": "triageAgent__output__confidence",
+            "type": "number",
+            "binding": "=$vars.triageAgent.output.confidence"
+          }
+        ],
+        "agentOutputVariables": [
+          {
+            "id": "caseId",
+            "type": "string"
+          },
+          {
+            "id": "disputeType",
+            "type": "string"
+          },
+          {
+            "id": "evidenceSummary",
+            "type": "string"
+          },
+          {
+            "id": "rootCause",
+            "type": "string"
+          },
+          {
+            "id": "recommendedAction",
+            "type": "string"
+          },
+          {
+            "id": "actionCode",
+            "type": "string"
+          },
+          {
+            "id": "adjustmentAmount",
+            "type": "number"
+          },
+          {
+            "id": "confidence",
+            "type": "number"
+          },
+          {
+            "id": "approvalSummary",
+            "type": "string"
+          },
+          {
+            "id": "emailSubject",
+            "type": "string"
+          },
+          {
+            "id": "emailBody",
+            "type": "string"
+          },
+          {
+            "id": "resourcesUsed",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "id": "paymentMisapplicationAgent",
+      "type": "uipath.agent.autonomous",
+      "typeVersion": "1.3",
+      "display": {
+        "label": "Payment Misapplication Specialist"
+      },
+      "inputs": {
+        "systemPrompt": "Use the configured inline payment misapplication specialist project.",
+        "userPrompt": "Prepare a grounded resolution proposal from the bound case and triage result.",
+        "model": "gpt-5.6-terra",
+        "source": "1c6b5289-1ff4-45f1-b48c-e613f8fd917f",
+        "agentInputVariables": [
+          {
+            "id": "loadSampleCase__output__output",
+            "type": "object",
+            "binding": "=$vars.loadSampleCase.output"
+          },
+          {
+            "id": "triageAgent__output__disputeType",
+            "type": "string",
+            "binding": "=$vars.triageAgent.output.disputeType"
+          },
+          {
+            "id": "triageAgent__output__rationale",
+            "type": "string",
+            "binding": "=$vars.triageAgent.output.rationale"
+          },
+          {
+            "id": "triageAgent__output__confidence",
+            "type": "number",
+            "binding": "=$vars.triageAgent.output.confidence"
+          }
+        ],
+        "agentOutputVariables": [
+          {
+            "id": "caseId",
+            "type": "string"
+          },
+          {
+            "id": "disputeType",
+            "type": "string"
+          },
+          {
+            "id": "evidenceSummary",
+            "type": "string"
+          },
+          {
+            "id": "rootCause",
+            "type": "string"
+          },
+          {
+            "id": "recommendedAction",
+            "type": "string"
+          },
+          {
+            "id": "actionCode",
+            "type": "string"
+          },
+          {
+            "id": "adjustmentAmount",
+            "type": "number"
+          },
+          {
+            "id": "confidence",
+            "type": "number"
+          },
+          {
+            "id": "approvalSummary",
+            "type": "string"
+          },
+          {
+            "id": "emailSubject",
+            "type": "string"
+          },
+          {
+            "id": "emailBody",
+            "type": "string"
+          },
+          {
+            "id": "resourcesUsed",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "id": "triageTaxonomyContext",
+      "type": "uipath.agent.resource.context.index.ar-dispute-triage-index.9e46f4a3-6c15-4cab-9030-08def39d8059",
+      "typeVersion": "1.0.0",
+      "display": {
+        "label": "AR Dispute Triage Taxonomy"
+      },
+      "inputs": {
+        "source": "deb897d4-bdfb-4ba0-8cbc-63b7d36bb6d3"
+      }
+    },
+    {
+      "id": "paymentResolutionContext",
+      "type": "uipath.agent.resource.context.index.ar-payment-resolution-index.469965c2-8382-4521-9031-08def39d8059",
+      "typeVersion": "1.0.0",
+      "display": {
+        "label": "Payment Resolution Knowledge"
+      },
+      "inputs": {
+        "source": "3164f987-7d12-47bd-ba72-815bdc1dbbcd"
+      }
+    },
+    {
+      "id": "lookupPaymentTool",
+      "type": "uipath.agent.resource.tool.api.cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
+      "typeVersion": "1.0.0",
+      "display": {
+        "label": "Lookup Payment Application"
+      },
+      "inputs": {
+        "source": "01605eeb-d428-49af-81b4-0d5ca844af2f"
+      }
+    },
+    {
+      "id": "normalizeProposal",
+      "type": "core.action.script",
+      "typeVersion": "1.1",
+      "display": {
+        "label": "Normalize Proposal"
+      },
+      "inputs": {
+        "script": "const candidates = [\n  $vars.poMismatchAgent.output,\n  $vars.missingPodAgent.output,\n  $vars.paymentMisapplicationAgent.output\n].filter(function (candidate) { return candidate && candidate.caseId; });\nif (candidates.length !== 1) {\n  throw new Error(\"Expected exactly one specialist proposal; received \" + candidates.length);\n}\nconst proposal = candidates[0];\nconst required = [\n  \"caseId\", \"disputeType\", \"evidenceSummary\", \"rootCause\",\n  \"recommendedAction\", \"actionCode\", \"adjustmentAmount\", \"confidence\",\n  \"approvalSummary\", \"emailSubject\", \"emailBody\", \"resourcesUsed\"\n];\nconst actual = Object.keys(proposal).sort();\nconst expected = required.slice().sort();\nif (JSON.stringify(actual) !== JSON.stringify(expected)) {\n  throw new Error(\"Specialist proposal must contain exactly the 12-field contract\");\n}\nrequired.forEach(function (field) {\n  if (proposal[field] === null || proposal[field] === undefined) {\n    throw new Error(\"Missing specialist proposal field: \" + field);\n  }\n});\nif (typeof proposal.adjustmentAmount !== \"number\" || typeof proposal.confidence !== \"number\") {\n  throw new Error(\"Specialist numeric fields have invalid types\");\n}\nreturn proposal;"
+      }
+    },
+    {
+      "id": "needsManualTriage",
+      "type": "core.control.end",
+      "typeVersion": "1.0",
+      "display": {
+        "label": "Needs Manual Triage"
+      },
+      "inputs": {},
+      "outputs": {
+        "status": {
+          "source": "=js:\"needs_manual_triage\""
+        },
+        "caseId": {
+          "source": "=js:$vars.start.output.caseId"
+        },
+        "disputeType": {
+          "source": "=js:$vars.triageAgent.output.disputeType"
+        },
+        "triageRationale": {
+          "source": "=js:$vars.triageAgent.output.rationale"
+        },
+        "triageConfidence": {
+          "source": "=js:$vars.triageAgent.output.confidence"
+        },
+        "recommendedAction": {
+          "source": "=js:null"
+        },
+        "approvalDecision": {
+          "source": "=js:null"
+        },
+        "approvalComments": {
+          "source": "=js:null"
+        },
+        "updateResult": {
+          "source": "=js:null"
+        },
+        "emailSent": {
+          "source": "=js:false"
+        },
+        "resourcesUsed": {
+          "source": "=js:\"AR Dispute Triage Taxonomy\""
+        },
+        "auditSummary": {
+          "source": "=js:\"Manual triage required; no specialist, API workflow, approval, or email side effect ran.\""
+        }
+      }
+    },
+    {
+      "id": "proposalReady",
+      "type": "core.control.end",
+      "typeVersion": "1.0",
+      "display": {
+        "label": "Proposal Ready for Approval"
+      },
+      "inputs": {},
+      "outputs": {
+        "status": {
+          "source": "=js:\"needs_rework\""
+        },
+        "caseId": {
+          "source": "=js:$vars.start.output.caseId"
+        },
+        "disputeType": {
+          "source": "=js:$vars.triageAgent.output.disputeType"
+        },
+        "triageRationale": {
+          "source": "=js:$vars.triageAgent.output.rationale"
+        },
+        "triageConfidence": {
+          "source": "=js:$vars.triageAgent.output.confidence"
+        },
+        "recommendedAction": {
+          "source": "=js:$vars.normalizeProposal.output.recommendedAction"
+        },
+        "approvalDecision": {
+          "source": "=js:null"
+        },
+        "approvalComments": {
+          "source": "=js:null"
+        },
+        "updateResult": {
+          "source": "=js:null"
+        },
+        "emailSent": {
+          "source": "=js:false"
+        },
+        "resourcesUsed": {
+          "source": "=js:$vars.normalizeProposal.output.resourcesUsed"
+        },
+        "auditSummary": {
+          "source": "=js:\"Proposal normalized; collector approval and side effects are added in the next build wave.\""
+        }
+      }
     }
   ],
-  "edges": [],
+  "edges": [
+    {
+      "id": "edge_start_loadSampleCase",
+      "sourceNodeId": "start",
+      "sourcePort": "output",
+      "targetNodeId": "loadSampleCase",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_loadSampleCase_triageAgent",
+      "sourceNodeId": "loadSampleCase",
+      "sourcePort": "success",
+      "targetNodeId": "triageAgent",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_triageAgent_isSupportedTriage",
+      "sourceNodeId": "triageAgent",
+      "sourcePort": "success",
+      "targetNodeId": "isSupportedTriage",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_isSupportedTriage_supported_routeByDisputeType",
+      "sourceNodeId": "isSupportedTriage",
+      "sourcePort": "true",
+      "targetNodeId": "routeByDisputeType",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_isSupportedTriage_manual_needsManualTriage",
+      "sourceNodeId": "isSupportedTriage",
+      "sourcePort": "false",
+      "targetNodeId": "needsManualTriage",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_route_po_poMismatchAgent",
+      "sourceNodeId": "routeByDisputeType",
+      "sourcePort": "case-po-mismatch",
+      "targetNodeId": "poMismatchAgent",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_route_pod_missingPodAgent",
+      "sourceNodeId": "routeByDisputeType",
+      "sourcePort": "case-missing-pod",
+      "targetNodeId": "missingPodAgent",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_route_payment_paymentMisapplicationAgent",
+      "sourceNodeId": "routeByDisputeType",
+      "sourcePort": "case-payment-misapplication",
+      "targetNodeId": "paymentMisapplicationAgent",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_poMismatchAgent_normalizeProposal",
+      "sourceNodeId": "poMismatchAgent",
+      "sourcePort": "success",
+      "targetNodeId": "normalizeProposal",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_missingPodAgent_normalizeProposal",
+      "sourceNodeId": "missingPodAgent",
+      "sourcePort": "success",
+      "targetNodeId": "normalizeProposal",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_paymentMisapplicationAgent_normalizeProposal",
+      "sourceNodeId": "paymentMisapplicationAgent",
+      "sourcePort": "success",
+      "targetNodeId": "normalizeProposal",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_triageAgent_context_triageTaxonomyContext",
+      "sourceNodeId": "triageAgent",
+      "sourcePort": "context",
+      "targetNodeId": "triageTaxonomyContext",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_paymentAgent_context_paymentResolutionContext",
+      "sourceNodeId": "paymentMisapplicationAgent",
+      "sourcePort": "context",
+      "targetNodeId": "paymentResolutionContext",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_paymentAgent_tool_lookupPaymentTool",
+      "sourceNodeId": "paymentMisapplicationAgent",
+      "sourcePort": "tool",
+      "targetNodeId": "lookupPaymentTool",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_normalizeProposal_proposalReady",
+      "sourceNodeId": "normalizeProposal",
+      "sourcePort": "success",
+      "targetNodeId": "proposalReady",
+      "targetPort": "input"
+    }
+  ],
   "definitions": [
     {
       "nodeType": "core.trigger.manual",
@@ -76,14 +665,2550 @@
           ]
         }
       }
+    },
+    {
+      "nodeType": "core.action.script",
+      "version": "1.1",
+      "category": "data-operations",
+      "description": "Run custom JavaScript code",
+      "tags": [
+        "code",
+        "javascript",
+        "python"
+      ],
+      "sortOrder": 35,
+      "supportsErrorHandling": true,
+      "display": {
+        "label": "Script",
+        "icon": "code"
+      },
+      "handleConfiguration": [
+        {
+          "position": "left",
+          "handles": [
+            {
+              "id": "input",
+              "type": "target",
+              "handleType": "input"
+            }
+          ]
+        },
+        {
+          "position": "right",
+          "handles": [
+            {
+              "id": "success",
+              "type": "source",
+              "handleType": "output"
+            },
+            {
+              "id": "error",
+              "label": "Error",
+              "type": "source",
+              "handleType": "output",
+              "visible": "{inputs.errorHandlingEnabled}",
+              "constraints": {
+                "maxConnections": 1
+              }
+            }
+          ]
+        }
+      ],
+      "debug": {
+        "runtime": "clientScript"
+      },
+      "model": {
+        "type": "bpmn:ScriptTask"
+      },
+      "inputDefinition": {
+        "type": "object",
+        "properties": {
+          "script": {
+            "type": "string",
+            "minLength": 1,
+            "errorMessage": "Add a script function",
+            "validationSeverity": "warning"
+          }
+        },
+        "required": [
+          "script"
+        ]
+      },
+      "inputDefaults": {
+        "script": ""
+      },
+      "outputDefinition": {
+        "output": {
+          "type": "any",
+          "description": "The return value of the script",
+          "source": "=result.response",
+          "var": "output"
+        },
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "source": "=Error",
+          "var": "error",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "form": {
+        "id": "script-properties",
+        "title": "Script configuration",
+        "sections": [
+          {
+            "id": "script",
+            "title": "Script",
+            "collapsible": true,
+            "defaultExpanded": true,
+            "fields": [
+              {
+                "name": "inputs.script",
+                "type": "custom",
+                "component": "script-editor",
+                "componentProps": {
+                  "language": "javascript",
+                  "returnType": "any",
+                  "validationMode": "script",
+                  "minHeight": 200,
+                  "placeholder": " // Return any value\nreturn {\n  message: \"Web request response\",\n  data: $vars.httpRequest1.output\n};"
+                },
+                "label": "Code",
+                "description": "JavaScript expression that returns a result"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "nodeType": "core.logic.decision",
+      "version": "1.2",
+      "category": "control-flow",
+      "description": "Branch on a true or false condition",
+      "tags": [
+        "control-flow",
+        "if",
+        "loop",
+        "switch"
+      ],
+      "sortOrder": 21,
+      "display": {
+        "label": "Decision",
+        "icon": "trending-up-down"
+      },
+      "handleConfiguration": [
+        {
+          "position": "left",
+          "handles": [
+            {
+              "id": "input",
+              "type": "target",
+              "handleType": "input"
+            }
+          ],
+          "visible": true
+        },
+        {
+          "position": "right",
+          "handles": [
+            {
+              "id": "true",
+              "type": "source",
+              "handleType": "output",
+              "label": "{inputs.trueLabel}",
+              "constraints": {
+                "minConnections": 1
+              }
+            },
+            {
+              "id": "false",
+              "type": "source",
+              "handleType": "output",
+              "label": "{inputs.falseLabel}"
+            }
+          ],
+          "visible": true
+        }
+      ],
+      "debug": {
+        "runtime": "clientScript"
+      },
+      "model": {
+        "type": "bpmn:InclusiveGateway"
+      },
+      "inputDefinition": {
+        "type": "object",
+        "properties": {
+          "expression": {
+            "type": "string",
+            "minLength": 1,
+            "errorMessage": "Add a condition"
+          },
+          "trueLabel": {
+            "type": "string"
+          },
+          "falseLabel": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "expression"
+        ]
+      },
+      "outputDefinition": {
+        "matchedCase": {
+          "type": "string",
+          "description": "The label of the matched branch (true/false label)",
+          "var": "matchedCase"
+        },
+        "matchedCaseId": {
+          "type": "string",
+          "description": "The branch that was taken (true or false)",
+          "var": "matchedCaseId"
+        }
+      },
+      "inputDefaults": {
+        "trueLabel": "True",
+        "falseLabel": "False"
+      },
+      "form": {
+        "id": "decision-properties",
+        "title": "Decision configuration",
+        "sections": [
+          {
+            "id": "condition",
+            "title": "Condition",
+            "fields": [
+              {
+                "name": "inputs.expression",
+                "type": "custom",
+                "component": "code-editor",
+                "componentProps": {
+                  "singleLine": true,
+                  "mode": "expression",
+                  "toggleable": false,
+                  "language": "javascript",
+                  "returnType": "boolean",
+                  "validationMode": "expression",
+                  "showVariableButton": true,
+                  "placeholder": "$vars.httpRequest1.output.statusCode >= 200 && $vars.httpRequest1.output.statusCode < 300"
+                },
+                "label": "Condition",
+                "description": "The condition must be a JavaScript expression that evaluates to true or false."
+              },
+              {
+                "name": "inputs.trueLabel",
+                "type": "text",
+                "label": "True branch label",
+                "description": "This label appears on the true branch."
+              },
+              {
+                "name": "inputs.falseLabel",
+                "type": "text",
+                "label": "False branch label",
+                "description": "This label appears on the false branch."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "nodeType": "core.logic.switch",
+      "version": "1.1",
+      "category": "control-flow",
+      "description": "Route to one of many branches by condition",
+      "tags": [
+        "control-flow",
+        "switch",
+        "case",
+        "when"
+      ],
+      "sortOrder": 20,
+      "display": {
+        "label": "Switch",
+        "icon": "between-horizontal-start"
+      },
+      "handleConfiguration": [
+        {
+          "position": "left",
+          "handles": [
+            {
+              "id": "input",
+              "type": "target",
+              "handleType": "input"
+            }
+          ],
+          "visible": true
+        },
+        {
+          "position": "right",
+          "handles": [
+            {
+              "id": "case-{item.id}",
+              "type": "source",
+              "handleType": "output",
+              "label": "{item.label || 'Case ' + (index + 1)}",
+              "repeat": "inputs.cases"
+            },
+            {
+              "id": "default",
+              "type": "source",
+              "handleType": "output",
+              "label": "Default"
+            }
+          ],
+          "visible": true
+        }
+      ],
+      "debug": {
+        "runtime": "clientScript"
+      },
+      "model": {
+        "type": "bpmn:ExclusiveGateway"
+      },
+      "inputDefinition": {
+        "type": "object",
+        "properties": {
+          "cases": {
+            "type": "array",
+            "minItems": 1,
+            "errorMessage": "At least one case is required",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "expression": {
+                  "type": "string",
+                  "minLength": 1,
+                  "errorMessage": "Add a condition"
+                }
+              },
+              "required": [
+                "expression"
+              ]
+            }
+          }
+        },
+        "required": [
+          "cases"
+        ]
+      },
+      "outputDefinition": {
+        "matchedCase": {
+          "type": "string",
+          "description": "The label of the matched case",
+          "var": "matchedCase"
+        },
+        "matchedCaseId": {
+          "type": "string",
+          "description": "The ID of the matched case (\"default\" for the default branch)",
+          "var": "matchedCaseId"
+        }
+      },
+      "inputDefaults": {
+        "cases": [
+          {
+            "id": "default-1",
+            "label": "Case 1",
+            "expression": ""
+          },
+          {
+            "id": "default-2",
+            "label": "Case 2",
+            "expression": ""
+          }
+        ]
+      },
+      "form": {
+        "id": "switch-properties",
+        "title": "Switch configuration",
+        "sections": [
+          {
+            "id": "cases",
+            "title": "Cases",
+            "description": "Each case is evaluated in order. The first condition that returns true is taken.",
+            "collapsible": true,
+            "defaultExpanded": true,
+            "fields": [
+              {
+                "name": "inputs.cases",
+                "type": "custom",
+                "label": "Switch cases",
+                "component": "case-list-editor",
+                "componentProps": {
+                  "minCases": 1,
+                  "maxCases": 10,
+                  "expressionPlaceholder": "$vars.httpRequest1.output.statusCode >= 200 && $vars.httpRequest1.output.statusCode < 300",
+                  "expressionValidationFields": [
+                    {
+                      "subPath": "expression",
+                      "validationMode": "expression",
+                      "expectedType": "boolean"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "runtimeConstraints": {
+        "exclude": [
+          "api-function"
+        ]
+      }
+    },
+    {
+      "nodeType": "core.control.end",
+      "version": "1.0",
+      "category": "control-flow",
+      "description": "Mark the end of a process path",
+      "tags": [
+        "control-flow",
+        "end",
+        "finish",
+        "complete"
+      ],
+      "sortOrder": 20,
+      "display": {
+        "label": "End",
+        "icon": "circle-check",
+        "shape": "circle"
+      },
+      "handleConfiguration": [
+        {
+          "position": "left",
+          "handles": [
+            {
+              "id": "input",
+              "type": "target",
+              "handleType": "input"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "type": "bpmn:EndEvent"
+      },
+      "runtimeConstraints": {
+        "exclude": [
+          "api-function"
+        ]
+      }
+    },
+    {
+      "nodeType": "uipath.agent.autonomous",
+      "version": "1.3",
+      "category": "agent",
+      "description": "AI agent that completes tasks autonomously",
+      "tags": [
+        "agentic",
+        "ai",
+        "autonomous",
+        "agent"
+      ],
+      "sortOrder": 5,
+      "supportsErrorHandling": true,
+      "display": {
+        "label": "Autonomous agent",
+        "icon": "autonomous-agent",
+        "shape": "rectangle"
+      },
+      "handleConfiguration": [
+        {
+          "position": "top",
+          "handles": [
+            {
+              "id": "escalation",
+              "type": "source",
+              "handleType": "artifact",
+              "label": "Escalations",
+              "showButton": true,
+              "constraints": {
+                "allowedTargets": [
+                  {
+                    "nodeType": "uipath.agent.resource.escalation"
+                  },
+                  {
+                    "nodeType": "uipath.agent.resource.escalation.*"
+                  }
+                ],
+                "validationMessage": "Only Agent Escalation nodes can connect here",
+                "addNodePanel": {
+                  "searchScope": "deep",
+                  "searchProviders": []
+                }
+              }
+            }
+          ]
+        },
+        {
+          "position": "bottom",
+          "handles": [
+            {
+              "id": "context",
+              "type": "source",
+              "handleType": "artifact",
+              "label": "Context",
+              "showButton": true,
+              "constraints": {
+                "allowedTargets": [
+                  {
+                    "nodeType": "uipath.agent.resource.context.*"
+                  }
+                ],
+                "validationMessage": "Only Context resource nodes can connect here",
+                "addNodePanel": {
+                  "searchScope": "deep",
+                  "searchProviders": [],
+                  "refreshOnFocus": "context",
+                  "createNewActions": [
+                    {
+                      "label": "Create new Context",
+                      "icon": "external-link",
+                      "description": "Opens in a new tab",
+                      "urlTemplate": "/{org}/agents_/indexes/add",
+                      "categoryId": "agent"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": "tool",
+              "type": "source",
+              "handleType": "artifact",
+              "label": "Tools",
+              "showButton": true,
+              "constraints": {
+                "allowedTargets": [
+                  {
+                    "nodeType": "uipath.agent.resource.tool.*"
+                  }
+                ],
+                "validationMessage": "Only Tool resource nodes can connect here",
+                "addNodePanel": {
+                  "searchScope": "deep",
+                  "searchProviders": [],
+                  "refreshOnFocus": "mcp",
+                  "createNewActions": [
+                    {
+                      "label": "Create new MCP server",
+                      "icon": "plus",
+                      "urlTemplate": "/{org}/{tenant}/orchestrator_/mcp",
+                      "categoryId": "agent.tool.mcp"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "position": "left",
+          "handles": [
+            {
+              "id": "input",
+              "type": "target",
+              "handleType": "input"
+            }
+          ]
+        },
+        {
+          "position": "right",
+          "handles": [
+            {
+              "id": "success",
+              "type": "source",
+              "handleType": "output",
+              "isDefaultForType": true
+            },
+            {
+              "id": "error",
+              "label": "Error",
+              "type": "source",
+              "handleType": "output",
+              "visible": "{inputs.errorHandlingEnabled}",
+              "constraints": {
+                "maxConnections": 1
+              }
+            }
+          ]
+        }
+      ],
+      "form": {
+        "id": "settings-form",
+        "title": "Agent settings",
+        "mode": "onChange",
+        "reValidateMode": "onChange",
+        "sections": [
+          {
+            "id": "section-1",
+            "title": "Agent settings",
+            "collapsible": true,
+            "defaultExpanded": true,
+            "fields": [
+              {
+                "name": "inputs.mode",
+                "type": "custom",
+                "component": "agent-harness-picker",
+                "label": ""
+              },
+              {
+                "name": "inputs.model",
+                "type": "custom",
+                "component": "agent-model-picker",
+                "label": "Model",
+                "componentProps": {
+                  "placeholder": "gpt-4o-2024-11-20"
+                }
+              },
+              {
+                "name": "inputs.systemPrompt",
+                "type": "custom",
+                "component": "prompt-editor",
+                "label": "System prompt",
+                "componentProps": {
+                  "multiline": true,
+                  "minRows": 4,
+                  "maxRows": 20,
+                  "placeholder": "Enter the system prompt"
+                }
+              },
+              {
+                "name": "inputs.userPrompt",
+                "type": "custom",
+                "component": "prompt-editor",
+                "label": "User prompt",
+                "componentProps": {
+                  "multiline": true,
+                  "minRows": 3,
+                  "maxRows": 15,
+                  "placeholder": "Enter the user prompt"
+                }
+              }
+            ]
+          },
+          {
+            "id": "section-advanced",
+            "title": "Advanced settings",
+            "collapsible": true,
+            "defaultExpanded": false,
+            "fields": [
+              {
+                "name": "inputs.temperature",
+                "type": "slider",
+                "label": "Temperature",
+                "defaultValue": 0,
+                "min": 0,
+                "max": 1,
+                "step": 0.01
+              },
+              {
+                "name": "inputs.maxTokenPerResponse",
+                "type": "slider",
+                "label": "Maximum tokens per response",
+                "defaultValue": 16384,
+                "min": 0,
+                "step": 1,
+                "maxRef": {
+                  "fromField": "inputs.modelMaxTokens",
+                  "fallback": 16384
+                }
+              },
+              {
+                "name": "inputs.maxIterations",
+                "type": "slider",
+                "label": "Maximum iterations",
+                "defaultValue": 25,
+                "min": 1,
+                "max": 100,
+                "step": 1
+              }
+            ]
+          },
+          {
+            "id": "guardrails",
+            "collapsible": false,
+            "fields": [
+              {
+                "name": "inputs.guardrails",
+                "type": "custom",
+                "component": "guardrails-editor",
+                "label": "",
+                "componentProps": {
+                  "toolName": "Agent",
+                  "scope": "Agent"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "inputDefinition": {
+        "type": "object",
+        "properties": {
+          "systemPrompt": {
+            "type": "string",
+            "minLength": 1,
+            "errorMessage": {
+              "minLength": "System prompt is required"
+            }
+          },
+          "userPrompt": {
+            "type": "string",
+            "minLength": 1,
+            "errorMessage": {
+              "minLength": "User prompt is required"
+            }
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1,
+            "errorMessage": {
+              "minLength": "Model is required"
+            }
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "standard",
+              "advanced"
+            ]
+          },
+          "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "maxTokenPerResponse": {
+            "type": "number",
+            "minimum": 0
+          },
+          "modelMaxTokens": {
+            "type": "number",
+            "minimum": 0
+          },
+          "maxIterations": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "guardrails": {
+            "type": "array"
+          },
+          "agentInputVariables": {
+            "type": "array"
+          },
+          "agentOutputVariables": {
+            "type": "array"
+          }
+        },
+        "required": [
+          "systemPrompt",
+          "userPrompt",
+          "model"
+        ]
+      },
+      "inputDefaults": {
+        "systemPrompt": "You are an agentic assistant.",
+        "userPrompt": "What is the current date?",
+        "model": "gpt-4o-2024-11-20",
+        "mode": "standard",
+        "agentInputVariables": [],
+        "agentOutputVariables": [
+          {
+            "id": "content",
+            "type": "string"
+          }
+        ]
+      },
+      "outputDefinition": {
+        "output": {
+          "type": "object",
+          "description": "Agent response",
+          "var": "output",
+          "properties": {
+            "content": {
+              "type": "string",
+              "description": "The agent response text"
+            }
+          }
+        },
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "source": "=Error",
+          "var": "error",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "model": {
+        "source": true,
+        "type": "bpmn:ServiceTask",
+        "serviceType": "Orchestrator.StartInlineAgentJob",
+        "version": "v2",
+        "context": [
+          {
+            "name": "_label",
+            "type": "string",
+            "value": ""
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "value": ""
+          },
+          {
+            "name": "entryPoint",
+            "type": "string",
+            "value": ""
+          }
+        ]
+      },
+      "debug": {
+        "runtime": "bpmnEngine"
+      }
+    },
+    {
+      "nodeType": "uipath.agent.resource.context.index.ar-dispute-triage-index.9e46f4a3-6c15-4cab-9030-08def39d8059",
+      "version": "1.0.0",
+      "category": "agent",
+      "tags": [
+        "agent-context",
+        "index"
+      ],
+      "description": "",
+      "sortOrder": 505,
+      "display": {
+        "label": "ar-dispute-triage-index",
+        "description": "",
+        "icon": "file-text",
+        "shape": "circle"
+      },
+      "handleConfiguration": [
+        {
+          "position": "top",
+          "handles": [
+            {
+              "id": "input",
+              "type": "target",
+              "handleType": "artifact",
+              "constraints": {
+                "maxConnections": 1,
+                "allowedSources": [
+                  {
+                    "nodeType": "uipath.agent.autonomous",
+                    "handleId": "context"
+                  },
+                  {
+                    "nodeType": "uipath.agent.conversational",
+                    "handleId": "context"
+                  }
+                ],
+                "validationMessage": "Only Agent's context handle can connect here"
+              }
+            }
+          ]
+        }
+      ],
+      "model": {
+        "source": true
+      },
+      "form": {
+        "id": "context-index-form",
+        "title": "Context index",
+        "sections": [
+          {
+            "id": "index-settings",
+            "title": "Index settings",
+            "collapsible": true,
+            "defaultExpanded": true,
+            "fields": [
+              {
+                "name": "inputs",
+                "type": "custom",
+                "component": "index-settings-editor",
+                "label": ""
+              }
+            ]
+          }
+        ]
+      },
+      "inputDefinition": {
+        "type": "object",
+        "properties": {
+          "indexId": {
+            "type": "string"
+          },
+          "indexName": {
+            "type": "string"
+          },
+          "folderKey": {
+            "type": "string"
+          },
+          "folderPath": {
+            "type": "string"
+          },
+          "retrievalMode": {
+            "type": "string"
+          },
+          "query": {
+            "type": "object"
+          },
+          "threshold": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "resultCount": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 40
+          },
+          "fileExtension": {
+            "type": "string"
+          },
+          "folderPathPrefix": {
+            "type": "object"
+          },
+          "citations": {
+            "type": "string"
+          },
+          "outputColumns": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "webSearchGrounding": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "retrievalMode": {
+                  "not": {
+                    "enum": [
+                      "deeprag",
+                      "batchtransform"
+                    ]
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "query": {
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "prompt"
+                        },
+                        "promptValue": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "promptValue"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "text-builder"
+                        },
+                        "textValue": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "textValue"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "variable"
+                        },
+                        "argumentPath": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "argumentPath"
+                      ]
+                    }
+                  ],
+                  "errorMessage": "Query is required"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "retrievalMode": {
+                  "const": "deeprag"
+                }
+              },
+              "required": [
+                "retrievalMode"
+              ]
+            },
+            "then": {
+              "properties": {
+                "query": {
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "prompt"
+                        },
+                        "promptValue": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "promptValue"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "text-builder"
+                        },
+                        "textValue": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "textValue"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "variable"
+                        },
+                        "argumentPath": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "argumentPath"
+                      ]
+                    }
+                  ],
+                  "errorMessage": "DeepRAG task is required"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "retrievalMode": {
+                  "const": "batchtransform"
+                }
+              },
+              "required": [
+                "retrievalMode"
+              ]
+            },
+            "then": {
+              "properties": {
+                "query": {
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "prompt"
+                        },
+                        "promptValue": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "promptValue"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "text-builder"
+                        },
+                        "textValue": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "textValue"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "variable"
+                        },
+                        "argumentPath": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "argumentPath"
+                      ]
+                    }
+                  ],
+                  "errorMessage": "Batch transform task is required"
+                },
+                "outputColumns": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "errorMessage": "Description is required for every output column"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "description"
+                    ]
+                  },
+                  "errorMessage": {
+                    "minItems": "At least one output column is required"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "inputDefaults": {
+        "indexId": "9e46f4a3-6c15-4cab-9030-08def39d8059",
+        "indexName": "ar-dispute-triage-index",
+        "folderKey": "67fc19c3-e3a7-4523-aac0-fa63ea83d261",
+        "folderPath": "JD_Demos/demos",
+        "retrievalMode": "semantic",
+        "query": {
+          "mode": "prompt",
+          "textValue": "",
+          "promptValue": "The query for the Semantic strategy",
+          "argumentPath": ""
+        },
+        "threshold": 0,
+        "resultCount": 3,
+        "fileExtension": "All",
+        "folderPathPrefix": {
+          "mode": "text-builder",
+          "textValue": "",
+          "promptValue": "",
+          "argumentPath": ""
+        },
+        "citations": "enabled",
+        "outputColumns": [],
+        "webSearchGrounding": {
+          "value": "enabled"
+        }
+      }
+    },
+    {
+      "nodeType": "uipath.agent.resource.context.index.ar-payment-resolution-index.469965c2-8382-4521-9031-08def39d8059",
+      "version": "1.0.0",
+      "category": "agent",
+      "tags": [
+        "agent-context",
+        "index"
+      ],
+      "description": "",
+      "sortOrder": 505,
+      "display": {
+        "label": "ar-payment-resolution-index",
+        "description": "",
+        "icon": "file-text",
+        "shape": "circle"
+      },
+      "handleConfiguration": [
+        {
+          "position": "top",
+          "handles": [
+            {
+              "id": "input",
+              "type": "target",
+              "handleType": "artifact",
+              "constraints": {
+                "maxConnections": 1,
+                "allowedSources": [
+                  {
+                    "nodeType": "uipath.agent.autonomous",
+                    "handleId": "context"
+                  },
+                  {
+                    "nodeType": "uipath.agent.conversational",
+                    "handleId": "context"
+                  }
+                ],
+                "validationMessage": "Only Agent's context handle can connect here"
+              }
+            }
+          ]
+        }
+      ],
+      "model": {
+        "source": true
+      },
+      "form": {
+        "id": "context-index-form",
+        "title": "Context index",
+        "sections": [
+          {
+            "id": "index-settings",
+            "title": "Index settings",
+            "collapsible": true,
+            "defaultExpanded": true,
+            "fields": [
+              {
+                "name": "inputs",
+                "type": "custom",
+                "component": "index-settings-editor",
+                "label": ""
+              }
+            ]
+          }
+        ]
+      },
+      "inputDefinition": {
+        "type": "object",
+        "properties": {
+          "indexId": {
+            "type": "string"
+          },
+          "indexName": {
+            "type": "string"
+          },
+          "folderKey": {
+            "type": "string"
+          },
+          "folderPath": {
+            "type": "string"
+          },
+          "retrievalMode": {
+            "type": "string"
+          },
+          "query": {
+            "type": "object"
+          },
+          "threshold": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "resultCount": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 40
+          },
+          "fileExtension": {
+            "type": "string"
+          },
+          "folderPathPrefix": {
+            "type": "object"
+          },
+          "citations": {
+            "type": "string"
+          },
+          "outputColumns": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "webSearchGrounding": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "retrievalMode": {
+                  "not": {
+                    "enum": [
+                      "deeprag",
+                      "batchtransform"
+                    ]
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "query": {
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "prompt"
+                        },
+                        "promptValue": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "promptValue"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "text-builder"
+                        },
+                        "textValue": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "textValue"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "variable"
+                        },
+                        "argumentPath": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "argumentPath"
+                      ]
+                    }
+                  ],
+                  "errorMessage": "Query is required"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "retrievalMode": {
+                  "const": "deeprag"
+                }
+              },
+              "required": [
+                "retrievalMode"
+              ]
+            },
+            "then": {
+              "properties": {
+                "query": {
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "prompt"
+                        },
+                        "promptValue": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "promptValue"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "text-builder"
+                        },
+                        "textValue": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "textValue"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "variable"
+                        },
+                        "argumentPath": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "argumentPath"
+                      ]
+                    }
+                  ],
+                  "errorMessage": "DeepRAG task is required"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "retrievalMode": {
+                  "const": "batchtransform"
+                }
+              },
+              "required": [
+                "retrievalMode"
+              ]
+            },
+            "then": {
+              "properties": {
+                "query": {
+                  "oneOf": [
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "prompt"
+                        },
+                        "promptValue": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "promptValue"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "text-builder"
+                        },
+                        "textValue": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "textValue"
+                      ]
+                    },
+                    {
+                      "properties": {
+                        "mode": {
+                          "const": "variable"
+                        },
+                        "argumentPath": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "argumentPath"
+                      ]
+                    }
+                  ],
+                  "errorMessage": "Batch transform task is required"
+                },
+                "outputColumns": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "errorMessage": "Description is required for every output column"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "description"
+                    ]
+                  },
+                  "errorMessage": {
+                    "minItems": "At least one output column is required"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "inputDefaults": {
+        "indexId": "469965c2-8382-4521-9031-08def39d8059",
+        "indexName": "ar-payment-resolution-index",
+        "folderKey": "67fc19c3-e3a7-4523-aac0-fa63ea83d261",
+        "folderPath": "JD_Demos/demos",
+        "retrievalMode": "semantic",
+        "query": {
+          "mode": "prompt",
+          "textValue": "",
+          "promptValue": "The query for the Semantic strategy",
+          "argumentPath": ""
+        },
+        "threshold": 0,
+        "resultCount": 3,
+        "fileExtension": "All",
+        "folderPathPrefix": {
+          "mode": "text-builder",
+          "textValue": "",
+          "promptValue": "",
+          "argumentPath": ""
+        },
+        "citations": "enabled",
+        "outputColumns": [],
+        "webSearchGrounding": {
+          "value": "enabled"
+        }
+      }
+    },
+    {
+      "nodeType": "uipath.agent.resource.tool.api.cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
+      "version": "1.0.0",
+      "category": "agent.tool.api",
+      "runtimeConstraints": {
+        "exclude": [
+          "api-function"
+        ]
+      },
+      "tags": [
+        "agent-tool",
+        "in-solution",
+        "local"
+      ],
+      "sortOrder": 555,
+      "description": "(In-solution) LookupPaymentApplication",
+      "display": {
+        "label": "LookupPaymentApplication",
+        "icon": "api",
+        "shape": "circle"
+      },
+      "handleConfiguration": [
+        {
+          "position": "top",
+          "handles": [
+            {
+              "id": "input",
+              "type": "target",
+              "handleType": "artifact",
+              "isDefaultForType": true,
+              "constraints": {
+                "maxConnections": 1,
+                "allowedSources": [
+                  {
+                    "nodeType": "uipath.agent.autonomous",
+                    "handleId": "tool"
+                  },
+                  {
+                    "nodeType": "uipath.agent.conversational",
+                    "handleId": "tool"
+                  }
+                ],
+                "validationMessage": "Only Agent's tool handle can connect here"
+              }
+            }
+          ]
+        }
+      ],
+      "model": {
+        "type": "bpmn:ServiceTask",
+        "serviceType": "Orchestrator.ExecuteApiWorkflowAsync",
+        "version": "v2",
+        "bindings": {
+          "resource": "process",
+          "resourceSubType": "Api",
+          "resourceKey": "cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
+          "orchestratorType": "api",
+          "values": [
+            {
+              "name": "name",
+              "propertyAttribute": "name",
+              "default": "LookupPaymentApplication"
+            },
+            {
+              "name": "folderPath",
+              "propertyAttribute": "folderPath",
+              "default": ""
+            }
+          ]
+        },
+        "projectId": "61301115-9557-4ff8-98d0-ff4230ba479f",
+        "projectName": "LookupPaymentApplication",
+        "context": [
+          {
+            "name": "name",
+            "type": "string",
+            "value": "<bindings.name>"
+          },
+          {
+            "name": "folderPath",
+            "type": "string",
+            "value": "<bindings.folderPath>"
+          },
+          {
+            "name": "_label",
+            "type": "string",
+            "value": "LookupPaymentApplication"
+          }
+        ],
+        "source": true
+      },
+      "form": {
+        "id": "tool-form",
+        "title": "LookupPaymentApplication",
+        "sections": []
+      },
+      "inputDefinition": {},
+      "inputDefaults": {
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "outputDefinition": {}
     }
   ],
+  "bindings": [
+    {
+      "id": "bLookupPaymentName",
+      "name": "name",
+      "type": "string",
+      "resource": "process",
+      "resourceKey": "cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
+      "default": "LookupPaymentApplication",
+      "propertyAttribute": "name",
+      "resourceSubType": "Api"
+    },
+    {
+      "id": "bLookupPaymentFolderPath",
+      "name": "folderPath",
+      "type": "string",
+      "resource": "process",
+      "resourceKey": "cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
+      "default": "solution_folder",
+      "propertyAttribute": "folderPath",
+      "resourceSubType": "Api"
+    }
+  ],
+  "variables": {
+    "globals": [
+      {
+        "id": "caseId",
+        "direction": "inout",
+        "type": "string",
+        "description": "One supported demo case identifier returned with the result",
+        "triggerNodeId": "start"
+      },
+      {
+        "id": "recipientEmail",
+        "direction": "in",
+        "type": "string",
+        "description": "Presenter-supplied Outlook recipient",
+        "triggerNodeId": "start"
+      },
+      {
+        "id": "status",
+        "direction": "out",
+        "type": "string"
+      },
+      {
+        "id": "disputeType",
+        "direction": "out",
+        "type": "string"
+      },
+      {
+        "id": "triageRationale",
+        "direction": "out",
+        "type": "string"
+      },
+      {
+        "id": "triageConfidence",
+        "direction": "out",
+        "type": "number"
+      },
+      {
+        "id": "recommendedAction",
+        "direction": "out",
+        "type": "string"
+      },
+      {
+        "id": "approvalDecision",
+        "direction": "out",
+        "type": "string"
+      },
+      {
+        "id": "approvalComments",
+        "direction": "out",
+        "type": "string"
+      },
+      {
+        "id": "updateResult",
+        "direction": "out",
+        "type": "object"
+      },
+      {
+        "id": "emailSent",
+        "direction": "out",
+        "type": "boolean"
+      },
+      {
+        "id": "resourcesUsed",
+        "direction": "out",
+        "type": "string"
+      },
+      {
+        "id": "auditSummary",
+        "direction": "out",
+        "type": "string"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "start.output",
+        "type": "object",
+        "description": "Data passed when manually triggering the process.",
+        "binding": {
+          "nodeId": "start",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "loadSampleCase.output",
+        "type": "any",
+        "description": "The return value of the script",
+        "binding": {
+          "nodeId": "loadSampleCase",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "loadSampleCase.error",
+        "type": "object",
+        "description": "Error information if the node fails",
+        "schema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "required": [
+            "code",
+            "message",
+            "detail",
+            "category",
+            "status"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "Error code as a string"
+            },
+            "message": {
+              "type": "string",
+              "description": "High-level error message"
+            },
+            "detail": {
+              "type": "string",
+              "description": "Detailed error description"
+            },
+            "category": {
+              "type": "string",
+              "description": "Error category"
+            },
+            "status": {
+              "type": "integer",
+              "description": "HTTP status code"
+            }
+          },
+          "additionalProperties": false
+        },
+        "binding": {
+          "nodeId": "loadSampleCase",
+          "outputId": "error"
+        }
+      },
+      {
+        "id": "triageAgent.output",
+        "type": "object",
+        "description": "Agent response",
+        "binding": {
+          "nodeId": "triageAgent",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "triageAgent.error",
+        "type": "object",
+        "description": "Error information if the node fails",
+        "schema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "required": [
+            "code",
+            "message",
+            "detail",
+            "category",
+            "status"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "Error code as a string"
+            },
+            "message": {
+              "type": "string",
+              "description": "High-level error message"
+            },
+            "detail": {
+              "type": "string",
+              "description": "Detailed error description"
+            },
+            "category": {
+              "type": "string",
+              "description": "Error category"
+            },
+            "status": {
+              "type": "integer",
+              "description": "HTTP status code"
+            }
+          },
+          "additionalProperties": false
+        },
+        "binding": {
+          "nodeId": "triageAgent",
+          "outputId": "error"
+        }
+      },
+      {
+        "id": "isSupportedTriage.matchedCase",
+        "type": "string",
+        "description": "The label of the matched branch (true/false label)",
+        "binding": {
+          "nodeId": "isSupportedTriage",
+          "outputId": "matchedCase"
+        }
+      },
+      {
+        "id": "isSupportedTriage.matchedCaseId",
+        "type": "string",
+        "description": "The branch that was taken (true or false)",
+        "binding": {
+          "nodeId": "isSupportedTriage",
+          "outputId": "matchedCaseId"
+        }
+      },
+      {
+        "id": "routeByDisputeType.matchedCase",
+        "type": "string",
+        "description": "The label of the matched case",
+        "binding": {
+          "nodeId": "routeByDisputeType",
+          "outputId": "matchedCase"
+        }
+      },
+      {
+        "id": "routeByDisputeType.matchedCaseId",
+        "type": "string",
+        "description": "The ID of the matched case (\"default\" for the default branch)",
+        "binding": {
+          "nodeId": "routeByDisputeType",
+          "outputId": "matchedCaseId"
+        }
+      },
+      {
+        "id": "poMismatchAgent.output",
+        "type": "object",
+        "description": "Agent response",
+        "binding": {
+          "nodeId": "poMismatchAgent",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "poMismatchAgent.error",
+        "type": "object",
+        "description": "Error information if the node fails",
+        "schema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "required": [
+            "code",
+            "message",
+            "detail",
+            "category",
+            "status"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "Error code as a string"
+            },
+            "message": {
+              "type": "string",
+              "description": "High-level error message"
+            },
+            "detail": {
+              "type": "string",
+              "description": "Detailed error description"
+            },
+            "category": {
+              "type": "string",
+              "description": "Error category"
+            },
+            "status": {
+              "type": "integer",
+              "description": "HTTP status code"
+            }
+          },
+          "additionalProperties": false
+        },
+        "binding": {
+          "nodeId": "poMismatchAgent",
+          "outputId": "error"
+        }
+      },
+      {
+        "id": "missingPodAgent.output",
+        "type": "object",
+        "description": "Agent response",
+        "binding": {
+          "nodeId": "missingPodAgent",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "missingPodAgent.error",
+        "type": "object",
+        "description": "Error information if the node fails",
+        "schema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "required": [
+            "code",
+            "message",
+            "detail",
+            "category",
+            "status"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "Error code as a string"
+            },
+            "message": {
+              "type": "string",
+              "description": "High-level error message"
+            },
+            "detail": {
+              "type": "string",
+              "description": "Detailed error description"
+            },
+            "category": {
+              "type": "string",
+              "description": "Error category"
+            },
+            "status": {
+              "type": "integer",
+              "description": "HTTP status code"
+            }
+          },
+          "additionalProperties": false
+        },
+        "binding": {
+          "nodeId": "missingPodAgent",
+          "outputId": "error"
+        }
+      },
+      {
+        "id": "paymentMisapplicationAgent.output",
+        "type": "object",
+        "description": "Agent response",
+        "binding": {
+          "nodeId": "paymentMisapplicationAgent",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "paymentMisapplicationAgent.error",
+        "type": "object",
+        "description": "Error information if the node fails",
+        "schema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "required": [
+            "code",
+            "message",
+            "detail",
+            "category",
+            "status"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "Error code as a string"
+            },
+            "message": {
+              "type": "string",
+              "description": "High-level error message"
+            },
+            "detail": {
+              "type": "string",
+              "description": "Detailed error description"
+            },
+            "category": {
+              "type": "string",
+              "description": "Error category"
+            },
+            "status": {
+              "type": "integer",
+              "description": "HTTP status code"
+            }
+          },
+          "additionalProperties": false
+        },
+        "binding": {
+          "nodeId": "paymentMisapplicationAgent",
+          "outputId": "error"
+        }
+      },
+      {
+        "id": "normalizeProposal.output",
+        "type": "any",
+        "description": "The return value of the script",
+        "binding": {
+          "nodeId": "normalizeProposal",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "normalizeProposal.error",
+        "type": "object",
+        "description": "Error information if the node fails",
+        "schema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "required": [
+            "code",
+            "message",
+            "detail",
+            "category",
+            "status"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "Error code as a string"
+            },
+            "message": {
+              "type": "string",
+              "description": "High-level error message"
+            },
+            "detail": {
+              "type": "string",
+              "description": "Detailed error description"
+            },
+            "category": {
+              "type": "string",
+              "description": "Error category"
+            },
+            "status": {
+              "type": "integer",
+              "description": "HTTP status code"
+            }
+          },
+          "additionalProperties": false
+        },
+        "binding": {
+          "nodeId": "normalizeProposal",
+          "outputId": "error"
+        }
+      },
+      {
+        "id": "needsManualTriage.status",
+        "type": "string",
+        "binding": {
+          "nodeId": "needsManualTriage",
+          "outputId": "status"
+        }
+      },
+      {
+        "id": "needsManualTriage.caseId",
+        "type": "string",
+        "binding": {
+          "nodeId": "needsManualTriage",
+          "outputId": "caseId"
+        }
+      },
+      {
+        "id": "needsManualTriage.disputeType",
+        "type": "string",
+        "binding": {
+          "nodeId": "needsManualTriage",
+          "outputId": "disputeType"
+        }
+      },
+      {
+        "id": "needsManualTriage.triageRationale",
+        "type": "string",
+        "binding": {
+          "nodeId": "needsManualTriage",
+          "outputId": "triageRationale"
+        }
+      },
+      {
+        "id": "needsManualTriage.triageConfidence",
+        "type": "string",
+        "binding": {
+          "nodeId": "needsManualTriage",
+          "outputId": "triageConfidence"
+        }
+      },
+      {
+        "id": "needsManualTriage.recommendedAction",
+        "type": "string",
+        "binding": {
+          "nodeId": "needsManualTriage",
+          "outputId": "recommendedAction"
+        }
+      },
+      {
+        "id": "needsManualTriage.approvalDecision",
+        "type": "string",
+        "binding": {
+          "nodeId": "needsManualTriage",
+          "outputId": "approvalDecision"
+        }
+      },
+      {
+        "id": "needsManualTriage.approvalComments",
+        "type": "string",
+        "binding": {
+          "nodeId": "needsManualTriage",
+          "outputId": "approvalComments"
+        }
+      },
+      {
+        "id": "needsManualTriage.updateResult",
+        "type": "string",
+        "binding": {
+          "nodeId": "needsManualTriage",
+          "outputId": "updateResult"
+        }
+      },
+      {
+        "id": "needsManualTriage.emailSent",
+        "type": "string",
+        "binding": {
+          "nodeId": "needsManualTriage",
+          "outputId": "emailSent"
+        }
+      },
+      {
+        "id": "needsManualTriage.resourcesUsed",
+        "type": "string",
+        "binding": {
+          "nodeId": "needsManualTriage",
+          "outputId": "resourcesUsed"
+        }
+      },
+      {
+        "id": "needsManualTriage.auditSummary",
+        "type": "string",
+        "binding": {
+          "nodeId": "needsManualTriage",
+          "outputId": "auditSummary"
+        }
+      },
+      {
+        "id": "proposalReady.status",
+        "type": "string",
+        "binding": {
+          "nodeId": "proposalReady",
+          "outputId": "status"
+        }
+      },
+      {
+        "id": "proposalReady.caseId",
+        "type": "string",
+        "binding": {
+          "nodeId": "proposalReady",
+          "outputId": "caseId"
+        }
+      },
+      {
+        "id": "proposalReady.disputeType",
+        "type": "string",
+        "binding": {
+          "nodeId": "proposalReady",
+          "outputId": "disputeType"
+        }
+      },
+      {
+        "id": "proposalReady.triageRationale",
+        "type": "string",
+        "binding": {
+          "nodeId": "proposalReady",
+          "outputId": "triageRationale"
+        }
+      },
+      {
+        "id": "proposalReady.triageConfidence",
+        "type": "string",
+        "binding": {
+          "nodeId": "proposalReady",
+          "outputId": "triageConfidence"
+        }
+      },
+      {
+        "id": "proposalReady.recommendedAction",
+        "type": "string",
+        "binding": {
+          "nodeId": "proposalReady",
+          "outputId": "recommendedAction"
+        }
+      },
+      {
+        "id": "proposalReady.approvalDecision",
+        "type": "string",
+        "binding": {
+          "nodeId": "proposalReady",
+          "outputId": "approvalDecision"
+        }
+      },
+      {
+        "id": "proposalReady.approvalComments",
+        "type": "string",
+        "binding": {
+          "nodeId": "proposalReady",
+          "outputId": "approvalComments"
+        }
+      },
+      {
+        "id": "proposalReady.updateResult",
+        "type": "string",
+        "binding": {
+          "nodeId": "proposalReady",
+          "outputId": "updateResult"
+        }
+      },
+      {
+        "id": "proposalReady.emailSent",
+        "type": "string",
+        "binding": {
+          "nodeId": "proposalReady",
+          "outputId": "emailSent"
+        }
+      },
+      {
+        "id": "proposalReady.resourcesUsed",
+        "type": "string",
+        "binding": {
+          "nodeId": "proposalReady",
+          "outputId": "resourcesUsed"
+        }
+      },
+      {
+        "id": "proposalReady.auditSummary",
+        "type": "string",
+        "binding": {
+          "nodeId": "proposalReady",
+          "outputId": "auditSummary"
+        }
+      }
+    ],
+    "variableUpdates": {}
+  },
+  "runtime": "maestro",
   "layout": {
     "nodes": {
       "start": {
         "position": {
-          "x": 256,
-          "y": 144
+          "x": -192,
+          "y": 0
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "loadSampleCase": {
+        "position": {
+          "x": 1536,
+          "y": -336
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "triageAgent": {
+        "position": {
+          "x": 1536,
+          "y": -336
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "isSupportedTriage": {
+        "position": {
+          "x": 1536,
+          "y": -336
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "routeByDisputeType": {
+        "position": {
+          "x": 1536,
+          "y": -336
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "poMismatchAgent": {
+        "position": {
+          "x": 1536,
+          "y": -336
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "missingPodAgent": {
+        "position": {
+          "x": 1536,
+          "y": -336
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "paymentMisapplicationAgent": {
+        "position": {
+          "x": 1536,
+          "y": -336
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "triageTaxonomyContext": {
+        "position": {
+          "x": 1536,
+          "y": -336
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "paymentResolutionContext": {
+        "position": {
+          "x": 1536,
+          "y": -336
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "lookupPaymentTool": {
+        "position": {
+          "x": 1536,
+          "y": -336
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "normalizeProposal": {
+        "position": {
+          "x": 1536,
+          "y": -336
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "needsManualTriage": {
+        "position": {
+          "x": 1536,
+          "y": -336
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        }
+      },
+      "proposalReady": {
+        "position": {
+          "x": 1536,
+          "y": -336
+        },
+        "size": {
+          "width": 96,
+          "height": 96
         }
       }
     }
