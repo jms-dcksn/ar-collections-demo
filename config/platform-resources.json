@@ -6,14 +6,14 @@
     {
       "source": "knowledge/triage/ar-dispute-taxonomy-and-examples.txt",
       "bucket": "ar-dispute-triage-kb",
-      "bucketKey": "",
+      "bucketKey": "9ebe576c-c8b9-4e82-bd47-32be23a1cdc0",
       "index": "ar-dispute-triage-index",
       "indexKey": ""
     },
     {
       "source": "knowledge/payment/payment-misapplication-resolution-playbook.txt",
       "bucket": "ar-payment-resolution-kb",
-      "bucketKey": "",
+      "bucketKey": "8bdec5fc-9b40-4053-b879-a74ab933b9bc",
       "index": "ar-payment-resolution-index",
       "indexKey": ""
     }
