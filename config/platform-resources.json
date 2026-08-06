@@ -1,0 +1,21 @@
+{
+  "folderPath": "JD_Demos/demos",
+  "outlookConnection": "james.dickson@uipath.com",
+  "connectionKey": "",
+  "resources": [
+    {
+      "source": "knowledge/triage/ar-dispute-taxonomy-and-examples.txt",
+      "bucket": "ar-dispute-triage-kb",
+      "bucketKey": "",
+      "index": "ar-dispute-triage-index",
+      "indexKey": ""
+    },
+    {
+      "source": "knowledge/payment/payment-misapplication-resolution-playbook.txt",
+      "bucket": "ar-payment-resolution-kb",
+      "bucketKey": "",
+      "index": "ar-payment-resolution-index",
+      "indexKey": ""
+    }
+  ]
+}
