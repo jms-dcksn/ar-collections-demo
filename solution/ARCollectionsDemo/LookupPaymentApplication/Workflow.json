@@ -11,6 +11,84 @@
       "variables": []
     }
   },
+  "input": {
+    "schema": {
+      "format": "json",
+      "document": {
+        "type": "object",
+        "properties": {
+          "caseId": {
+            "type": "string"
+          },
+          "customerAccountId": {
+            "type": "string"
+          },
+          "invoiceNumber": {
+            "type": "string"
+          },
+          "paymentReference": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "caseId",
+          "customerAccountId",
+          "invoiceNumber",
+          "paymentReference"
+        ],
+        "title": "Inputs"
+      }
+    }
+  },
+  "output": {
+    "schema": {
+      "format": "json",
+      "document": {
+        "type": "object",
+        "properties": {
+          "paymentReference": {
+            "type": "string"
+          },
+          "paymentAmount": {
+            "type": "number"
+          },
+          "paymentDate": {
+            "type": "string"
+          },
+          "appliedInvoiceNumber": {
+            "type": "string"
+          },
+          "targetInvoiceNumber": {
+            "type": "string"
+          },
+          "applicationStatus": {
+            "type": "string"
+          },
+          "matchedRemittance": {
+            "type": "boolean"
+          },
+          "recommendedAction": {
+            "type": "string"
+          },
+          "sourceSystem": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "paymentReference",
+          "paymentAmount",
+          "paymentDate",
+          "appliedInvoiceNumber",
+          "targetInvoiceNumber",
+          "applicationStatus",
+          "matchedRemittance",
+          "recommendedAction",
+          "sourceSystem"
+        ],
+        "title": "Outputs"
+      }
+    }
+  },
   "do": [
     {
       "Sequence_1": {
@@ -29,6 +107,40 @@
                 "displayName": "Workflow start",
                 "fullName": "Assign",
                 "isTransparent": true
+              }
+            }
+          },
+          {
+            "Javascript_1": {
+              "run": {
+                "script": {
+                  "code": "const { caseId, customerAccountId, invoiceNumber, paymentReference } = $workflow.input;\nconst key = `${caseId}|${customerAccountId}|${invoiceNumber}|${paymentReference}`;\nif (key !== 'AR-PAY-003|SUMMIT-4402|INV-30915|PAY-77821') {\n  throw new Error('LookupPaymentApplication supports only curated demo input AR-PAY-003.');\n}\nreturn {\n  paymentReference: 'PAY-77821',\n  paymentAmount: 36800,\n  paymentDate: '2026-07-02',\n  appliedInvoiceNumber: 'INV-30909',\n  targetInvoiceNumber: 'INV-30915',\n  applicationStatus: 'MISAPPLIED',\n  matchedRemittance: true,\n  recommendedAction: 'REALLOCATE_PAYMENT',\n  sourceSystem: 'MockCashApplication'\n};",
+                  "language": "javascript",
+                  "arguments": "${{ \"$context\": $context, \"$workflow\": $workflow, \"$input\": $input }}"
+                }
+              },
+              "export": {
+                "as": "{ ...$context, outputs: { ...$context?.outputs, \"Javascript_1\": $output } }"
+              },
+              "metadata": {
+                "activityType": "JsInvoke",
+                "displayName": "Lookup payment application",
+                "fullName": "JsInvoke"
+              }
+            }
+          },
+          {
+            "Response_1": {
+              "response": "${$context.outputs.Javascript_1}",
+              "markJobAsFailed": false,
+              "then": "end",
+              "export": {
+                "as": "{ ...$context, outputs: { ...$context?.outputs, \"Response_1\": $output } }"
+              },
+              "metadata": {
+                "activityType": "Response",
+                "displayName": "Return payment application",
+                "fullName": "Response"
               }
             }
           }
