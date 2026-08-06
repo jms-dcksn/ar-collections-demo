@@ -1,3 +1,4 @@
+import importlib.util
 import json
 import re
 from pathlib import Path
@@ -6,6 +7,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PROJECT_DIR = REPO_ROOT / "solution" / "ARCollectionsDemo" / "LookupPaymentApplication"
 WORKFLOW_PATH = PROJECT_DIR / "Workflow.json"
+VERIFIER_PATH = Path(__file__).with_name("verify_lookup_payment.py")
 
 EXPECTED_INPUT_TYPES = {
     "caseId": "string",
@@ -75,6 +77,15 @@ def assert_exact_schema(workflow, contract_name, expected_types):
     assert set(schema["required"]) == set(expected_types)
 
 
+def load_verifier_module():
+    spec = importlib.util.spec_from_file_location(
+        "verify_lookup_payment_under_test", VERIFIER_PATH
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def test_lookup_payment_has_exact_contract_and_no_external_calls():
     workflow = json.loads(WORKFLOW_PATH.read_text(encoding="utf-8"))
     objects = [node for node in walk_json(workflow) if isinstance(node, dict)]
@@ -109,3 +120,26 @@ def test_lookup_payment_has_exact_contract_and_no_external_calls():
         if pattern.search(script_content)
     }
     assert not matched_network_primitives
+
+
+def test_verifier_normalizes_pascal_case_business_keys_exactly():
+    verifier = load_verifier_module()
+    expected = {
+        "paymentReference": "PAY-77821",
+        "paymentAmount": 36800,
+        "paymentDate": "2026-07-02",
+        "appliedInvoiceNumber": "INV-30909",
+        "targetInvoiceNumber": "INV-30915",
+        "applicationStatus": "MISAPPLIED",
+        "matchedRemittance": True,
+        "recommendedAction": "REALLOCATE_PAYMENT",
+        "sourceSystem": "MockCashApplication",
+    }
+    runtime_response = {
+        "Data": {
+            key[0].upper() + key[1:]: value
+            for key, value in expected.items()
+        }
+    }
+
+    assert verifier.extract_business_output(runtime_response, set(expected)) == expected
