@@ -15,62 +15,44 @@
     ],
     "runtimeDependencies": [
       {
-        "bindingType": "index",
-        "bindingKey": "ar-dispute-triage-index",
+        "bindingType": "process",
+        "bindingKey": "cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
         "bindingValues": {
-          "name": {
-            "defaultValue": "ar-dispute-triage-index",
+          "folderPath": {
+            "defaultValue": "solution_folder",
             "isExpression": false
           },
-          "folderPath": {
-            "defaultValue": "JD_Demos/demos",
-            "isExpression": false
-          }
-        },
-        "bindingMetadata": {
-          "bindingsVersion": "2.2",
-          "solutionsSupport": "true"
-        },
-        "resourceKind": "Index",
-        "resourceKey": "9e46f4a3-6c15-4cab-9030-08def39d8059",
-        "resourceName": "ar-dispute-triage-index",
-        "folderKey": "67fc19c3-e3a7-4523-aac0-fa63ea83d261"
-      },
-      {
-        "bindingType": "process",
-        "bindingKey": "LookupPaymentApplication",
-        "bindingValues": {
           "name": {
             "defaultValue": "LookupPaymentApplication",
             "isExpression": false
           }
         },
         "bindingMetadata": {
+          "activityName": "Lookup Payment Application",
           "bindingsVersion": "2.2",
           "solutionsSupport": "true"
         },
         "resourceKind": "Process"
       },
       {
-        "bindingType": "index",
-        "bindingKey": "ar-payment-resolution-index",
+        "bindingType": "connection",
+        "bindingKey": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
         "bindingValues": {
-          "name": {
-            "defaultValue": "ar-payment-resolution-index",
-            "isExpression": false
-          },
-          "folderPath": {
-            "defaultValue": "JD_Demos/demos",
+          "connectionId": {
+            "defaultValue": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
             "isExpression": false
           }
         },
         "bindingMetadata": {
+          "activityName": "Send Email",
           "bindingsVersion": "2.2",
-          "solutionsSupport": "true"
+          "connector": "uipath-microsoft-outlook365",
+          "useConnectionService": "true"
         },
-        "resourceKind": "Index",
-        "resourceKey": "469965c2-8382-4521-9031-08def39d8059",
-        "resourceName": "ar-payment-resolution-index",
+        "resourceKind": "Connection",
+        "resourceType": "uipath-microsoft-outlook365",
+        "resourceKey": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+        "resourceName": "james.dickson@uipath.com",
         "folderKey": "67fc19c3-e3a7-4523-aac0-fa63ea83d261"
       }
     ],
