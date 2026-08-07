@@ -1,26 +1,26 @@
 {
   "$resourceType": "context",
-  "id": "3164f987-7d12-47bd-ba72-815bdc1dbbcd",
-  "referenceKey": null,
-  "isEnabled": true,
   "name": "Payment Resolution Knowledge",
   "description": "Payment-misapplication controls and resolution evidence used to verify a reallocation recommendation.",
-  "contextType": "index",
   "folderPath": "JD_Demos/demos",
   "indexName": "ar-payment-resolution-index",
+  "id": "3164f987-7d12-47bd-ba72-815bdc1dbbcd",
+  "referenceKey": "",
   "settings": {
-    "retrievalMode": "semantic",
     "query": {
-      "variant": "dynamic",
-      "description": "Retrieve payment-misapplication controls and resolution evidence."
+      "description": "Retrieve payment-misapplication controls and resolution evidence.",
+      "variant": "dynamic"
     },
     "folderPathPrefix": {
-      "variant": "static"
-    },
-    "fileExtension": {
-      "value": "All"
+      "variant": "static",
+      "value": ""
     },
     "threshold": 0,
-    "resultCount": 5
-  }
+    "resultCount": 5,
+    "retrievalMode": "semantic",
+    "fileExtension": {
+      "value": "All"
+    }
+  },
+  "contextType": "index"
 }

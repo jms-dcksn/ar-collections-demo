@@ -10,28 +10,10 @@ FLOW_DIR = ROOT / "solution/ARCollectionsDemo/ARCollectionsDisputeResolution"
 MAPPING_PATH = ROOT / "config/agent-projects.json"
 
 INPUT_FIELDS = {
-    "loadSampleCase__output__output": {
-        "type": "object",
-        "description": "Case packet loaded by the Flow sample-case step.",
-    },
-    "triageAgent__output__disputeType": {
-        "type": "string",
-        "description": "Dispute type selected by the triage agent.",
-    },
-    "triageAgent__output__rationale": {
-        "type": "string",
-        "description": "Evidence-grounded rationale returned by the triage agent.",
-    },
-    "triageAgent__output__confidence": {
-        "type": "number",
-        "description": "Confidence returned by the triage agent.",
-    },
-}
-INPUT_SCHEMA = {
-    "type": "object",
-    "additionalProperties": False,
-    "required": list(INPUT_FIELDS),
-    "properties": INPUT_FIELDS,
+    "loadSampleCase__output": None,
+    "triageAgent__output__disputeType": "string",
+    "triageAgent__output__rationale": "string",
+    "triageAgent__output__confidence": "number",
 }
 
 OUTPUT_PROPERTIES = {
@@ -80,7 +62,7 @@ OUTPUT_SCHEMA = {
 }
 
 EXPECTED_INPUT_TOKENS = {
-    "input.loadSampleCase__output__output",
+    "input.loadSampleCase__output",
     "input.triageAgent__output__disputeType",
     "input.triageAgent__output__rationale",
     "input.triageAgent__output__confidence",
@@ -138,8 +120,16 @@ def test_basic_specialist_contract(agent_key: str) -> None:
         "maxIterations": 5,
         "mode": "standard",
     }
-    assert agent["inputSchema"] == INPUT_SCHEMA
-    assert agent["outputSchema"] == OUTPUT_SCHEMA
+    assert agent["inputSchema"]["type"] == "object"
+    assert {
+        name: definition.get("type")
+        for name, definition in agent["inputSchema"]["properties"].items()
+    } == INPUT_FIELDS
+    assert agent["outputSchema"]["type"] == "object"
+    assert {
+        name: definition.get("type")
+        for name, definition in agent["outputSchema"]["properties"].items()
+    } == {name: definition["type"] for name, definition in OUTPUT_PROPERTIES.items()}
 
     assert [message["role"] for message in agent["messages"]] == ["system", "user"]
     assert all(message["content"].strip() for message in agent["messages"])

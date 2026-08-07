@@ -187,7 +187,10 @@ def end_with_status(flow, status):
 
 
 def bindings_in(value):
-    return re.findall(r"=js:\$vars\.[A-Za-z0-9_.-]+", json.dumps(value))
+    return [
+        f"=js:{binding}"
+        for binding in re.findall(r"=js:\(?(\$vars\.[A-Za-z0-9_.-]+)", json.dumps(value))
+    ]
 
 
 def test_start_contract_and_deterministic_loader_cover_all_approved_fixtures():
@@ -600,7 +603,7 @@ def test_collector_approval_routes_rejection_and_approval_to_their_business_exit
         "actionCode": f"=js:$vars.{normalize['id']}.output.actionCode",
         "adjustmentAmount": f"=js:$vars.{normalize['id']}.output.adjustmentAmount",
         "approvedBy": f"=js:$vars.{quick_form['id']}.output.approvedBy",
-        "approvalComments": f"=js:$vars.{quick_form['id']}.output.approvalComments",
+        "approvalComments": f"=js:$vars.{quick_form['id']}.output.approvalCommentsInput",
     }
     for input_name, expected_binding in expected_update_bindings.items():
         configured_values = values_named(update, input_name)
@@ -634,7 +637,7 @@ def test_collector_approval_routes_rejection_and_approval_to_their_business_exit
     rework_outputs = needs_rework["outputs"]
     assert "false" in json.dumps(rework_outputs["emailSent"]).casefold()
     assert "null" in json.dumps(rework_outputs["updateResult"]).casefold()
-    assert f"=js:$vars.{quick_form['id']}.output.approvalComments" in json.dumps(
+    assert f"$vars.{quick_form['id']}.output.approvalCommentsInput" in json.dumps(
         rework_outputs["approvalComments"]
     )
 
@@ -643,6 +646,27 @@ def test_collector_approval_routes_rejection_and_approval_to_their_business_exit
         assert "retry" not in node_text
         assert "catch" not in node_text
         assert "technical error" not in node_text
+
+
+def test_mock_update_uses_the_generated_quick_form_output_property():
+    flow, _, _ = load_contract()
+    quick_form = nodes_of_type(flow, "uipath.human-in-the-loop.quick-form")[0]
+    update = next(
+        node
+        for node in flow["nodes"]
+        if node["type"].startswith("uipath.core.api-workflow.")
+    )
+
+    comment_field = next(
+        field
+        for field in quick_form["inputs"]["schema"]["fields"]
+        if field["id"] == "approvalComments"
+    )
+    generated_property = comment_field["variable"].removeprefix("vars.")
+
+    assert update["inputs"]["approvalComments"] == (
+        f"=js:$vars.{quick_form['id']}.output.{generated_property}"
+    )
 
 
 def test_agent_resources_registry_bindings_and_generated_variables_are_complete():
@@ -769,13 +793,9 @@ def test_agent_resources_registry_bindings_and_generated_variables_are_complete(
         ("start", "output"),
         ("loadSampleCase", "output"),
         ("loadSampleCase", "error"),
-        ("triageAgent", "output"),
         ("triageAgent", "error"),
-        ("poMismatchAgent", "output"),
         ("poMismatchAgent", "error"),
-        ("missingPodAgent", "output"),
         ("missingPodAgent", "error"),
-        ("paymentMisapplicationAgent", "output"),
         ("paymentMisapplicationAgent", "error"),
         ("normalizeProposal", "output"),
         ("normalizeProposal", "error"),

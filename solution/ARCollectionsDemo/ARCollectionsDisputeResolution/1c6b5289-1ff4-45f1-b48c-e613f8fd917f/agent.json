@@ -10,106 +10,61 @@
   },
   "inputSchema": {
     "type": "object",
-    "additionalProperties": false,
     "properties": {
-      "loadSampleCase__output__output": {
-        "type": "object",
-        "description": "Serialized case packet bound from $vars.loadSampleCase.output"
-      },
       "triageAgent__output__disputeType": {
-        "type": "string",
-        "description": "Routed dispute type bound from the triage agent output"
+        "type": "string"
       },
       "triageAgent__output__rationale": {
-        "type": "string",
-        "description": "Triage rationale bound from the triage agent output"
+        "type": "string"
       },
       "triageAgent__output__confidence": {
-        "type": "number",
-        "description": "Triage confidence bound from the triage agent output"
+        "type": "number"
+      },
+      "loadSampleCase__output": {
+        "description": "Bound from $vars.loadSampleCase.output"
       }
-    },
-    "required": [
-      "loadSampleCase__output__output",
-      "triageAgent__output__disputeType",
-      "triageAgent__output__rationale",
-      "triageAgent__output__confidence"
-    ]
+    }
   },
   "outputSchema": {
     "type": "object",
-    "additionalProperties": false,
     "properties": {
       "caseId": {
-        "type": "string",
-        "description": "Original case identifier from the case packet"
+        "type": "string"
       },
       "disputeType": {
-        "type": "string",
-        "description": "Dispute type supplied by the triage route"
+        "type": "string"
       },
       "evidenceSummary": {
-        "type": "string",
-        "description": "Concise summary of the consistent case, lookup, and knowledge evidence"
+        "type": "string"
       },
       "rootCause": {
-        "type": "string",
-        "description": "Concise cause of the payment blocker"
+        "type": "string"
       },
       "recommendedAction": {
-        "type": "string",
-        "description": "Proposed resolution supported by both attached resources"
+        "type": "string"
       },
       "actionCode": {
-        "type": "string",
-        "enum": [
-          "ISSUE_CREDIT",
-          "PROVIDE_POD",
-          "REALLOCATE_PAYMENT"
-        ],
-        "description": "Approved downstream action code"
+        "type": "string"
       },
       "adjustmentAmount": {
-        "type": "number",
-        "description": "Financial adjustment amount, or zero when none is required"
+        "type": "number"
       },
       "confidence": {
-        "type": "number",
-        "minimum": 0,
-        "maximum": 1,
-        "description": "Specialist confidence from zero to one"
+        "type": "number"
       },
       "approvalSummary": {
-        "type": "string",
-        "description": "Concise collector-facing summary"
+        "type": "string"
       },
       "emailSubject": {
-        "type": "string",
-        "description": "Proposed customer email subject"
+        "type": "string"
       },
       "emailBody": {
-        "type": "string",
-        "description": "Proposed plain-text customer response"
+        "type": "string"
       },
       "resourcesUsed": {
-        "type": "string",
-        "description": "Business-readable list of case, API tool, and Context Grounding sources actually used"
+        "type": "string"
       }
-    },
-    "required": [
-      "caseId",
-      "disputeType",
-      "evidenceSummary",
-      "rootCause",
-      "recommendedAction",
-      "actionCode",
-      "adjustmentAmount",
-      "confidence",
-      "approvalSummary",
-      "emailSubject",
-      "emailBody",
-      "resourcesUsed"
-    ]
+    }
   },
   "metadata": {
     "storageVersion": "50.0.0",
@@ -131,7 +86,7 @@
     },
     {
       "role": "user",
-      "content": "Resolve this routed payment-misapplication case.\n\nCase packet: {{input.loadSampleCase__output__output}}\nRouted dispute type: {{input.triageAgent__output__disputeType}}\nTriage rationale: {{input.triageAgent__output__rationale}}\nTriage confidence: {{input.triageAgent__output__confidence}}\n\nCall LookupPaymentApplication and search ar-payment-resolution-index before reasoning. Require consistent evidence from both resources, then return only the required 12-field structured contract.",
+      "content": "Resolve this routed payment-misapplication case.\n\nCase packet: {{input.loadSampleCase__output}}\nRouted dispute type: {{input.triageAgent__output__disputeType}}\nTriage rationale: {{input.triageAgent__output__rationale}}\nTriage confidence: {{input.triageAgent__output__confidence}}\n\nCall LookupPaymentApplication and search ar-payment-resolution-index before reasoning. Require consistent evidence from both resources, then return only the required 12-field structured contract.",
       "contentTokens": [
         {
           "type": "simpleText",
@@ -139,7 +94,7 @@
         },
         {
           "type": "variable",
-          "rawString": "input.loadSampleCase__output__output"
+          "rawString": "input.loadSampleCase__output"
         },
         {
           "type": "simpleText",
@@ -172,5 +127,7 @@
       ]
     }
   ],
-  "projectId": "1c6b5289-1ff4-45f1-b48c-e613f8fd917f"
+  "projectId": "1c6b5289-1ff4-45f1-b48c-e613f8fd917f",
+  "id": "1c6b5289-1ff4-45f1-b48c-e613f8fd917f",
+  "name": "Payment Misapplication Specialist"
 }

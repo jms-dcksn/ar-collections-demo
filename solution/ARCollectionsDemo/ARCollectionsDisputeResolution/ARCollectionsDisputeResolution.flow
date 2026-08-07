@@ -2,17 +2,27 @@
   "id": "2af1fdaa-b414-460f-9f42-b099f793059c",
   "version": "1.9",
   "name": "ARCollectionsDisputeResolution",
+  "runtime": "maestro",
   "nodes": [
     {
       "id": "start",
       "type": "core.trigger.manual",
       "typeVersion": "1.0",
       "display": {
-        "label": "Start AR dispute"
+        "label": "Start AR dispute",
+        "icon": "play"
       },
       "inputs": {
         "entryPointId": "13a89eab-d48e-4b3e-9cf4-e902f60985bc",
         "isDefaultEntryPoint": true
+      },
+      "outputs": {
+        "output": {
+          "type": "object",
+          "description": "Data passed when manually triggering the process.",
+          "source": "null",
+          "var": "output"
+        }
       }
     },
     {
@@ -20,10 +30,59 @@
       "type": "core.action.script",
       "typeVersion": "1.1",
       "display": {
-        "label": "Load Sample Case"
+        "label": "Load Sample Case",
+        "icon": "code"
       },
       "inputs": {
         "script": "const cases = {\n  \"AR-PO-001\": {\n    caseId: \"AR-PO-001\",\n    customerName: \"Northstar Manufacturing\",\n    customerAccountId: \"NORTHSTAR-1701\",\n    invoiceNumber: \"INV-10471\",\n    outstandingBalance: 48750,\n    customerReason: \"The invoice exceeds our purchase order and requires correction.\",\n    openedDate: \"2026-07-07\",\n    evidence: { purchaseOrderNumber: \"PO-77124\", invoiceAmount: 48750, poAuthorizedAmount: 47250, difference: 1500 }\n  },\n  \"AR-POD-002\": {\n    caseId: \"AR-POD-002\",\n    customerName: \"Riverbend Retail\",\n    customerAccountId: \"RIVERBEND-2904\",\n    invoiceNumber: \"INV-20482\",\n    outstandingBalance: 22400,\n    customerReason: \"Payment is on hold pending proof of delivery.\",\n    openedDate: \"2026-07-10\",\n    evidence: { deliveredDate: \"2026-06-18\", signer: \"M. Chen\", shipmentQuantity: 80, invoiceQuantity: 80, quantitiesMatch: true }\n  },\n  \"AR-PAY-003\": {\n    caseId: \"AR-PAY-003\",\n    customerName: \"Summit Medical Distribution\",\n    customerAccountId: \"SUMMIT-4402\",\n    invoiceNumber: \"INV-30915\",\n    outstandingBalance: 36800,\n    customerReason: \"We paid this invoice, but the balance is still open.\",\n    openedDate: \"2026-07-14\",\n    evidence: { reportedPaymentAmount: 36800, paymentReference: \"PAY-77821\" }\n  },\n  \"AR-AMB-004\": {\n    caseId: \"AR-AMB-004\",\n    customerName: \"Lakeshore Components\",\n    customerAccountId: \"LAKESHORE-5506\",\n    invoiceNumber: \"INV-40102\",\n    outstandingBalance: 12800,\n    customerReason: \"The balance does not look right; please investigate\",\n    openedDate: \"2026-07-18\",\n    evidence: {}\n  }\n};\nconst caseId = $vars.start.output.caseId;\nif (!Object.prototype.hasOwnProperty.call(cases, caseId)) {\n  throw new Error(\"Unsupported sample caseId: \" + caseId);\n}\nreturn cases[caseId];"
+      },
+      "outputs": {
+        "output": {
+          "type": "any",
+          "description": "The return value of the script",
+          "source": "=result.response",
+          "var": "output"
+        },
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          },
+          "source": "=Error",
+          "var": "error"
+        }
       }
     },
     {
@@ -31,12 +90,10 @@
       "type": "uipath.agent.autonomous",
       "typeVersion": "1.3",
       "display": {
-        "label": "Grounded Dispute Triage"
+        "label": "Grounded Dispute Triage",
+        "icon": "autonomous-agent"
       },
       "inputs": {
-        "systemPrompt": "Use the configured inline triage agent project.",
-        "userPrompt": "Classify the bound AR dispute case packet.",
-        "model": "gpt-5.6-terra",
         "source": "f7d7d1a5-0f16-43f1-b1b8-b70cef70ece9",
         "agentInputVariables": [
           {
@@ -60,6 +117,48 @@
             "type": "number"
           }
         ]
+      },
+      "outputs": {
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          },
+          "source": "=Error",
+          "var": "error"
+        }
       }
     },
     {
@@ -67,7 +166,8 @@
       "type": "core.logic.decision",
       "typeVersion": "1.2",
       "display": {
-        "label": "Supported and confident?"
+        "label": "Supported and confident?",
+        "icon": "trending-up-down"
       },
       "inputs": {
         "expression": "=js:$vars.triageAgent.output.confidence >= 0.75 && [\"po_mismatch\", \"missing_pod\", \"payment_misapplication\"].indexOf($vars.triageAgent.output.disputeType) >= 0",
@@ -80,7 +180,8 @@
       "type": "core.logic.switch",
       "typeVersion": "1.1",
       "display": {
-        "label": "Route by Dispute Type"
+        "label": "Route by Dispute Type",
+        "icon": "between-horizontal-start"
       },
       "inputs": {
         "cases": [
@@ -107,12 +208,11 @@
       "type": "uipath.agent.autonomous",
       "typeVersion": "1.3",
       "display": {
-        "label": "PO Mismatch Specialist"
+        "label": "PO Mismatch Specialist",
+        "icon": "autonomous-agent",
+        "subLabel": ""
       },
       "inputs": {
-        "systemPrompt": "Use the configured inline PO mismatch specialist project.",
-        "userPrompt": "Prepare a resolution proposal from the bound case and triage result.",
-        "model": "gpt-5.6-terra",
         "source": "30427850-3685-4d58-9c41-8dfb95163182",
         "agentInputVariables": [
           {
@@ -186,6 +286,48 @@
             "type": "string"
           }
         ]
+      },
+      "outputs": {
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          },
+          "source": "=Error",
+          "var": "error"
+        }
       }
     },
     {
@@ -193,12 +335,10 @@
       "type": "uipath.agent.autonomous",
       "typeVersion": "1.3",
       "display": {
-        "label": "Missing POD Specialist"
+        "label": "Missing POD Specialist",
+        "icon": "autonomous-agent"
       },
       "inputs": {
-        "systemPrompt": "Use the configured inline missing POD specialist project.",
-        "userPrompt": "Prepare a resolution proposal from the bound case and triage result.",
-        "model": "gpt-5.6-terra",
         "source": "81cc5d04-87bf-4a19-9a5f-ba1a2dbf006a",
         "agentInputVariables": [
           {
@@ -272,6 +412,48 @@
             "type": "string"
           }
         ]
+      },
+      "outputs": {
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          },
+          "source": "=Error",
+          "var": "error"
+        }
       }
     },
     {
@@ -279,12 +461,10 @@
       "type": "uipath.agent.autonomous",
       "typeVersion": "1.3",
       "display": {
-        "label": "Payment Misapplication Specialist"
+        "label": "Payment Misapplication Specialist",
+        "icon": "autonomous-agent"
       },
       "inputs": {
-        "systemPrompt": "Use the configured inline payment misapplication specialist project.",
-        "userPrompt": "Prepare a grounded resolution proposal from the bound case and triage result.",
-        "model": "gpt-5.6-terra",
         "source": "1c6b5289-1ff4-45f1-b48c-e613f8fd917f",
         "agentInputVariables": [
           {
@@ -358,6 +538,48 @@
             "type": "string"
           }
         ]
+      },
+      "outputs": {
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          },
+          "source": "=Error",
+          "var": "error"
+        }
       }
     },
     {
@@ -365,7 +587,8 @@
       "type": "uipath.agent.resource.context.index.ar-dispute-triage-index.9e46f4a3-6c15-4cab-9030-08def39d8059",
       "typeVersion": "1.0.0",
       "display": {
-        "label": "AR Dispute Triage Taxonomy"
+        "label": "AR Dispute Triage Taxonomy",
+        "icon": "file-text"
       },
       "inputs": {
         "source": "deb897d4-bdfb-4ba0-8cbc-63b7d36bb6d3"
@@ -376,7 +599,8 @@
       "type": "uipath.agent.resource.context.index.ar-payment-resolution-index.469965c2-8382-4521-9031-08def39d8059",
       "typeVersion": "1.0.0",
       "display": {
-        "label": "Payment Resolution Knowledge"
+        "label": "Payment Resolution Knowledge",
+        "icon": "file-text"
       },
       "inputs": {
         "source": "3164f987-7d12-47bd-ba72-815bdc1dbbcd"
@@ -387,7 +611,8 @@
       "type": "uipath.agent.resource.tool.api.cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
       "typeVersion": "1.0.0",
       "display": {
-        "label": "Lookup Payment Application"
+        "label": "Lookup Payment Application",
+        "icon": "api"
       },
       "inputs": {
         "source": "01605eeb-d428-49af-81b4-0d5ca844af2f"
@@ -398,10 +623,59 @@
       "type": "core.action.script",
       "typeVersion": "1.1",
       "display": {
-        "label": "Normalize Proposal"
+        "label": "Normalize Proposal",
+        "icon": "code"
       },
       "inputs": {
         "script": "const candidates = [\n  $vars.poMismatchAgent.output,\n  $vars.missingPodAgent.output,\n  $vars.paymentMisapplicationAgent.output\n].filter(function (candidate) { return candidate && candidate.caseId; });\nif (candidates.length !== 1) {\n  throw new Error(\"Expected exactly one specialist proposal; received \" + candidates.length);\n}\nconst proposal = candidates[0];\nconst required = [\n  \"caseId\", \"disputeType\", \"evidenceSummary\", \"rootCause\",\n  \"recommendedAction\", \"actionCode\", \"adjustmentAmount\", \"confidence\",\n  \"approvalSummary\", \"emailSubject\", \"emailBody\", \"resourcesUsed\"\n];\nconst actual = Object.keys(proposal).sort();\nconst expected = required.slice().sort();\nif (JSON.stringify(actual) !== JSON.stringify(expected)) {\n  throw new Error(\"Specialist proposal must contain exactly the 12-field contract\");\n}\nrequired.forEach(function (field) {\n  if (proposal[field] === null || proposal[field] === undefined) {\n    throw new Error(\"Missing specialist proposal field: \" + field);\n  }\n});\nif (typeof proposal.adjustmentAmount !== \"number\" || typeof proposal.confidence !== \"number\") {\n  throw new Error(\"Specialist numeric fields have invalid types\");\n}\nreturn proposal;"
+      },
+      "outputs": {
+        "output": {
+          "type": "any",
+          "description": "The return value of the script",
+          "source": "=result.response",
+          "var": "output"
+        },
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          },
+          "source": "=Error",
+          "var": "error"
+        }
       }
     },
     {
@@ -409,45 +683,58 @@
       "type": "core.control.end",
       "typeVersion": "1.0",
       "display": {
-        "label": "Needs Manual Triage"
+        "label": "Needs Manual Triage",
+        "icon": "circle-check"
       },
       "inputs": {},
       "outputs": {
         "status": {
-          "source": "=js:\"needs_manual_triage\""
+          "source": "=js:\"needs_manual_triage\"",
+          "type": "string"
         },
         "resultCaseId": {
-          "source": "=js:$vars.start.output.caseId"
+          "source": "=js:$vars.start.output.caseId",
+          "type": "string"
         },
         "disputeType": {
-          "source": "=js:$vars.triageAgent.output.disputeType"
+          "source": "=js:$vars.triageAgent.output.disputeType",
+          "type": "string"
         },
         "triageRationale": {
-          "source": "=js:$vars.triageAgent.output.rationale"
+          "source": "=js:$vars.triageAgent.output.rationale",
+          "type": "string"
         },
         "triageConfidence": {
-          "source": "=js:$vars.triageAgent.output.confidence"
+          "source": "=js:$vars.triageAgent.output.confidence",
+          "type": "string"
         },
         "recommendedAction": {
-          "source": "=js:null"
+          "source": "=js:null",
+          "type": "string"
         },
         "approvalDecision": {
-          "source": "=js:null"
+          "source": "=js:null",
+          "type": "string"
         },
         "approvalComments": {
-          "source": "=js:null"
+          "source": "=js:null",
+          "type": "string"
         },
         "updateResult": {
-          "source": "=js:null"
+          "source": "=js:null",
+          "type": "string"
         },
         "emailSent": {
-          "source": "=js:false"
+          "source": "=js:false",
+          "type": "string"
         },
         "resourcesUsed": {
-          "source": "=js:\"AR Dispute Triage Taxonomy\""
+          "source": "=js:\"AR Dispute Triage Taxonomy\"",
+          "type": "string"
         },
         "auditSummary": {
-          "source": "=js:\"Manual triage required; no specialist, API workflow, approval, or email side effect ran.\""
+          "source": "=js:\"Manual triage required; no specialist, API workflow, approval, or email side effect ran.\"",
+          "type": "string"
         }
       }
     },
@@ -456,7 +743,8 @@
       "type": "uipath.human-in-the-loop.quick-form",
       "typeVersion": "1.0",
       "display": {
-        "label": "Review AR dispute resolution"
+        "label": "Review AR dispute resolution",
+        "icon": "users"
       },
       "inputs": {
         "title": "Review AR dispute resolution",
@@ -612,14 +900,18 @@
         "output": {
           "type": "object",
           "description": "Task result data",
+          "descriptionKey": "hitlOutputBuilder_taskResultData_description",
           "source": "=result",
           "var": "output",
           "properties": {
             "approvedBy": {
-              "type": "string"
+              "type": "string",
+              "title": "Approved by"
             },
-            "approvalComments": {
-              "type": "string"
+            "approvalCommentsInput": {
+              "type": "string",
+              "title": "Approval comments",
+              "fieldId": "approvalComments"
             },
             "Action": {
               "type": "string",
@@ -634,6 +926,7 @@
         "status": {
           "type": "string",
           "description": "Task completion status",
+          "descriptionKey": "hitlOutputBuilder_taskCompletionStatus_description",
           "source": "=result.Action",
           "var": "status",
           "enum": [
@@ -649,7 +942,8 @@
       "type": "core.logic.decision",
       "typeVersion": "1.2",
       "display": {
-        "label": "Resolution approved?"
+        "label": "Resolution approved?",
+        "icon": "trending-up-down"
       },
       "inputs": {
         "expression": "=js:$vars.reviewArDisputeResolution1.status === \"Approve\"",
@@ -662,7 +956,8 @@
       "type": "uipath.core.api-workflow.e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
       "typeVersion": "1.0.0",
       "display": {
-        "label": "MockUpdateDispute"
+        "label": "MockUpdateDispute",
+        "icon": "api"
       },
       "inputs": {
         "caseId": "=js:$vars.normalizeProposal.output.caseId",
@@ -670,20 +965,54 @@
         "actionCode": "=js:$vars.normalizeProposal.output.actionCode",
         "adjustmentAmount": "=js:$vars.normalizeProposal.output.adjustmentAmount",
         "approvedBy": "=js:$vars.reviewArDisputeResolution1.output.approvedBy",
-        "approvalComments": "=js:$vars.reviewArDisputeResolution1.output.approvalComments"
+        "approvalComments": "=js:$vars.reviewArDisputeResolution1.output.approvalCommentsInput"
       },
       "outputs": {
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "source": "=Error",
+          "var": "error",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
         "output": {
           "type": "object",
           "description": "The return value of the API workflow",
           "source": "=result.response",
           "var": "output"
-        },
-        "error": {
-          "type": "object",
-          "description": "Error information if the API workflow fails",
-          "source": "=result.Error",
-          "var": "error"
         }
       }
     },
@@ -692,45 +1021,63 @@
       "type": "core.control.end",
       "typeVersion": "1.0",
       "display": {
-        "label": "Needs Rework"
+        "label": "Needs Rework",
+        "icon": "circle-check",
+        "subLabel": ""
       },
       "inputs": {},
       "outputs": {
         "status": {
-          "source": "=js:\"needs_rework\""
+          "source": "=js:\"needs_rework\"",
+          "type": "string"
         },
         "resultCaseId": {
-          "source": "=js:$vars.start.output.caseId"
+          "source": "=js:$vars.start.output.caseId",
+          "type": "string"
         },
         "disputeType": {
-          "source": "=js:$vars.triageAgent.output.disputeType"
+          "source": "=js:$vars.triageAgent.output.disputeType",
+          "type": "string"
         },
         "triageRationale": {
-          "source": "=js:$vars.triageAgent.output.rationale"
+          "source": "=js:$vars.triageAgent.output.rationale",
+          "type": "string"
         },
         "triageConfidence": {
-          "source": "=js:$vars.triageAgent.output.confidence"
+          "source": "=js:$vars.triageAgent.output.confidence",
+          "type": "string"
         },
         "recommendedAction": {
-          "source": "=js:$vars.normalizeProposal.output.recommendedAction"
+          "source": "=js:$vars.normalizeProposal.output.recommendedAction",
+          "type": "string"
         },
         "approvalDecision": {
-          "source": "=js:$vars.reviewArDisputeResolution1.status"
+          "source": "=js:$vars.reviewArDisputeResolution1.status",
+          "type": "string"
         },
         "approvalComments": {
-          "source": "=js:$vars.reviewArDisputeResolution1.output.approvalComments"
+          "source": {
+            "type": "jsExpression",
+            "expression": "$vars.reviewArDisputeResolution1.output.approvalCommentsInput",
+            "fieldType": "string"
+          },
+          "type": "string"
         },
         "updateResult": {
-          "source": "=js:null"
+          "source": "=js:null",
+          "type": "string"
         },
         "emailSent": {
-          "source": "=js:false"
+          "source": "=js:false",
+          "type": "string"
         },
         "resourcesUsed": {
-          "source": "=js:$vars.normalizeProposal.output.resourcesUsed"
+          "source": "=js:$vars.normalizeProposal.output.resourcesUsed",
+          "type": "string"
         },
         "auditSummary": {
-          "source": "=js:\"Collector rejected the proposal; no back-office update or email side effect ran.\""
+          "source": "=js:\"Collector rejected the proposal; no back-office update or email side effect ran.\"",
+          "type": "string"
         }
       }
     },
@@ -739,45 +1086,63 @@
       "type": "core.control.end",
       "typeVersion": "1.0",
       "display": {
-        "label": "Resolved"
+        "label": "Resolved",
+        "icon": "circle-check",
+        "subLabel": ""
       },
       "inputs": {},
       "outputs": {
         "status": {
-          "source": "=js:\"resolved\""
+          "source": "=js:\"resolved\"",
+          "type": "string"
         },
         "resultCaseId": {
-          "source": "=js:$vars.start.output.caseId"
+          "source": "=js:$vars.start.output.caseId",
+          "type": "string"
         },
         "disputeType": {
-          "source": "=js:$vars.triageAgent.output.disputeType"
+          "source": "=js:$vars.triageAgent.output.disputeType",
+          "type": "string"
         },
         "triageRationale": {
-          "source": "=js:$vars.triageAgent.output.rationale"
+          "source": "=js:$vars.triageAgent.output.rationale",
+          "type": "string"
         },
         "triageConfidence": {
-          "source": "=js:$vars.triageAgent.output.confidence"
+          "source": "=js:$vars.triageAgent.output.confidence",
+          "type": "string"
         },
         "recommendedAction": {
-          "source": "=js:$vars.normalizeProposal.output.recommendedAction"
+          "source": "=js:$vars.normalizeProposal.output.recommendedAction",
+          "type": "string"
         },
         "approvalDecision": {
-          "source": "=js:$vars.reviewArDisputeResolution1.status"
+          "source": "=js:$vars.reviewArDisputeResolution1.status",
+          "type": "string"
         },
         "approvalComments": {
-          "source": "=js:$vars.reviewArDisputeResolution1.output.approvalComments"
+          "source": {
+            "type": "jsExpression",
+            "expression": "$vars.reviewArDisputeResolution1.output.approvalCommentsInput",
+            "fieldType": "string"
+          },
+          "type": "string"
         },
         "updateResult": {
-          "source": "=js:$vars.mockUpdateDispute1.output"
+          "source": "=js:$vars.mockUpdateDispute1.output",
+          "type": "string"
         },
         "emailSent": {
-          "source": "=js:true"
+          "source": "=js:true",
+          "type": "string"
         },
         "resourcesUsed": {
-          "source": "=js:$vars.normalizeProposal.output.resourcesUsed"
+          "source": "=js:$vars.normalizeProposal.output.resourcesUsed",
+          "type": "string"
         },
         "auditSummary": {
-          "source": "=js:\"Collector approved the proposal; mock update completed and the Outlook response was sent.\""
+          "source": "=js:\"Collector approved the proposal; mock update completed and the Outlook response was sent.\"",
+          "type": "string"
         }
       }
     },
@@ -786,7 +1151,9 @@
       "type": "uipath.connector.uipath-microsoft-outlook365.send-email",
       "typeVersion": "1.0.0",
       "display": {
-        "label": "Send Email"
+        "label": "Send Email",
+        "icon": "https://cloud.uipath.com/a17c9af1-091d-4dd2-9cec-ed787c6601c8/studio_/typecache/icons/160499b52f7cea190b530fe6f40da7ee03455a8d3fb72dd7f4f68d61e7865a3a.svg",
+        "subLabel": ""
       },
       "inputs": {
         "detail": {
@@ -796,21 +1163,16 @@
           "connectionFolderKey": "67fc19c3-e3a7-4523-aac0-fa63ea83d261",
           "method": "POST",
           "endpoint": "/hubs/productivity/send-mail-v2",
-          "bodyParameters": {
-            "message.toRecipients": "=js:$vars.start.output.recipientEmail",
-            "message.subject": "=js:$vars.normalizeProposal.output.emailSubject",
-            "message.body.content": "=js:$vars.normalizeProposal.output.emailBody",
-            "saveToSentItems": true
-          },
           "queryParameters": {
             "saveAsDraft": false,
             "includeMessageDetails": true
           },
-          "uiPathActivityTypeId": "c7ce0a96-2091-3d94-b16f-706ebb1eb351",
-          "errorState": {
-            "issues": []
+          "bodyParameters": {
+            "message.toRecipients": "=js:($vars.start.output.recipientEmail)",
+            "message.subject": "=js:($vars.normalizeProposal.output.emailSubject)",
+            "message.body.content": "=js:($vars.normalizeProposal.output.emailBody)",
+            "saveToSentItems": true
           },
-          "configuration": "=jsonString:{\"essentialConfiguration\":{\"instanceParameters\":{\"connectorKey\":\"uipath-microsoft-outlook365\",\"objectName\":\"send-mail-v2\",\"httpMethod\":\"POST\",\"activityType\":\"Curated\",\"version\":\"1.0.0\",\"supportsStreaming\":false,\"subType\":\"standard\"},\"objectName\":\"send-mail-v2\",\"operation\":\"create\",\"httpMethod\":\"POST\",\"path\":\"/hubs/productivity/send-mail-v2\",\"packageVersion\":\"1.0.0\",\"connectorVersion\":null,\"executionType\":null,\"customFieldsRequestDetails\":null,\"unifiedTypesCompatible\":true}}",
           "multipartParameters": [
             {
               "name": "file",
@@ -821,12 +1183,74 @@
               "dataType": "string"
             }
           ],
+          "objectName": "send-mail-v2",
+          "configuration": "=jsonString:{\"essentialConfiguration\":{\"connectorVersion\":\"1.40.3\",\"customFieldsRequestDetails\":null,\"instanceParameters\":{\"connectorKey\":\"uipath-microsoft-outlook365\",\"objectName\":\"send-mail-v2\",\"httpMethod\":\"POST\",\"activityType\":\"Curated\",\"version\":\"1.0.0\",\"supportsStreaming\":false,\"subType\":\"standard\"},\"objectName\":\"send-mail-v2\",\"operation\":\"create\",\"packageVersion\":\"1.0.0\",\"httpMethod\":\"POST\",\"path\":\"/hubs/productivity/send-mail-v2\",\"unifiedTypesCompatible\":true,\"savedJitInputFieldId\":\"in_send-mail-v2\"},\"optionalConfiguration\":{\"_textBlocks\":[],\"objectActions\":[],\"connectorName\":\"Microsoft Outlook 365\",\"agentIdentity\":null,\"maxPageSize\":1000,\"jobArguments\":null,\"isAutopilotInvalidConfig\":false,\"additionalHeaders\":null,\"cachedLookupValues\":[],\"cachedBrowserItems\":[],\"cachedPropertyMappings\":[],\"primaryKeys\":[],\"objectDisplayName\":\"Send Mail\",\"eventMode\":null,\"eventOperation\":null,\"hasBreakingChanges\":false,\"fieldsContainer\":{\"outputTypeDefinition\":\"{\\\"conversationId\\\":string;\\\"id\\\":string;\\\"internetMessageId\\\":string;\\\"status\\\":string}\",\"outputJsonSchema\":{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"type\":\"object\",\"properties\":{\"status\":{\"title\":\"Status\",\"type\":\"string\"},\"id\":{\"title\":\"Message ID\",\"type\":\"string\",\"description\":\"A unique identifier for the sent email or saved draft.\"},\"conversationId\":{\"title\":\"Conversation ID\",\"type\":\"string\",\"description\":\"Unique identifier for the email conversation thread. Use this with the List Emails / Get Newest Email Conversation ID filter to track incoming replies.\"},\"internetMessageId\":{\"title\":\"Internet message ID\",\"type\":\"string\",\"description\":\"A unique identifier for the email message on the internet.\"}},\"definitions\":{}},\"hasFileOutput\":false,\"populateOutputFields\":true,\"inputFields\":[{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"saveAsDraft\",\"name\":\"saveAsDraft\",\"displayName\":\"Save as draft\",\"description\":\"Send an email message. By default, the email will be saved as draft.\",\"type\":\"boolean\",\"sortOrder\":1,\"defaultValue\":true,\"primaryKey\":false,\"design\":{\"loadByDefault\":false,\"isMultiSelect\":false,\"enableUserOverride\":false,\"isHidden\":false,\"position\":\"primary\",\"validation\":false},\"fieldActions\":null,\"searchable\":false,\"searchableOperators\":null,\"searchableNames\":null,\"required\":false,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"query\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":true,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Boolean\",\"assemblyQualifiedName\":\"Boolean\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"message_sub_toRecipients\",\"name\":\"message.toRecipients\",\"displayName\":\"To\",\"description\":\"The main recipients of the email, separated by comma(,)\",\"type\":\"string\",\"sortOrder\":2,\"primaryKey\":false,\"design\":{\"loadByDefault\":false,\"isMultiSelect\":false,\"enableUserOverride\":false,\"isHidden\":false,\"position\":\"primary\",\"validation\":false},\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":true,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null,\"sampleValue\":\"\"},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"message_sub_subject\",\"name\":\"message.subject\",\"displayName\":\"Subject\",\"description\":\"The subject of the email\",\"type\":\"string\",\"sortOrder\":3,\"primaryKey\":false,\"design\":{\"loadByDefault\":false,\"isMultiSelect\":false,\"enableUserOverride\":false,\"isHidden\":false,\"position\":\"primary\",\"validation\":false},\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null,\"sampleValue\":\"\"},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"message_sub_body_sub_content\",\"name\":\"message.body.content\",\"displayName\":\"Body\",\"description\":\"The body of the email\",\"type\":\"string\",\"sortOrder\":4,\"primaryKey\":false,\"design\":{\"component\":\"RichTextEditorHTML\",\"loadByDefault\":false,\"isMultiSelect\":false,\"enableUserOverride\":false,\"isHidden\":false,\"position\":\"primary\",\"validation\":false},\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null,\"sampleValue\":\"\"},{\"typeScriptDefinition\":\"{ \\\"ID\\\": string; \\\"FullName\\\"?: string; \\\"MimeType\\\"?: string; \\\"Metadata\\\"?: Record<string, unknown>; }\",\"useUrlInput\":false,\"id\":\"_file\",\"name\":\"file\",\"displayName\":\"Attachment\",\"description\":\"The file to attach to the email\",\"type\":\"file\",\"sortOrder\":5,\"primaryKey\":false,\"design\":{\"loadByDefault\":false,\"isMultiSelect\":false,\"enableUserOverride\":false,\"isHidden\":false,\"position\":\"primary\",\"validation\":false},\"fieldActions\":null,\"searchable\":false,\"searchableOperators\":null,\"searchableNames\":null,\"required\":false,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"multipart\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":true,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"IResource\",\"assemblyQualifiedName\":\"IResource\",\"isValueType\":false},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"includeMessageDetails\",\"name\":\"includeMessageDetails\",\"displayName\":\"Include message details\",\"description\":\"Returns the sent message's identifiers (message ID, conversation ID, internet message ID, status) when set to true. If set to false, response only contains status.\",\"type\":\"boolean\",\"sortOrder\":6,\"defaultValue\":false,\"primaryKey\":false,\"design\":{\"loadByDefault\":false,\"isMultiSelect\":false,\"enableUserOverride\":false,\"isHidden\":false,\"position\":\"primary\",\"validation\":false},\"fieldActions\":null,\"searchable\":false,\"searchableOperators\":null,\"searchableNames\":null,\"required\":false,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"query\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":true,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Boolean\",\"assemblyQualifiedName\":\"Boolean\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"message_sub_replyTo\",\"name\":\"message.replyTo\",\"displayName\":\"Reply to\",\"description\":\"The email addresses to use when replying, separated by comma (,)\",\"type\":\"string\",\"sortOrder\":6,\"primaryKey\":false,\"design\":{\"loadByDefault\":true,\"isMultiSelect\":false,\"enableUserOverride\":false,\"isHidden\":false,\"position\":\"secondary\",\"validation\":false},\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null,\"sampleValue\":\"\"},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"message_sub_importance\",\"name\":\"message.importance\",\"displayName\":\"Importance\",\"description\":\"The importance of the email\",\"type\":\"string\",\"sortOrder\":7,\"primaryKey\":false,\"enum\":[{\"name\":\"High\",\"value\":\"high\"},{\"name\":\"Normal\",\"value\":\"normal\"},{\"name\":\"Low\",\"value\":\"low\"}],\"design\":{\"loadByDefault\":false,\"isMultiSelect\":false,\"enableUserOverride\":false,\"isHidden\":false,\"position\":\"secondary\",\"validation\":false},\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null,\"sampleValue\":\"high\"},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"message_sub_ccRecipients\",\"name\":\"message.ccRecipients\",\"displayName\":\"CC\",\"description\":\"The secondary recipients of the email, separated by comma (,)\",\"type\":\"string\",\"sortOrder\":8,\"primaryKey\":false,\"design\":{\"loadByDefault\":false,\"isMultiSelect\":false,\"enableUserOverride\":false,\"isHidden\":false,\"position\":\"secondary\",\"validation\":false},\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null,\"sampleValue\":\"\"},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"message_sub_bccRecipients\",\"name\":\"message.bccRecipients\",\"displayName\":\"BCC\",\"description\":\"The hidden recipients of the email, separated by comma (,)\",\"type\":\"string\",\"sortOrder\":9,\"primaryKey\":false,\"design\":{\"loadByDefault\":false,\"isMultiSelect\":false,\"enableUserOverride\":false,\"isHidden\":false,\"position\":\"secondary\",\"validation\":false},\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null,\"sampleValue\":\"\"},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"message_sub_body_sub_contentType\",\"name\":\"message.body.contentType\",\"displayName\":\"Message body content type\",\"description\":\"Specifies the format of the email body, such as plain text or HTML.\",\"type\":\"string\",\"sortOrder\":11,\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null,\"sampleValue\":\"\"},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"saveToSentItems\",\"name\":\"saveToSentItems\",\"displayName\":\"Save to sent items\",\"description\":\"Indicates if the email should be saved in the sent items folder.\",\"type\":\"boolean\",\"sortOrder\":12,\"defaultValue\":true,\"primaryKey\":false,\"design\":{\"loadByDefault\":false,\"isMultiSelect\":false,\"enableUserOverride\":false,\"isHidden\":false,\"validation\":false},\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Boolean\",\"assemblyQualifiedName\":\"Boolean\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null,\"sampleValue\":\"\"},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"body\",\"name\":\"body\",\"displayName\":\"Body\",\"description\":\"The object body\",\"type\":\"string\",\"sortOrder\":13,\"primaryKey\":false,\"design\":{\"isMultiSelect\":false,\"loadByDefault\":false,\"enableUserOverride\":false,\"isHidden\":true,\"textBlocks\":null,\"dictionaryWidget\":null,\"selection\":null,\"solutionResourceKind\":null,\"solutionResourceSubTypes\":null,\"exposeAsSubBinding\":null,\"enableURLInput\":null},\"fieldActions\":null,\"searchable\":false,\"searchableOperators\":null,\"searchableNames\":null,\"required\":false,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"multipart\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":true,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null}],\"outputFields\":[{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"send-mail-v2\",\"name\":\"send-mail-v2\",\"displayName\":\"Send Mail\",\"description\":\"\",\"type\":\"Generatedsend-mail-v2\",\"sortOrder\":null,\"format\":null,\"mask\":null,\"defaultValue\":null,\"primaryKey\":false,\"lookup\":null,\"enum\":null,\"design\":null,\"fieldActions\":null,\"searchable\":false,\"searchableOperators\":null,\"searchableNames\":null,\"searchableJoins\":null,\"required\":false,\"request\":false,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"output\",\"onCanvas\":null,\"isJitField\":true,\"isFieldActionParent\":false,\"isMainResponseField\":true,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Object\",\"assemblyQualifiedName\":\"Object\",\"isValueType\":false},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null}],\"jitTypeNeedsRefresh\":false,\"jitInputField\":{\"typeScriptDefinition\":\"{\\\"message\\\":{\\\"bccRecipients\\\":string;\\\"body\\\":{\\\"content\\\":string;\\\"contentType\\\":string};\\\"ccRecipients\\\":string;\\\"importance\\\":string;\\\"replyTo\\\":string;\\\"subject\\\":string;\\\"toRecipients\\\":string};\\\"saveToSentItems\\\":boolean}\",\"useUrlInput\":false,\"id\":\"in_send-mail-v2\",\"name\":\"send-mail-v2\",\"displayName\":\"Send Mail\",\"description\":\"Send Mail input object\",\"type\":\"Generatedsend-mail-v2\",\"sortOrder\":null,\"format\":null,\"mask\":null,\"defaultValue\":\"{\\n  \\\"message\\\": {\\n    \\\"bccRecipients\\\": null,\\n    \\\"body\\\": {\\n      \\\"content\\\": null,\\n      \\\"contentType\\\": null\\n    },\\n    \\\"ccRecipients\\\": null,\\n    \\\"importance\\\": null,\\n    \\\"replyTo\\\": null,\\n    \\\"subject\\\": null,\\n    \\\"toRecipients\\\": null\\n  },\\n  \\\"saveToSentItems\\\": null\\n}\",\"primaryKey\":false,\"lookup\":null,\"enum\":null,\"design\":null,\"fieldActions\":null,\"searchable\":false,\"searchableOperators\":null,\"searchableNames\":null,\"searchableJoins\":null,\"required\":true,\"request\":false,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"jitObjectInput\",\"onCanvas\":null,\"isJitField\":true,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Object\",\"assemblyQualifiedName\":\"Object\",\"isValueType\":false},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},\"inputMode\":null,\"searchableFields\":[],\"hasUnifiedTypes\":true,\"jitTypeHash\":null}}}",
+          "uiPathActivityTypeId": "c7ce0a96-2091-3d94-b16f-706ebb1eb351",
+          "errorState": {
+            "issues": []
+          },
           "inputMetadata": {
             "type": "multipart",
             "multipart": {
               "bodyFieldName": "body"
             }
+          },
+          "telemetryData": {
+            "connectorKey": "uipath-microsoft-outlook365",
+            "connectorName": "Microsoft Outlook 365",
+            "operationType": "create",
+            "objectName": "send-mail-v2",
+            "objectDisplayName": "Send Mail",
+            "primaryKeyName": ""
           }
+        }
+      },
+      "outputs": {
+        "output": {
+          "type": "object",
+          "description": "The return value of the connector.",
+          "source": "=result.response",
+          "var": "output"
+        },
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          },
+          "source": "=Error",
+          "var": "error"
         }
       }
     }
@@ -984,7 +1408,7 @@
         "start",
         "manual"
       ],
-      "sortOrder": 40,
+      "sortOrder": 80,
       "display": {
         "label": "Manual trigger",
         "icon": "play",
@@ -1043,7 +1467,7 @@
         "javascript",
         "python"
       ],
-      "sortOrder": 35,
+      "sortOrder": 70,
       "supportsErrorHandling": true,
       "display": {
         "label": "Script",
@@ -1182,328 +1606,6 @@
       }
     },
     {
-      "nodeType": "core.logic.decision",
-      "version": "1.2",
-      "category": "control-flow",
-      "description": "Branch on a true or false condition",
-      "tags": [
-        "control-flow",
-        "if",
-        "loop",
-        "switch"
-      ],
-      "sortOrder": 21,
-      "display": {
-        "label": "Decision",
-        "icon": "trending-up-down"
-      },
-      "handleConfiguration": [
-        {
-          "position": "left",
-          "handles": [
-            {
-              "id": "input",
-              "type": "target",
-              "handleType": "input"
-            }
-          ],
-          "visible": true
-        },
-        {
-          "position": "right",
-          "handles": [
-            {
-              "id": "true",
-              "type": "source",
-              "handleType": "output",
-              "label": "{inputs.trueLabel}",
-              "constraints": {
-                "minConnections": 1
-              }
-            },
-            {
-              "id": "false",
-              "type": "source",
-              "handleType": "output",
-              "label": "{inputs.falseLabel}"
-            }
-          ],
-          "visible": true
-        }
-      ],
-      "debug": {
-        "runtime": "clientScript"
-      },
-      "model": {
-        "type": "bpmn:InclusiveGateway"
-      },
-      "inputDefinition": {
-        "type": "object",
-        "properties": {
-          "expression": {
-            "type": "string",
-            "minLength": 1,
-            "errorMessage": "Add a condition"
-          },
-          "trueLabel": {
-            "type": "string"
-          },
-          "falseLabel": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "expression"
-        ]
-      },
-      "outputDefinition": {
-        "matchedCase": {
-          "type": "string",
-          "description": "The label of the matched branch (true/false label)",
-          "var": "matchedCase"
-        },
-        "matchedCaseId": {
-          "type": "string",
-          "description": "The branch that was taken (true or false)",
-          "var": "matchedCaseId"
-        }
-      },
-      "inputDefaults": {
-        "trueLabel": "True",
-        "falseLabel": "False"
-      },
-      "form": {
-        "id": "decision-properties",
-        "title": "Decision configuration",
-        "sections": [
-          {
-            "id": "condition",
-            "title": "Condition",
-            "fields": [
-              {
-                "name": "inputs.expression",
-                "type": "custom",
-                "component": "code-editor",
-                "componentProps": {
-                  "singleLine": true,
-                  "mode": "expression",
-                  "toggleable": false,
-                  "language": "javascript",
-                  "returnType": "boolean",
-                  "validationMode": "expression",
-                  "showVariableButton": true,
-                  "placeholder": "$vars.httpRequest1.output.statusCode >= 200 && $vars.httpRequest1.output.statusCode < 300"
-                },
-                "label": "Condition",
-                "description": "The condition must be a JavaScript expression that evaluates to true or false."
-              },
-              {
-                "name": "inputs.trueLabel",
-                "type": "text",
-                "label": "True branch label",
-                "description": "This label appears on the true branch."
-              },
-              {
-                "name": "inputs.falseLabel",
-                "type": "text",
-                "label": "False branch label",
-                "description": "This label appears on the false branch."
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "nodeType": "core.logic.switch",
-      "version": "1.1",
-      "category": "control-flow",
-      "description": "Route to one of many branches by condition",
-      "tags": [
-        "control-flow",
-        "switch",
-        "case",
-        "when"
-      ],
-      "sortOrder": 20,
-      "display": {
-        "label": "Switch",
-        "icon": "between-horizontal-start"
-      },
-      "handleConfiguration": [
-        {
-          "position": "left",
-          "handles": [
-            {
-              "id": "input",
-              "type": "target",
-              "handleType": "input"
-            }
-          ],
-          "visible": true
-        },
-        {
-          "position": "right",
-          "handles": [
-            {
-              "id": "case-{item.id}",
-              "type": "source",
-              "handleType": "output",
-              "label": "{item.label || 'Case ' + (index + 1)}",
-              "repeat": "inputs.cases"
-            },
-            {
-              "id": "default",
-              "type": "source",
-              "handleType": "output",
-              "label": "Default"
-            }
-          ],
-          "visible": true
-        }
-      ],
-      "debug": {
-        "runtime": "clientScript"
-      },
-      "model": {
-        "type": "bpmn:ExclusiveGateway"
-      },
-      "inputDefinition": {
-        "type": "object",
-        "properties": {
-          "cases": {
-            "type": "array",
-            "minItems": 1,
-            "errorMessage": "At least one case is required",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "label": {
-                  "type": "string"
-                },
-                "expression": {
-                  "type": "string",
-                  "minLength": 1,
-                  "errorMessage": "Add a condition"
-                }
-              },
-              "required": [
-                "expression"
-              ]
-            }
-          }
-        },
-        "required": [
-          "cases"
-        ]
-      },
-      "outputDefinition": {
-        "matchedCase": {
-          "type": "string",
-          "description": "The label of the matched case",
-          "var": "matchedCase"
-        },
-        "matchedCaseId": {
-          "type": "string",
-          "description": "The ID of the matched case (\"default\" for the default branch)",
-          "var": "matchedCaseId"
-        }
-      },
-      "inputDefaults": {
-        "cases": [
-          {
-            "id": "default-1",
-            "label": "Case 1",
-            "expression": ""
-          },
-          {
-            "id": "default-2",
-            "label": "Case 2",
-            "expression": ""
-          }
-        ]
-      },
-      "form": {
-        "id": "switch-properties",
-        "title": "Switch configuration",
-        "sections": [
-          {
-            "id": "cases",
-            "title": "Cases",
-            "description": "Each case is evaluated in order. The first condition that returns true is taken.",
-            "collapsible": true,
-            "defaultExpanded": true,
-            "fields": [
-              {
-                "name": "inputs.cases",
-                "type": "custom",
-                "label": "Switch cases",
-                "component": "case-list-editor",
-                "componentProps": {
-                  "minCases": 1,
-                  "maxCases": 10,
-                  "expressionPlaceholder": "$vars.httpRequest1.output.statusCode >= 200 && $vars.httpRequest1.output.statusCode < 300",
-                  "expressionValidationFields": [
-                    {
-                      "subPath": "expression",
-                      "validationMode": "expression",
-                      "expectedType": "boolean"
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "runtimeConstraints": {
-        "exclude": [
-          "api-function"
-        ]
-      }
-    },
-    {
-      "nodeType": "core.control.end",
-      "version": "1.0",
-      "category": "control-flow",
-      "description": "Mark the end of a process path",
-      "tags": [
-        "control-flow",
-        "end",
-        "finish",
-        "complete"
-      ],
-      "sortOrder": 20,
-      "display": {
-        "label": "End",
-        "icon": "circle-check",
-        "shape": "circle"
-      },
-      "handleConfiguration": [
-        {
-          "position": "left",
-          "handles": [
-            {
-              "id": "input",
-              "type": "target",
-              "handleType": "input"
-            }
-          ]
-        }
-      ],
-      "model": {
-        "type": "bpmn:EndEvent"
-      },
-      "runtimeConstraints": {
-        "exclude": [
-          "api-function"
-        ]
-      }
-    },
-    {
       "nodeType": "uipath.agent.autonomous",
       "version": "1.3",
       "category": "agent",
@@ -1514,7 +1616,7 @@
         "autonomous",
         "agent"
       ],
-      "sortOrder": 5,
+      "sortOrder": 10,
       "supportsErrorHandling": true,
       "display": {
         "label": "Autonomous agent",
@@ -1572,7 +1674,7 @@
                   "createNewActions": [
                     {
                       "label": "Create new Context",
-                      "icon": "external-link",
+                      "icon": "plus",
                       "description": "Opens in a new tab",
                       "urlTemplate": "/{org}/agents_/indexes/add",
                       "categoryId": "agent"
@@ -1646,6 +1748,13 @@
       "form": {
         "id": "settings-form",
         "title": "Agent settings",
+        "metadata": {
+          "propertyPanel": {
+            "sectionTabs": {
+              "section-advanced": "advanced"
+            }
+          }
+        },
         "mode": "onChange",
         "reValidateMode": "onChange",
         "sections": [
@@ -1911,6 +2020,290 @@
       }
     },
     {
+      "nodeType": "core.logic.decision",
+      "version": "1.2",
+      "category": "control-flow",
+      "description": "Branch on a true or false condition",
+      "tags": [
+        "control-flow",
+        "if",
+        "loop",
+        "switch"
+      ],
+      "sortOrder": 61,
+      "display": {
+        "label": "Decision",
+        "icon": "trending-up-down"
+      },
+      "handleConfiguration": [
+        {
+          "position": "left",
+          "handles": [
+            {
+              "id": "input",
+              "type": "target",
+              "handleType": "input"
+            }
+          ],
+          "visible": true
+        },
+        {
+          "position": "right",
+          "handles": [
+            {
+              "id": "true",
+              "type": "source",
+              "handleType": "output",
+              "label": "{inputs.trueLabel}",
+              "constraints": {
+                "minConnections": 1
+              }
+            },
+            {
+              "id": "false",
+              "type": "source",
+              "handleType": "output",
+              "label": "{inputs.falseLabel}"
+            }
+          ],
+          "visible": true
+        }
+      ],
+      "debug": {
+        "runtime": "clientScript"
+      },
+      "model": {
+        "type": "bpmn:InclusiveGateway"
+      },
+      "inputDefinition": {
+        "type": "object",
+        "properties": {
+          "expression": {
+            "type": "string",
+            "minLength": 1,
+            "errorMessage": "Add a condition"
+          },
+          "trueLabel": {
+            "type": "string"
+          },
+          "falseLabel": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "expression"
+        ]
+      },
+      "outputDefinition": {
+        "matchedCase": {
+          "type": "string",
+          "description": "The label of the matched branch (true/false label)",
+          "var": "matchedCase"
+        },
+        "matchedCaseId": {
+          "type": "string",
+          "description": "The branch that was taken (true or false)",
+          "var": "matchedCaseId"
+        }
+      },
+      "inputDefaults": {
+        "trueLabel": "True",
+        "falseLabel": "False"
+      },
+      "form": {
+        "id": "decision-properties",
+        "title": "Decision configuration",
+        "sections": [
+          {
+            "id": "condition",
+            "title": "Condition",
+            "fields": [
+              {
+                "name": "inputs.expression",
+                "type": "custom",
+                "component": "code-editor",
+                "componentProps": {
+                  "singleLine": true,
+                  "mode": "expression",
+                  "toggleable": false,
+                  "language": "javascript",
+                  "returnType": "boolean",
+                  "validationMode": "expression",
+                  "showVariableButton": true,
+                  "placeholder": "$vars.httpRequest1.output.statusCode >= 200 && $vars.httpRequest1.output.statusCode < 300"
+                },
+                "label": "Condition",
+                "description": "The condition must be a JavaScript expression that evaluates to true or false."
+              },
+              {
+                "name": "inputs.trueLabel",
+                "type": "text",
+                "label": "True branch label",
+                "description": "This label appears on the true branch."
+              },
+              {
+                "name": "inputs.falseLabel",
+                "type": "text",
+                "label": "False branch label",
+                "description": "This label appears on the false branch."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "nodeType": "core.logic.switch",
+      "version": "1.1",
+      "category": "control-flow",
+      "description": "Route to one of many branches by condition",
+      "tags": [
+        "control-flow",
+        "switch",
+        "case",
+        "when"
+      ],
+      "sortOrder": 62,
+      "display": {
+        "label": "Switch",
+        "icon": "between-horizontal-start"
+      },
+      "handleConfiguration": [
+        {
+          "position": "left",
+          "handles": [
+            {
+              "id": "input",
+              "type": "target",
+              "handleType": "input"
+            }
+          ],
+          "visible": true
+        },
+        {
+          "position": "right",
+          "handles": [
+            {
+              "id": "case-{item.id}",
+              "type": "source",
+              "handleType": "output",
+              "label": "{item.label || 'Case ' + (index + 1)}",
+              "repeat": "inputs.cases"
+            },
+            {
+              "id": "default",
+              "type": "source",
+              "handleType": "output",
+              "label": "Default"
+            }
+          ],
+          "visible": true
+        }
+      ],
+      "debug": {
+        "runtime": "clientScript"
+      },
+      "model": {
+        "type": "bpmn:ExclusiveGateway"
+      },
+      "inputDefinition": {
+        "type": "object",
+        "properties": {
+          "cases": {
+            "type": "array",
+            "minItems": 1,
+            "errorMessage": "At least one case is required",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "expression": {
+                  "type": "string",
+                  "minLength": 1,
+                  "errorMessage": "Add a condition"
+                }
+              },
+              "required": [
+                "expression"
+              ]
+            }
+          }
+        },
+        "required": [
+          "cases"
+        ]
+      },
+      "outputDefinition": {
+        "matchedCase": {
+          "type": "string",
+          "description": "The label of the matched case",
+          "var": "matchedCase"
+        },
+        "matchedCaseId": {
+          "type": "string",
+          "description": "The ID of the matched case (\"default\" for the default branch)",
+          "var": "matchedCaseId"
+        }
+      },
+      "inputDefaults": {
+        "cases": [
+          {
+            "id": "default-1",
+            "label": "Case 1",
+            "expression": ""
+          },
+          {
+            "id": "default-2",
+            "label": "Case 2",
+            "expression": ""
+          }
+        ]
+      },
+      "form": {
+        "id": "switch-properties",
+        "title": "Switch configuration",
+        "sections": [
+          {
+            "id": "cases",
+            "title": "Cases",
+            "description": "Each case is evaluated in order. The first condition that returns true is taken.",
+            "collapsible": true,
+            "defaultExpanded": true,
+            "fields": [
+              {
+                "name": "inputs.cases",
+                "type": "custom",
+                "label": "Switch cases",
+                "component": "case-list-editor",
+                "componentProps": {
+                  "minCases": 1,
+                  "maxCases": 10,
+                  "expressionPlaceholder": "$vars.httpRequest1.output.statusCode >= 200 && $vars.httpRequest1.output.statusCode < 300",
+                  "expressionValidationFields": [
+                    {
+                      "subPath": "expression",
+                      "validationMode": "expression",
+                      "expectedType": "boolean"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "runtimeConstraints": {
+        "exclude": [
+          "api-function"
+        ]
+      }
+    },
+    {
       "nodeType": "uipath.agent.resource.context.index.ar-dispute-triage-index.9e46f4a3-6c15-4cab-9030-08def39d8059",
       "version": "1.0.0",
       "category": "agent",
@@ -1919,7 +2312,7 @@
         "index"
       ],
       "description": "",
-      "sortOrder": 505,
+      "sortOrder": 510,
       "display": {
         "label": "ar-dispute-triage-index",
         "description": "",
@@ -1943,6 +2336,10 @@
                   },
                   {
                     "nodeType": "uipath.agent.conversational",
+                    "handleId": "context"
+                  },
+                  {
+                    "nodeType": "uipath.agent.voice",
                     "handleId": "context"
                   }
                 ],
@@ -2303,7 +2700,7 @@
         "index"
       ],
       "description": "",
-      "sortOrder": 505,
+      "sortOrder": 510,
       "display": {
         "label": "ar-payment-resolution-index",
         "description": "",
@@ -2327,6 +2724,10 @@
                   },
                   {
                     "nodeType": "uipath.agent.conversational",
+                    "handleId": "context"
+                  },
+                  {
+                    "nodeType": "uipath.agent.voice",
                     "handleId": "context"
                   }
                 ],
@@ -2788,6 +3189,44 @@
       "outputDefinition": {}
     },
     {
+      "nodeType": "core.control.end",
+      "version": "1.0",
+      "category": "control-flow",
+      "description": "Mark the end of a process path",
+      "tags": [
+        "control-flow",
+        "end",
+        "finish",
+        "complete"
+      ],
+      "sortOrder": 65,
+      "display": {
+        "label": "End",
+        "icon": "circle-check",
+        "shape": "circle"
+      },
+      "handleConfiguration": [
+        {
+          "position": "left",
+          "handles": [
+            {
+              "id": "input",
+              "type": "target",
+              "handleType": "input"
+            }
+          ]
+        }
+      ],
+      "model": {
+        "type": "bpmn:EndEvent"
+      },
+      "runtimeConstraints": {
+        "exclude": [
+          "api-function"
+        ]
+      }
+    },
+    {
       "nodeType": "uipath.human-in-the-loop.quick-form",
       "version": "1.0",
       "category": "human-task",
@@ -2799,7 +3238,7 @@
         "quick-form",
         "approval"
       ],
-      "sortOrder": 27,
+      "sortOrder": 50,
       "display": {
         "label": "Quick Form",
         "icon": "users",
@@ -2995,6 +3434,16 @@
               "id": "output",
               "type": "source",
               "handleType": "output"
+            },
+            {
+              "id": "error",
+              "label": "Error",
+              "type": "source",
+              "handleType": "output",
+              "visible": "{inputs.errorHandlingEnabled}",
+              "constraints": {
+                "maxConnections": 1
+              }
             }
           ]
         }
@@ -3110,7 +3559,7 @@
         "activity",
         "API.File.Upload.Optional"
       ],
-      "sortOrder": 515,
+      "sortOrder": 520,
       "supportsErrorHandling": true,
       "description": "Send an email message based on the input parameters",
       "display": {
@@ -3320,66 +3769,6 @@
       }
     }
   ],
-  "bindings": [
-    {
-      "id": "bLookupPaymentName",
-      "name": "name",
-      "type": "string",
-      "resource": "process",
-      "resourceKey": "cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
-      "default": "LookupPaymentApplication",
-      "propertyAttribute": "name",
-      "resourceSubType": "Api"
-    },
-    {
-      "id": "bLookupPaymentFolderPath",
-      "name": "folderPath",
-      "type": "string",
-      "resource": "process",
-      "resourceKey": "cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
-      "default": "solution_folder",
-      "propertyAttribute": "folderPath",
-      "resourceSubType": "Api"
-    },
-    {
-      "id": "bMockUpdateDisputeName",
-      "name": "name",
-      "type": "string",
-      "resource": "process",
-      "resourceKey": "e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
-      "default": "MockUpdateDispute",
-      "propertyAttribute": "name",
-      "resourceSubType": "Api"
-    },
-    {
-      "id": "bMockUpdateDisputeFolderPath",
-      "name": "folderPath",
-      "type": "string",
-      "resource": "process",
-      "resourceKey": "e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
-      "default": "solution_folder",
-      "propertyAttribute": "folderPath",
-      "resourceSubType": "Api"
-    },
-    {
-      "id": "b8yXxkPUV",
-      "name": "uipath-microsoft-outlook365 connection",
-      "type": "string",
-      "resource": "connection",
-      "resourceKey": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
-      "propertyAttribute": "ConnectionId",
-      "default": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c"
-    },
-    {
-      "id": "bqXep0d1f",
-      "name": "FolderKey",
-      "type": "string",
-      "resource": "connection",
-      "resourceKey": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
-      "propertyAttribute": "FolderKey",
-      "default": "67fc19c3-e3a7-4523-aac0-fa63ea83d261"
-    }
-  ],
   "variables": {
     "globals": [
       {
@@ -3521,15 +3910,6 @@
         }
       },
       {
-        "id": "triageAgent.output",
-        "type": "object",
-        "description": "Agent response",
-        "binding": {
-          "nodeId": "triageAgent",
-          "outputId": "output"
-        }
-      },
-      {
         "id": "triageAgent.error",
         "type": "object",
         "description": "Error information if the node fails",
@@ -3609,15 +3989,6 @@
         }
       },
       {
-        "id": "poMismatchAgent.output",
-        "type": "object",
-        "description": "Agent response",
-        "binding": {
-          "nodeId": "poMismatchAgent",
-          "outputId": "output"
-        }
-      },
-      {
         "id": "poMismatchAgent.error",
         "type": "object",
         "description": "Error information if the node fails",
@@ -3661,15 +4032,6 @@
         }
       },
       {
-        "id": "missingPodAgent.output",
-        "type": "object",
-        "description": "Agent response",
-        "binding": {
-          "nodeId": "missingPodAgent",
-          "outputId": "output"
-        }
-      },
-      {
         "id": "missingPodAgent.error",
         "type": "object",
         "description": "Error information if the node fails",
@@ -3710,15 +4072,6 @@
         "binding": {
           "nodeId": "missingPodAgent",
           "outputId": "error"
-        }
-      },
-      {
-        "id": "paymentMisapplicationAgent.output",
-        "type": "object",
-        "description": "Agent response",
-        "binding": {
-          "nodeId": "paymentMisapplicationAgent",
-          "outputId": "output"
         }
       },
       {
@@ -3949,21 +4302,55 @@
         }
       },
       {
+        "id": "mockUpdateDispute1.error",
+        "type": "object",
+        "description": "Error information if the node fails",
+        "schema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "required": [
+            "code",
+            "message",
+            "detail",
+            "category",
+            "status"
+          ],
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "Error code as a string"
+            },
+            "message": {
+              "type": "string",
+              "description": "High-level error message"
+            },
+            "detail": {
+              "type": "string",
+              "description": "Detailed error description"
+            },
+            "category": {
+              "type": "string",
+              "description": "Error category"
+            },
+            "status": {
+              "type": "integer",
+              "description": "HTTP status code"
+            }
+          },
+          "additionalProperties": false
+        },
+        "binding": {
+          "nodeId": "mockUpdateDispute1",
+          "outputId": "error"
+        }
+      },
+      {
         "id": "mockUpdateDispute1.output",
         "type": "object",
         "description": "The return value of the API workflow",
         "binding": {
           "nodeId": "mockUpdateDispute1",
           "outputId": "output"
-        }
-      },
-      {
-        "id": "mockUpdateDispute1.error",
-        "type": "object",
-        "description": "Error information if the API workflow fails",
-        "binding": {
-          "nodeId": "mockUpdateDispute1",
-          "outputId": "error"
         }
       },
       {
@@ -4210,201 +4597,280 @@
           "outputId": "error"
         }
       }
-    ],
-    "variableUpdates": {}
+    ]
   },
-  "runtime": "maestro",
+  "bindings": [
+    {
+      "id": "bLookupPaymentName",
+      "name": "name",
+      "type": "string",
+      "resource": "process",
+      "resourceKey": "cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
+      "default": "LookupPaymentApplication",
+      "propertyAttribute": "name",
+      "resourceSubType": "Api"
+    },
+    {
+      "id": "bLookupPaymentFolderPath",
+      "name": "folderPath",
+      "type": "string",
+      "resource": "process",
+      "resourceKey": "cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
+      "default": "solution_folder",
+      "propertyAttribute": "folderPath",
+      "resourceSubType": "Api"
+    },
+    {
+      "id": "bMockUpdateDisputeName",
+      "name": "name",
+      "type": "string",
+      "resource": "process",
+      "resourceKey": "e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
+      "default": "MockUpdateDispute",
+      "propertyAttribute": "name",
+      "resourceSubType": "Api"
+    },
+    {
+      "id": "bMockUpdateDisputeFolderPath",
+      "name": "folderPath",
+      "type": "string",
+      "resource": "process",
+      "resourceKey": "e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
+      "default": "solution_folder",
+      "propertyAttribute": "folderPath",
+      "resourceSubType": "Api"
+    },
+    {
+      "id": "b8yXxkPUV",
+      "name": "uipath-microsoft-outlook365 connection",
+      "type": "string",
+      "resource": "connection",
+      "resourceKey": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+      "default": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+      "propertyAttribute": "ConnectionId"
+    },
+    {
+      "id": "bqXep0d1f",
+      "name": "FolderKey",
+      "type": "string",
+      "resource": "connection",
+      "resourceKey": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+      "default": "67fc19c3-e3a7-4523-aac0-fa63ea83d261",
+      "propertyAttribute": "FolderKey"
+    }
+  ],
+  "solutionId": "uip-sw-local://Folder/2155b48d-62d4-42d6-888f-7c7854865be9",
+  "projectId": "0db80011-c481-493c-b4da-aa6944b3373b",
   "layout": {
     "nodes": {
       "start": {
         "position": {
           "x": -192,
-          "y": 0
+          "y": -96
         },
         "size": {
           "width": 96,
           "height": 96
-        }
+        },
+        "collapsed": false
       },
       "loadSampleCase": {
         "position": {
           "x": 0,
-          "y": 0
+          "y": -96
         },
         "size": {
           "width": 96,
           "height": 96
-        }
+        },
+        "collapsed": false
       },
       "triageAgent": {
         "position": {
           "x": 192,
-          "y": -96
+          "y": -192
         },
         "size": {
           "width": 288,
           "height": 96
-        }
+        },
+        "collapsed": false
       },
       "isSupportedTriage": {
         "position": {
           "x": 576,
+          "y": -96
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        },
+        "collapsed": false
+      },
+      "routeByDisputeType": {
+        "position": {
+          "x": 768,
+          "y": -192
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        },
+        "collapsed": false
+      },
+      "poMismatchAgent": {
+        "position": {
+          "x": 960,
+          "y": -432
+        },
+        "size": {
+          "width": 288,
+          "height": 96
+        },
+        "collapsed": false
+      },
+      "missingPodAgent": {
+        "position": {
+          "x": 960,
+          "y": -240
+        },
+        "size": {
+          "width": 288,
+          "height": 96
+        },
+        "collapsed": false
+      },
+      "paymentMisapplicationAgent": {
+        "position": {
+          "x": 960,
+          "y": -48
+        },
+        "size": {
+          "width": 288,
+          "height": 96
+        },
+        "collapsed": false
+      },
+      "triageTaxonomyContext": {
+        "position": {
+          "x": 240,
           "y": 0
         },
         "size": {
           "width": 96,
           "height": 96
-        }
-      },
-      "routeByDisputeType": {
-        "position": {
-          "x": 768,
-          "y": -96
         },
-        "size": {
-          "width": 96,
-          "height": 96
-        }
-      },
-      "poMismatchAgent": {
-        "position": {
-          "x": 960,
-          "y": -336
-        },
-        "size": {
-          "width": 288,
-          "height": 96
-        }
-      },
-      "missingPodAgent": {
-        "position": {
-          "x": 960,
-          "y": -144
-        },
-        "size": {
-          "width": 288,
-          "height": 96
-        }
-      },
-      "paymentMisapplicationAgent": {
-        "position": {
-          "x": 960,
-          "y": 48
-        },
-        "size": {
-          "width": 288,
-          "height": 96
-        }
-      },
-      "triageTaxonomyContext": {
-        "position": {
-          "x": 240,
-          "y": 96
-        },
-        "size": {
-          "width": 96,
-          "height": 96
-        }
+        "collapsed": false
       },
       "paymentResolutionContext": {
         "position": {
           "x": 960,
-          "y": 240
+          "y": 144
         },
         "size": {
           "width": 96,
           "height": 96
-        }
+        },
+        "collapsed": false
       },
       "lookupPaymentTool": {
         "position": {
           "x": 1152,
-          "y": 240
+          "y": 144
         },
         "size": {
           "width": 96,
           "height": 96
-        }
+        },
+        "collapsed": false
       },
       "normalizeProposal": {
         "position": {
           "x": 1344,
+          "y": -432
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        },
+        "collapsed": false
+      },
+      "needsManualTriage": {
+        "position": {
+          "x": 768,
+          "y": 0
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        },
+        "collapsed": false
+      },
+      "reviewArDisputeResolution1": {
+        "position": {
+          "x": 1536,
+          "y": -432
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        },
+        "collapsed": false
+      },
+      "isResolutionApproved": {
+        "position": {
+          "x": 1728,
+          "y": -432
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        },
+        "collapsed": false
+      },
+      "mockUpdateDispute1": {
+        "position": {
+          "x": 1920,
+          "y": -528
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        },
+        "collapsed": false
+      },
+      "needsRework": {
+        "position": {
+          "x": 1920,
           "y": -336
         },
         "size": {
           "width": 96,
           "height": 96
-        }
-      },
-      "needsManualTriage": {
-        "position": {
-          "x": 768,
-          "y": 96
         },
-        "size": {
-          "width": 96,
-          "height": 96
-        }
-      },
-      "reviewArDisputeResolution1": {
-        "position": {
-          "x": 2304,
-          "y": -432
-        },
-        "size": {
-          "width": 96,
-          "height": 96
-        }
-      },
-      "isResolutionApproved": {
-        "position": {
-          "x": 2304,
-          "y": -432
-        },
-        "size": {
-          "width": 96,
-          "height": 96
-        }
-      },
-      "mockUpdateDispute1": {
-        "position": {
-          "x": 2304,
-          "y": -432
-        },
-        "size": {
-          "width": 96,
-          "height": 96
-        }
-      },
-      "needsRework": {
-        "position": {
-          "x": 2304,
-          "y": -432
-        },
-        "size": {
-          "width": 96,
-          "height": 96
-        }
+        "collapsed": false
       },
       "resolved": {
         "position": {
           "x": 2304,
-          "y": -432
+          "y": -528
         },
         "size": {
           "width": 96,
           "height": 96
-        }
+        },
+        "collapsed": false
       },
       "sendEmail1": {
         "position": {
           "x": 2112,
-          "y": -432
+          "y": -528
         },
         "size": {
           "width": 96,
           "height": 96
-        }
+        },
+        "collapsed": false
       }
     }
   }
