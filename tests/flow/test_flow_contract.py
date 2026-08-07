@@ -669,6 +669,22 @@ def test_mock_update_uses_the_generated_quick_form_output_property():
     )
 
 
+def test_quick_form_omits_labels_that_break_app_tasks_external_tag_validation():
+    flow, _, _ = load_contract()
+    quick_form = nodes_of_type(flow, "uipath.human-in-the-loop.quick-form")[0]
+
+    assert "labels" not in quick_form["inputs"]
+
+
+def test_quick_form_routes_only_through_its_declared_completed_handle():
+    flow, _, _ = load_contract()
+    quick_form = nodes_of_type(flow, "uipath.human-in-the-loop.quick-form")[0]
+
+    assert [edge["sourcePort"] for edge in outgoing(flow, quick_form["id"])] == [
+        "completed"
+    ]
+
+
 def test_agent_resources_registry_bindings_and_generated_variables_are_complete():
     flow, _, nodes = load_contract()
     expected_resources = {

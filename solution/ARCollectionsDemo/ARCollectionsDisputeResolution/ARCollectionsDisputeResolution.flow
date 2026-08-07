@@ -91,7 +91,8 @@
       "typeVersion": "1.3",
       "display": {
         "label": "Grounded Dispute Triage",
-        "icon": "autonomous-agent"
+        "icon": "autonomous-agent",
+        "subLabel": ""
       },
       "inputs": {
         "source": "f7d7d1a5-0f16-43f1-b1b8-b70cef70ece9",
@@ -209,8 +210,8 @@
       "typeVersion": "1.3",
       "display": {
         "label": "PO Mismatch Specialist",
-        "icon": "autonomous-agent",
-        "subLabel": ""
+        "subLabel": "",
+        "icon": "autonomous-agent"
       },
       "inputs": {
         "source": "30427850-3685-4d58-9c41-8dfb95163182",
@@ -336,7 +337,8 @@
       "typeVersion": "1.3",
       "display": {
         "label": "Missing POD Specialist",
-        "icon": "autonomous-agent"
+        "icon": "autonomous-agent",
+        "subLabel": ""
       },
       "inputs": {
         "source": "81cc5d04-87bf-4a19-9a5f-ba1a2dbf006a",
@@ -744,22 +746,37 @@
       "typeVersion": "1.0",
       "display": {
         "label": "Review AR dispute resolution",
-        "icon": "users"
+        "icon": "users",
+        "subLabel": ""
       },
       "inputs": {
         "title": "Review AR dispute resolution",
         "recipient": {
           "channels": [
+            "Slack",
+            "teams",
             "Email",
             "ActionCenter"
           ],
-          "connections": {},
+          "connections": {
+            "Slack": {
+              "name": "Slack",
+              "key": "Slack",
+              "folderPath": null
+            },
+            "teams": {
+              "name": "Teams",
+              "key": "Teams",
+              "folderPath": null
+            }
+          },
           "assignee": {
-            "type": "group"
+            "type": "user",
+            "value": "james.dickson@uipath.com",
+            "displayName": "James Dickson"
           }
         },
         "priority": "Medium",
-        "labels": "ar-collections,demo",
         "schema": {
           "schemaId": "9ec41cf8-bae1-4b34-9756-cdb2c91aee1a",
           "fields": [
@@ -1022,8 +1039,8 @@
       "typeVersion": "1.0",
       "display": {
         "label": "Needs Rework",
-        "icon": "circle-check",
-        "subLabel": ""
+        "subLabel": "",
+        "icon": "circle-check"
       },
       "inputs": {},
       "outputs": {
@@ -1087,8 +1104,8 @@
       "typeVersion": "1.0",
       "display": {
         "label": "Resolved",
-        "icon": "circle-check",
-        "subLabel": ""
+        "subLabel": "",
+        "icon": "circle-check"
       },
       "inputs": {},
       "outputs": {
@@ -1152,8 +1169,8 @@
       "typeVersion": "1.0.0",
       "display": {
         "label": "Send Email",
-        "icon": "https://cloud.uipath.com/a17c9af1-091d-4dd2-9cec-ed787c6601c8/studio_/typecache/icons/160499b52f7cea190b530fe6f40da7ee03455a8d3fb72dd7f4f68d61e7865a3a.svg",
-        "subLabel": ""
+        "subLabel": "",
+        "icon": "https://cloud.uipath.com/a17c9af1-091d-4dd2-9cec-ed787c6601c8/studio_/typecache/icons/160499b52f7cea190b530fe6f40da7ee03455a8d3fb72dd7f4f68d61e7865a3a.svg"
       },
       "inputs": {
         "detail": {
@@ -4666,7 +4683,7 @@
       "start": {
         "position": {
           "x": -192,
-          "y": -96
+          "y": -192
         },
         "size": {
           "width": 96,
@@ -4677,7 +4694,7 @@
       "loadSampleCase": {
         "position": {
           "x": 0,
-          "y": -96
+          "y": -192
         },
         "size": {
           "width": 96,
@@ -4688,7 +4705,7 @@
       "triageAgent": {
         "position": {
           "x": 192,
-          "y": -192
+          "y": -288
         },
         "size": {
           "width": 288,
@@ -4699,7 +4716,7 @@
       "isSupportedTriage": {
         "position": {
           "x": 576,
-          "y": -96
+          "y": -192
         },
         "size": {
           "width": 96,
@@ -4710,7 +4727,7 @@
       "routeByDisputeType": {
         "position": {
           "x": 768,
-          "y": -192
+          "y": -288
         },
         "size": {
           "width": 96,
@@ -4721,7 +4738,7 @@
       "poMismatchAgent": {
         "position": {
           "x": 960,
-          "y": -432
+          "y": -528
         },
         "size": {
           "width": 288,
@@ -4732,7 +4749,7 @@
       "missingPodAgent": {
         "position": {
           "x": 960,
-          "y": -240
+          "y": -336
         },
         "size": {
           "width": 288,
@@ -4743,7 +4760,7 @@
       "paymentMisapplicationAgent": {
         "position": {
           "x": 960,
-          "y": -48
+          "y": -144
         },
         "size": {
           "width": 288,
@@ -4754,7 +4771,7 @@
       "triageTaxonomyContext": {
         "position": {
           "x": 240,
-          "y": 0
+          "y": -96
         },
         "size": {
           "width": 96,
@@ -4765,7 +4782,7 @@
       "paymentResolutionContext": {
         "position": {
           "x": 960,
-          "y": 144
+          "y": 48
         },
         "size": {
           "width": 96,
@@ -4776,7 +4793,7 @@
       "lookupPaymentTool": {
         "position": {
           "x": 1152,
-          "y": 144
+          "y": 48
         },
         "size": {
           "width": 96,
@@ -4787,7 +4804,7 @@
       "normalizeProposal": {
         "position": {
           "x": 1344,
-          "y": -432
+          "y": -528
         },
         "size": {
           "width": 96,
@@ -4798,7 +4815,7 @@
       "needsManualTriage": {
         "position": {
           "x": 768,
-          "y": 0
+          "y": -96
         },
         "size": {
           "width": 96,
@@ -4809,7 +4826,7 @@
       "reviewArDisputeResolution1": {
         "position": {
           "x": 1536,
-          "y": -432
+          "y": -528
         },
         "size": {
           "width": 96,
@@ -4820,7 +4837,7 @@
       "isResolutionApproved": {
         "position": {
           "x": 1728,
-          "y": -432
+          "y": -528
         },
         "size": {
           "width": 96,
@@ -4831,7 +4848,7 @@
       "mockUpdateDispute1": {
         "position": {
           "x": 1920,
-          "y": -528
+          "y": -624
         },
         "size": {
           "width": 96,
@@ -4842,7 +4859,7 @@
       "needsRework": {
         "position": {
           "x": 1920,
-          "y": -336
+          "y": -432
         },
         "size": {
           "width": 96,
@@ -4853,7 +4870,7 @@
       "resolved": {
         "position": {
           "x": 2304,
-          "y": -528
+          "y": -624
         },
         "size": {
           "width": 96,
@@ -4864,7 +4881,7 @@
       "sendEmail1": {
         "position": {
           "x": 2112,
-          "y": -528
+          "y": -624
         },
         "size": {
           "width": 96,
