@@ -6,8 +6,48 @@
       "filePath": "content/Workflow.json",
       "uniqueId": "2d4fc5ec-fab3-4bff-8c4d-bbdd3ee8012b",
       "type": "Api",
-      "input": null,
-      "output": null
+      "input": {
+        "type": "object",
+        "properties": {
+          "caseId": { "type": "string" },
+          "customerAccountId": { "type": "string" },
+          "invoiceNumber": { "type": "string" },
+          "paymentReference": { "type": "string" }
+        },
+        "required": [
+          "caseId",
+          "customerAccountId",
+          "invoiceNumber",
+          "paymentReference"
+        ],
+        "title": "Inputs"
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "paymentReference": { "type": "string" },
+          "paymentAmount": { "type": "number" },
+          "paymentDate": { "type": "string" },
+          "appliedInvoiceNumber": { "type": "string" },
+          "targetInvoiceNumber": { "type": "string" },
+          "applicationStatus": { "type": "string" },
+          "matchedRemittance": { "type": "boolean" },
+          "recommendedAction": { "type": "string" },
+          "sourceSystem": { "type": "string" }
+        },
+        "required": [
+          "paymentReference",
+          "paymentAmount",
+          "paymentDate",
+          "appliedInvoiceNumber",
+          "targetInvoiceNumber",
+          "applicationStatus",
+          "matchedRemittance",
+          "recommendedAction",
+          "sourceSystem"
+        ],
+        "title": "Outputs"
+      }
     }
   ]
 }

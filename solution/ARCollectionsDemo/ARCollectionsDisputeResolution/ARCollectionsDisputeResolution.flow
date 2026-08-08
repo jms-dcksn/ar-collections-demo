@@ -91,8 +91,8 @@
       "typeVersion": "1.3",
       "display": {
         "label": "Grounded Dispute Triage",
-        "icon": "autonomous-agent",
-        "subLabel": ""
+        "subLabel": "",
+        "icon": "autonomous-agent"
       },
       "inputs": {
         "source": "f7d7d1a5-0f16-43f1-b1b8-b70cef70ece9",
@@ -337,8 +337,8 @@
       "typeVersion": "1.3",
       "display": {
         "label": "Missing POD Specialist",
-        "icon": "autonomous-agent",
-        "subLabel": ""
+        "subLabel": "",
+        "icon": "autonomous-agent"
       },
       "inputs": {
         "source": "81cc5d04-87bf-4a19-9a5f-ba1a2dbf006a",
@@ -590,6 +590,7 @@
       "typeVersion": "1.0.0",
       "display": {
         "label": "AR Dispute Triage Taxonomy",
+        "subLabel": "",
         "icon": "file-text"
       },
       "inputs": {
@@ -741,250 +742,46 @@
       }
     },
     {
-      "id": "reviewArDisputeResolution1",
-      "type": "uipath.human-in-the-loop.quick-form",
-      "typeVersion": "1.0",
-      "display": {
-        "label": "Review AR dispute resolution",
-        "icon": "users",
-        "subLabel": ""
-      },
-      "inputs": {
-        "title": "Review AR dispute resolution",
-        "recipient": {
-          "channels": [
-            "Slack",
-            "teams",
-            "Email",
-            "ActionCenter"
-          ],
-          "connections": {
-            "Slack": {
-              "name": "Slack",
-              "key": "Slack",
-              "folderPath": null
-            },
-            "teams": {
-              "name": "Teams",
-              "key": "Teams",
-              "folderPath": null
-            }
-          },
-          "assignee": {
-            "type": "user",
-            "value": "james.dickson@uipath.com",
-            "displayName": "James Dickson"
-          }
-        },
-        "priority": "Medium",
-        "schema": {
-          "schemaId": "9ec41cf8-bae1-4b34-9756-cdb2c91aee1a",
-          "fields": [
-            {
-              "id": "customerName",
-              "label": "Customer",
-              "type": "string",
-              "direction": "input",
-              "binding": "vars.loadSampleCase.output.customerName"
-            },
-            {
-              "id": "invoiceNumber",
-              "label": "Invoice",
-              "type": "string",
-              "direction": "input",
-              "binding": "vars.loadSampleCase.output.invoiceNumber"
-            },
-            {
-              "id": "outstandingBalance",
-              "label": "Outstanding balance",
-              "type": "number",
-              "direction": "input",
-              "binding": "vars.loadSampleCase.output.outstandingBalance"
-            },
-            {
-              "id": "disputeType",
-              "label": "Triage type",
-              "type": "string",
-              "direction": "input",
-              "binding": "vars.triageAgent.output.disputeType"
-            },
-            {
-              "id": "triageRationale",
-              "label": "Triage rationale",
-              "type": "string",
-              "direction": "input",
-              "binding": "vars.triageAgent.output.rationale"
-            },
-            {
-              "id": "triageConfidence",
-              "label": "Triage confidence",
-              "type": "number",
-              "direction": "input",
-              "binding": "vars.triageAgent.output.confidence"
-            },
-            {
-              "id": "evidenceSummary",
-              "label": "Specialist evidence",
-              "type": "string",
-              "direction": "input",
-              "binding": "vars.normalizeProposal.output.evidenceSummary"
-            },
-            {
-              "id": "rootCause",
-              "label": "Root cause",
-              "type": "string",
-              "direction": "input",
-              "binding": "vars.normalizeProposal.output.rootCause"
-            },
-            {
-              "id": "recommendedAction",
-              "label": "Recommended action",
-              "type": "string",
-              "direction": "input",
-              "binding": "vars.normalizeProposal.output.recommendedAction"
-            },
-            {
-              "id": "actionCode",
-              "label": "Action code",
-              "type": "string",
-              "direction": "input",
-              "binding": "vars.normalizeProposal.output.actionCode"
-            },
-            {
-              "id": "adjustmentAmount",
-              "label": "Adjustment amount",
-              "type": "number",
-              "direction": "input",
-              "binding": "vars.normalizeProposal.output.adjustmentAmount"
-            },
-            {
-              "id": "specialistConfidence",
-              "label": "Specialist confidence",
-              "type": "number",
-              "direction": "input",
-              "binding": "vars.normalizeProposal.output.confidence"
-            },
-            {
-              "id": "emailSubject",
-              "label": "Email subject preview",
-              "type": "string",
-              "direction": "input",
-              "binding": "vars.normalizeProposal.output.emailSubject"
-            },
-            {
-              "id": "emailBody",
-              "label": "Email body preview",
-              "type": "string",
-              "direction": "input",
-              "binding": "vars.normalizeProposal.output.emailBody"
-            },
-            {
-              "id": "approvedBy",
-              "label": "Approved by",
-              "type": "string",
-              "direction": "output",
-              "variable": "vars.approvedBy",
-              "required": true
-            },
-            {
-              "id": "approvalComments",
-              "label": "Approval comments",
-              "type": "string",
-              "direction": "output",
-              "variable": "vars.approvalCommentsInput",
-              "required": true
-            }
-          ],
-          "outcomes": [
-            {
-              "id": "approve",
-              "name": "Approve",
-              "type": "string",
-              "isPrimary": true,
-              "action": "Continue"
-            },
-            {
-              "id": "reject",
-              "name": "Reject",
-              "type": "string",
-              "isPrimary": false,
-              "action": "End"
-            }
-          ]
-        }
-      },
-      "outputs": {
-        "output": {
-          "type": "object",
-          "description": "Task result data",
-          "descriptionKey": "hitlOutputBuilder_taskResultData_description",
-          "source": "=result",
-          "var": "output",
-          "properties": {
-            "approvedBy": {
-              "type": "string",
-              "title": "Approved by"
-            },
-            "approvalCommentsInput": {
-              "type": "string",
-              "title": "Approval comments",
-              "fieldId": "approvalComments"
-            },
-            "Action": {
-              "type": "string",
-              "enum": [
-                "Approve",
-                "Reject"
-              ],
-              "default": "Approve"
-            }
-          }
-        },
-        "status": {
-          "type": "string",
-          "description": "Task completion status",
-          "descriptionKey": "hitlOutputBuilder_taskCompletionStatus_description",
-          "source": "=result.Action",
-          "var": "status",
-          "enum": [
-            "Approve",
-            "Reject"
-          ],
-          "default": "Approve"
-        }
-      }
-    },
-    {
-      "id": "isResolutionApproved",
-      "type": "core.logic.decision",
-      "typeVersion": "1.2",
-      "display": {
-        "label": "Resolution approved?",
-        "icon": "trending-up-down"
-      },
-      "inputs": {
-        "expression": "=js:$vars.reviewArDisputeResolution1.status === \"Approve\"",
-        "trueLabel": "Approved",
-        "falseLabel": "Needs rework"
-      }
-    },
-    {
       "id": "mockUpdateDispute1",
       "type": "uipath.core.api-workflow.e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
       "typeVersion": "1.0.0",
       "display": {
         "label": "MockUpdateDispute",
-        "icon": "api"
+        "icon": "api",
+        "subLabel": ""
       },
       "inputs": {
         "caseId": "=js:$vars.normalizeProposal.output.caseId",
         "disputeType": "=js:$vars.normalizeProposal.output.disputeType",
         "actionCode": "=js:$vars.normalizeProposal.output.actionCode",
         "adjustmentAmount": "=js:$vars.normalizeProposal.output.adjustmentAmount",
-        "approvedBy": "=js:$vars.reviewArDisputeResolution1.output.approvedBy",
-        "approvalComments": "=js:$vars.reviewArDisputeResolution1.output.approvalCommentsInput"
+        "approvedBy": "=js:$vars.quickForm1.output.approvedBy",
+        "approvalComments": "=js:$vars.quickForm1.output.approvalCommentsInput"
       },
       "outputs": {
+        "output": {
+          "type": "object",
+          "description": "The return value of the API workflow",
+          "source": "=this",
+          "var": "output",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "updateId": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        },
         "error": {
           "type": "object",
           "description": "Error information if the node fails",
@@ -1024,12 +821,6 @@
             },
             "additionalProperties": false
           }
-        },
-        "output": {
-          "type": "object",
-          "description": "The return value of the API workflow",
-          "source": "=result.response",
-          "var": "output"
         }
       }
     },
@@ -1069,15 +860,11 @@
           "type": "string"
         },
         "approvalDecision": {
-          "source": "=js:$vars.reviewArDisputeResolution1.status",
+          "source": "=js:$vars.quickForm1.status",
           "type": "string"
         },
         "approvalComments": {
-          "source": {
-            "type": "jsExpression",
-            "expression": "$vars.reviewArDisputeResolution1.output.approvalCommentsInput",
-            "fieldType": "string"
-          },
+          "source": "=js:$vars.quickForm1.output.approvalCommentsInput",
           "type": "string"
         },
         "updateResult": {
@@ -1134,15 +921,11 @@
           "type": "string"
         },
         "approvalDecision": {
-          "source": "=js:$vars.reviewArDisputeResolution1.status",
+          "source": "=js:$vars.quickForm1.status",
           "type": "string"
         },
         "approvalComments": {
-          "source": {
-            "type": "jsExpression",
-            "expression": "$vars.reviewArDisputeResolution1.output.approvalCommentsInput",
-            "fieldType": "string"
-          },
+          "source": "=js:$vars.quickForm1.output.approvalCommentsInput",
           "type": "string"
         },
         "updateResult": {
@@ -1270,6 +1053,221 @@
           "var": "error"
         }
       }
+    },
+    {
+      "id": "quickForm1",
+      "type": "uipath.human-in-the-loop.quick-form",
+      "typeVersion": "1.0",
+      "display": {
+        "label": "Review AR dispute resolution",
+        "subLabel": "",
+        "shape": "square",
+        "icon": "users"
+      },
+      "inputs": {
+        "type": "quick",
+        "title": "Review AR dispute resolution",
+        "priority": "Medium",
+        "schema": {
+          "id": "6593dd8f-75d0-4df3-8eff-8b4940a536f3",
+          "title": "Review AR dispute resolution",
+          "fields": [
+            {
+              "id": "customerName",
+              "type": "string",
+              "label": "Customer",
+              "direction": "input",
+              "binding": "vars.loadSampleCase.output.customerName"
+            },
+            {
+              "id": "invoiceNumber",
+              "label": "Invoice",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.loadSampleCase.output.invoiceNumber"
+            },
+            {
+              "id": "outstandingBalance",
+              "label": "Outstanding balance",
+              "type": "number",
+              "direction": "input",
+              "binding": "vars.loadSampleCase.output.outstandingBalance"
+            },
+            {
+              "id": "disputeType",
+              "label": "Triage type",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.triageAgent.output.disputeType"
+            },
+            {
+              "id": "triageRationale",
+              "label": "Triage rationale",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.triageAgent.output.rationale"
+            },
+            {
+              "id": "triageConfidence",
+              "label": "Triage confidence",
+              "type": "number",
+              "direction": "input",
+              "binding": "vars.triageAgent.output.confidence"
+            },
+            {
+              "id": "evidenceSummary",
+              "label": "Specialist evidence",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.normalizeProposal.output.evidenceSummary"
+            },
+            {
+              "id": "rootCause",
+              "label": "Root cause",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.normalizeProposal.output.rootCause"
+            },
+            {
+              "id": "recommendedAction",
+              "label": "Recommended action",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.normalizeProposal.output.recommendedAction"
+            },
+            {
+              "id": "actionCode",
+              "label": "Action code",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.normalizeProposal.output.actionCode"
+            },
+            {
+              "id": "adjustmentAmount",
+              "label": "Adjustment amount",
+              "type": "number",
+              "direction": "input",
+              "binding": "vars.normalizeProposal.output.adjustmentAmount"
+            },
+            {
+              "id": "specialistConfidence",
+              "label": "Specialist confidence",
+              "type": "number",
+              "direction": "input",
+              "binding": "vars.normalizeProposal.output.confidence"
+            },
+            {
+              "id": "emailSubject",
+              "label": "Email subject preview",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.normalizeProposal.output.emailSubject"
+            },
+            {
+              "id": "emailBody",
+              "label": "Email body preview",
+              "type": "string",
+              "direction": "input",
+              "binding": "vars.normalizeProposal.output.emailBody"
+            },
+            {
+              "id": "approvedBy",
+              "label": "Approved by",
+              "type": "string",
+              "direction": "output",
+              "variable": "vars.approvedBy",
+              "required": true
+            },
+            {
+              "id": "approvalComments",
+              "label": "Approval comments",
+              "type": "string",
+              "direction": "output",
+              "variable": "vars.approvalCommentsInput",
+              "required": true
+            }
+          ],
+          "outcomes": [
+            {
+              "id": "approve",
+              "name": "Approve",
+              "type": "string",
+              "action": "Continue",
+              "isPrimary": true
+            },
+            {
+              "id": "reject",
+              "name": "Reject",
+              "type": "string",
+              "action": "End",
+              "isPrimary": false
+            }
+          ]
+        },
+        "recipient": {
+          "channels": [
+            "ActionCenter"
+          ],
+          "connections": {},
+          "assignee": {
+            "type": "group"
+          }
+        }
+      },
+      "outputs": {
+        "output": {
+          "type": "object",
+          "description": "Task result data",
+          "descriptionKey": "hitlOutputBuilder_taskResultData_description",
+          "source": "=result",
+          "var": "output",
+          "properties": {
+            "approvedBy": {
+              "type": "string",
+              "title": "Approved by"
+            },
+            "approvalCommentsInput": {
+              "type": "string",
+              "title": "Approval comments",
+              "fieldId": "approvalComments"
+            },
+            "Action": {
+              "type": "string",
+              "enum": [
+                "Approve",
+                "Reject"
+              ],
+              "default": "Approve"
+            }
+          }
+        },
+        "status": {
+          "type": "string",
+          "description": "Task completion status",
+          "descriptionKey": "hitlOutputBuilder_taskCompletionStatus_description",
+          "source": "=result.Action",
+          "var": "status",
+          "enum": [
+            "Approve",
+            "Reject"
+          ],
+          "default": "Approve"
+        }
+      }
+    },
+    {
+      "id": "isResolutionApproved",
+      "type": "core.logic.decision",
+      "typeVersion": "1.2",
+      "display": {
+        "label": "Resolution approved?",
+        "icon": "trending-up-down"
+      },
+      "inputs": {
+        "expression": "=js:$vars.quickForm1.status === \"Approve\"",
+        "trueLabel": "Approved",
+        "falseLabel": "Needs rework"
+      }
     }
   ],
   "edges": [
@@ -1372,17 +1370,31 @@
       "targetPort": "input"
     },
     {
-      "id": "edge_normalizeProposal_reviewArDisputeResolution1",
-      "sourceNodeId": "normalizeProposal",
-      "sourcePort": "success",
-      "targetNodeId": "reviewArDisputeResolution1",
+      "id": "edge_mockUpdateDispute1_sendEmail1",
+      "sourceNodeId": "mockUpdateDispute1",
+      "sourcePort": "output",
+      "targetNodeId": "sendEmail1",
       "targetPort": "input"
     },
     {
-      "id": "edge_reviewArDisputeResolution1_isResolutionApproved",
-      "sourceNodeId": "reviewArDisputeResolution1",
+      "id": "edge_sendEmail1_resolved",
+      "sourceNodeId": "sendEmail1",
+      "sourcePort": "output",
+      "targetNodeId": "resolved",
+      "targetPort": "input"
+    },
+    {
+      "id": "edge_quickForm1_isResolutionApproved",
+      "sourceNodeId": "quickForm1",
       "sourcePort": "completed",
       "targetNodeId": "isResolutionApproved",
+      "targetPort": "input"
+    },
+    {
+      "id": "xy-edge__normalizeProposalsuccess-quickForm1input",
+      "sourceNodeId": "normalizeProposal",
+      "sourcePort": "success",
+      "targetNodeId": "quickForm1",
       "targetPort": "input"
     },
     {
@@ -1397,20 +1409,6 @@
       "sourceNodeId": "isResolutionApproved",
       "sourcePort": "true",
       "targetNodeId": "mockUpdateDispute1",
-      "targetPort": "input"
-    },
-    {
-      "id": "edge_mockUpdateDispute1_sendEmail1",
-      "sourceNodeId": "mockUpdateDispute1",
-      "sourcePort": "output",
-      "targetNodeId": "sendEmail1",
-      "targetPort": "input"
-    },
-    {
-      "id": "edge_sendEmail1_resolved",
-      "sourceNodeId": "sendEmail1",
-      "sourcePort": "output",
-      "targetNodeId": "resolved",
       "targetPort": "input"
     }
   ],
@@ -3244,176 +3242,6 @@
       }
     },
     {
-      "nodeType": "uipath.human-in-the-loop.quick-form",
-      "version": "1.0",
-      "category": "human-task",
-      "description": "Fast inline approvals with inline debug",
-      "tags": [
-        "human-task",
-        "hitl",
-        "human-in-the-loop",
-        "quick-form",
-        "approval"
-      ],
-      "sortOrder": 50,
-      "display": {
-        "label": "Quick Form",
-        "icon": "users",
-        "shape": "square"
-      },
-      "handleConfiguration": [
-        {
-          "position": "left",
-          "handles": [
-            {
-              "id": "input",
-              "type": "target",
-              "handleType": "input"
-            }
-          ],
-          "visible": true
-        },
-        {
-          "position": "right",
-          "handles": [
-            {
-              "id": "completed",
-              "type": "source",
-              "handleType": "output",
-              "showButton": true,
-              "constraints": {
-                "forbiddenTargetCategories": [
-                  "trigger"
-                ]
-              }
-            }
-          ],
-          "visible": true
-        }
-      ],
-      "model": {
-        "type": "bpmn:UserTask",
-        "serviceType": "Actions.HITL"
-      },
-      "inputDefaults": {
-        "schema": {
-          "fields": [],
-          "outcomes": [
-            {
-              "id": "submit",
-              "name": "Submit",
-              "type": "string",
-              "isPrimary": true,
-              "action": "Continue"
-            }
-          ]
-        },
-        "recipient": {
-          "channels": [
-            "Email",
-            "ActionCenter"
-          ],
-          "connections": {},
-          "assignee": {
-            "type": "group"
-          }
-        }
-      },
-      "outputDefinition": {
-        "output": {
-          "type": "object",
-          "description": "Task result data",
-          "source": "=result",
-          "var": "output"
-        },
-        "status": {
-          "type": "string",
-          "description": "Task completion status (completed, cancelled, timeout)",
-          "source": "=result.Action",
-          "var": "status"
-        }
-      },
-      "form": {
-        "id": "hitl-quick-form-properties",
-        "title": "Quick Form Task Configuration",
-        "sections": [
-          {
-            "id": "delivery",
-            "title": "Task delivery",
-            "collapsible": true,
-            "defaultExpanded": true,
-            "fields": [
-              {
-                "name": "inputs.recipient",
-                "type": "custom",
-                "component": "hitl-channel-selector",
-                "label": "Delivery Channels",
-                "description": "Select where the task should be sent"
-              }
-            ]
-          },
-          {
-            "id": "schema",
-            "title": "Schema",
-            "collapsible": true,
-            "defaultExpanded": true,
-            "fields": [
-              {
-                "name": "inputs.schema",
-                "type": "custom",
-                "component": "hitl-schema-editor",
-                "label": "Task Schema",
-                "description": "Define the input and output parameters for this task"
-              }
-            ]
-          },
-          {
-            "id": "additional-properties",
-            "title": "Additional properties",
-            "collapsible": true,
-            "defaultExpanded": true,
-            "fields": [
-              {
-                "name": "inputs.title",
-                "type": "text",
-                "label": "Task title"
-              },
-              {
-                "name": "inputs.priority",
-                "type": "select",
-                "label": "Priority",
-                "options": [
-                  {
-                    "label": "Low",
-                    "value": "Low"
-                  },
-                  {
-                    "label": "Medium",
-                    "value": "Medium"
-                  },
-                  {
-                    "label": "High",
-                    "value": "High"
-                  }
-                ]
-              },
-              {
-                "name": "inputs.labels",
-                "type": "text",
-                "label": "Labels",
-                "placeholder": "Comma-separated (e.g. finance,approval)"
-              }
-            ]
-          }
-        ]
-      },
-      "runtimeConstraints": {
-        "exclude": [
-          "api-function"
-        ]
-      }
-    },
-    {
       "nodeType": "uipath.core.api-workflow.e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
       "version": "1.0.0",
       "category": "api-workflow",
@@ -3519,9 +3347,60 @@
           }
         ]
       },
-      "inputDefinition": {},
-      "inputDefaults": {},
+      "inputDefinition": {
+        "type": "object",
+        "properties": {
+          "caseId": {
+            "type": "string"
+          },
+          "disputeType": {
+            "type": "string"
+          },
+          "actionCode": {
+            "type": "string"
+          },
+          "adjustmentAmount": {
+            "type": "number"
+          },
+          "approvedBy": {
+            "type": "string"
+          },
+          "approvalComments": {
+            "type": "string"
+          }
+        }
+      },
+      "inputDefaults": {
+        "caseId": "",
+        "disputeType": "",
+        "actionCode": "",
+        "adjustmentAmount": 0,
+        "approvedBy": "",
+        "approvalComments": ""
+      },
       "outputDefinition": {
+        "output": {
+          "type": "object",
+          "source": "=this",
+          "var": "output",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "updateId": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        },
         "error": {
           "type": "object",
           "description": "Error information if the node fails",
@@ -3562,6 +3441,50 @@
             "additionalProperties": false
           }
         }
+      },
+      "form": {
+        "id": "activity-properties",
+        "title": "API workflow",
+        "sections": [
+          {
+            "id": "inputs",
+            "title": "Inputs",
+            "collapsible": true,
+            "defaultExpanded": true,
+            "fields": [
+              {
+                "name": "inputs.caseId",
+                "type": "text",
+                "label": "caseId"
+              },
+              {
+                "name": "inputs.disputeType",
+                "type": "text",
+                "label": "disputeType"
+              },
+              {
+                "name": "inputs.actionCode",
+                "type": "text",
+                "label": "actionCode"
+              },
+              {
+                "name": "inputs.adjustmentAmount",
+                "type": "number",
+                "label": "adjustmentAmount"
+              },
+              {
+                "name": "inputs.approvedBy",
+                "type": "text",
+                "label": "approvedBy"
+              },
+              {
+                "name": "inputs.approvalComments",
+                "type": "text",
+                "label": "approvalComments"
+              }
+            ]
+          }
+        ]
       },
       "debug": {
         "runtime": "bpmnEngine"
@@ -3784,6 +3707,176 @@
       "debug": {
         "runtime": "bpmnEngine"
       }
+    },
+    {
+      "nodeType": "uipath.human-in-the-loop.quick-form",
+      "version": "1.0",
+      "category": "human-task",
+      "description": "Fast inline approvals with inline debug",
+      "tags": [
+        "human-task",
+        "hitl",
+        "human-in-the-loop",
+        "quick-form",
+        "approval"
+      ],
+      "sortOrder": 50,
+      "display": {
+        "label": "Quick Form",
+        "icon": "users",
+        "shape": "square"
+      },
+      "handleConfiguration": [
+        {
+          "position": "left",
+          "handles": [
+            {
+              "id": "input",
+              "type": "target",
+              "handleType": "input"
+            }
+          ],
+          "visible": true
+        },
+        {
+          "position": "right",
+          "handles": [
+            {
+              "id": "completed",
+              "type": "source",
+              "handleType": "output",
+              "showButton": true,
+              "constraints": {
+                "forbiddenTargetCategories": [
+                  "trigger"
+                ]
+              }
+            }
+          ],
+          "visible": true
+        }
+      ],
+      "model": {
+        "type": "bpmn:UserTask",
+        "serviceType": "Actions.HITL"
+      },
+      "inputDefaults": {
+        "schema": {
+          "fields": [],
+          "outcomes": [
+            {
+              "id": "submit",
+              "name": "Submit",
+              "type": "string",
+              "isPrimary": true,
+              "action": "Continue"
+            }
+          ]
+        },
+        "recipient": {
+          "channels": [
+            "Email",
+            "ActionCenter"
+          ],
+          "connections": {},
+          "assignee": {
+            "type": "group"
+          }
+        }
+      },
+      "outputDefinition": {
+        "output": {
+          "type": "object",
+          "description": "Task result data",
+          "source": "=result",
+          "var": "output"
+        },
+        "status": {
+          "type": "string",
+          "description": "Task completion status (completed, cancelled, timeout)",
+          "source": "=result.Action",
+          "var": "status"
+        }
+      },
+      "form": {
+        "id": "hitl-quick-form-properties",
+        "title": "Quick Form Task Configuration",
+        "sections": [
+          {
+            "id": "delivery",
+            "title": "Task delivery",
+            "collapsible": true,
+            "defaultExpanded": true,
+            "fields": [
+              {
+                "name": "inputs.recipient",
+                "type": "custom",
+                "component": "hitl-channel-selector",
+                "label": "Delivery Channels",
+                "description": "Select where the task should be sent"
+              }
+            ]
+          },
+          {
+            "id": "schema",
+            "title": "Schema",
+            "collapsible": true,
+            "defaultExpanded": true,
+            "fields": [
+              {
+                "name": "inputs.schema",
+                "type": "custom",
+                "component": "hitl-schema-editor",
+                "label": "Task Schema",
+                "description": "Define the input and output parameters for this task"
+              }
+            ]
+          },
+          {
+            "id": "additional-properties",
+            "title": "Additional properties",
+            "collapsible": true,
+            "defaultExpanded": true,
+            "fields": [
+              {
+                "name": "inputs.title",
+                "type": "text",
+                "label": "Task title"
+              },
+              {
+                "name": "inputs.priority",
+                "type": "select",
+                "label": "Priority",
+                "options": [
+                  {
+                    "label": "Low",
+                    "value": "Low"
+                  },
+                  {
+                    "label": "Medium",
+                    "value": "Medium"
+                  },
+                  {
+                    "label": "High",
+                    "value": "High"
+                  }
+                ]
+              },
+              {
+                "name": "inputs.labels",
+                "type": "text",
+                "label": "Labels",
+                "placeholder": "Comma-separated (e.g. finance,approval)"
+              }
+            ]
+          }
+        ]
+      },
+      "runtimeConstraints": {
+        "exclude": [
+          "api-function"
+        ]
+      }
     }
   ],
   "variables": {
@@ -3886,7 +3979,6 @@
       {
         "id": "loadSampleCase.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -3921,6 +4013,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "loadSampleCase",
           "outputId": "error"
@@ -3929,7 +4022,6 @@
       {
         "id": "triageAgent.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -3964,6 +4056,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "triageAgent",
           "outputId": "error"
@@ -4008,7 +4101,6 @@
       {
         "id": "poMismatchAgent.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4043,6 +4135,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "poMismatchAgent",
           "outputId": "error"
@@ -4051,7 +4144,6 @@
       {
         "id": "missingPodAgent.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4086,6 +4178,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "missingPodAgent",
           "outputId": "error"
@@ -4094,7 +4187,6 @@
       {
         "id": "paymentMisapplicationAgent.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4129,6 +4221,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "paymentMisapplicationAgent",
           "outputId": "error"
@@ -4146,7 +4239,6 @@
       {
         "id": "normalizeProposal.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4181,6 +4273,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "normalizeProposal",
           "outputId": "error"
@@ -4283,45 +4376,8 @@
         }
       },
       {
-        "id": "reviewArDisputeResolution1.output",
-        "type": "object",
-        "description": "Task result data",
-        "binding": {
-          "nodeId": "reviewArDisputeResolution1",
-          "outputId": "output"
-        }
-      },
-      {
-        "id": "reviewArDisputeResolution1.status",
-        "type": "string",
-        "description": "Task completion status",
-        "binding": {
-          "nodeId": "reviewArDisputeResolution1",
-          "outputId": "status"
-        }
-      },
-      {
-        "id": "isResolutionApproved.matchedCase",
-        "type": "string",
-        "description": "The label of the matched branch (true/false label)",
-        "binding": {
-          "nodeId": "isResolutionApproved",
-          "outputId": "matchedCase"
-        }
-      },
-      {
-        "id": "isResolutionApproved.matchedCaseId",
-        "type": "string",
-        "description": "The branch that was taken (true or false)",
-        "binding": {
-          "nodeId": "isResolutionApproved",
-          "outputId": "matchedCaseId"
-        }
-      },
-      {
         "id": "mockUpdateDispute1.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4356,6 +4412,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "mockUpdateDispute1",
           "outputId": "error"
@@ -4563,18 +4620,8 @@
         }
       },
       {
-        "id": "sendEmail1.output",
-        "type": "object",
-        "description": "The return value of the connector.",
-        "binding": {
-          "nodeId": "sendEmail1",
-          "outputId": "output"
-        }
-      },
-      {
         "id": "sendEmail1.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4609,9 +4656,91 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "sendEmail1",
           "outputId": "error"
+        }
+      },
+      {
+        "id": "triageAgent.output",
+        "type": "object",
+        "description": "Agent response",
+        "binding": {
+          "nodeId": "triageAgent",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "poMismatchAgent.output",
+        "type": "object",
+        "description": "Agent response",
+        "binding": {
+          "nodeId": "poMismatchAgent",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "missingPodAgent.output",
+        "type": "object",
+        "description": "Agent response",
+        "binding": {
+          "nodeId": "missingPodAgent",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "paymentMisapplicationAgent.output",
+        "type": "object",
+        "description": "Agent response",
+        "binding": {
+          "nodeId": "paymentMisapplicationAgent",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "quickForm1.output",
+        "type": "object",
+        "description": "Task result data",
+        "binding": {
+          "nodeId": "quickForm1",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "quickForm1.status",
+        "type": "string",
+        "description": "Task completion status",
+        "binding": {
+          "nodeId": "quickForm1",
+          "outputId": "status"
+        }
+      },
+      {
+        "id": "isResolutionApproved.matchedCase",
+        "type": "string",
+        "description": "The label of the matched branch (true/false label)",
+        "binding": {
+          "nodeId": "isResolutionApproved",
+          "outputId": "matchedCase"
+        }
+      },
+      {
+        "id": "isResolutionApproved.matchedCaseId",
+        "type": "string",
+        "description": "The branch that was taken (true or false)",
+        "binding": {
+          "nodeId": "isResolutionApproved",
+          "outputId": "matchedCaseId"
+        }
+      },
+      {
+        "id": "sendEmail1.output",
+        "type": "object",
+        "description": "The return value of the connector.",
+        "binding": {
+          "nodeId": "sendEmail1",
+          "outputId": "output"
         }
       }
     ]
@@ -4653,7 +4782,7 @@
       "type": "string",
       "resource": "process",
       "resourceKey": "e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
-      "default": "solution_folder",
+      "default": "JD_Demos/demos/ARCollectionsDemo",
       "propertyAttribute": "folderPath",
       "resourceSubType": "Api"
     },
@@ -4705,7 +4834,7 @@
       "triageAgent": {
         "position": {
           "x": 192,
-          "y": -288
+          "y": -192
         },
         "size": {
           "width": 288,
@@ -4731,7 +4860,7 @@
         },
         "size": {
           "width": 96,
-          "height": 96
+          "height": 160
         },
         "collapsed": false
       },
@@ -4770,8 +4899,8 @@
       },
       "triageTaxonomyContext": {
         "position": {
-          "x": 240,
-          "y": -96
+          "x": 192,
+          "y": 0
         },
         "size": {
           "width": 96,
@@ -4815,29 +4944,7 @@
       "needsManualTriage": {
         "position": {
           "x": 768,
-          "y": -96
-        },
-        "size": {
-          "width": 96,
-          "height": 96
-        },
-        "collapsed": false
-      },
-      "reviewArDisputeResolution1": {
-        "position": {
-          "x": 1536,
-          "y": -528
-        },
-        "size": {
-          "width": 96,
-          "height": 96
-        },
-        "collapsed": false
-      },
-      "isResolutionApproved": {
-        "position": {
-          "x": 1728,
-          "y": -528
+          "y": -32
         },
         "size": {
           "width": 96,
@@ -4847,7 +4954,7 @@
       },
       "mockUpdateDispute1": {
         "position": {
-          "x": 1920,
+          "x": 1904,
           "y": -624
         },
         "size": {
@@ -4858,8 +4965,8 @@
       },
       "needsRework": {
         "position": {
-          "x": 1920,
-          "y": -432
+          "x": 1872,
+          "y": -416
         },
         "size": {
           "width": 96,
@@ -4869,7 +4976,7 @@
       },
       "resolved": {
         "position": {
-          "x": 2304,
+          "x": 2240,
           "y": -624
         },
         "size": {
@@ -4880,8 +4987,30 @@
       },
       "sendEmail1": {
         "position": {
-          "x": 2112,
+          "x": 2080,
           "y": -624
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        },
+        "collapsed": false
+      },
+      "quickForm1": {
+        "position": {
+          "x": 1504,
+          "y": -528
+        },
+        "size": {
+          "width": 96,
+          "height": 96
+        },
+        "collapsed": false
+      },
+      "isResolutionApproved": {
+        "position": {
+          "x": 1696,
+          "y": -528
         },
         "size": {
           "width": 96,

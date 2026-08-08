@@ -10,6 +10,11 @@ FLOW_PATH = (
     / "solution/ARCollectionsDemo/ARCollectionsDisputeResolution"
     / "ARCollectionsDisputeResolution.flow"
 )
+BINDINGS_PATH = (
+    ROOT
+    / "solution/ARCollectionsDemo/ARCollectionsDisputeResolution"
+    / "bindings_v2.json"
+)
 AGENT_MAPPING_PATH = ROOT / "config/agent-projects.json"
 
 SUPPORTED_ROUTES = {
@@ -669,11 +674,73 @@ def test_mock_update_uses_the_generated_quick_form_output_property():
     )
 
 
+def test_mock_update_uses_the_deployed_api_workflow_folder():
+    flow, _, _ = load_contract()
+    flow_binding = next(
+        binding
+        for binding in flow["bindings"]
+        if binding["id"] == "bMockUpdateDisputeFolderPath"
+    )
+    bindings = load_json(BINDINGS_PATH)
+    solution_binding = next(
+        binding
+        for binding in bindings["resources"]
+        if binding["key"] == flow_binding["resourceKey"]
+    )
+
+    assert flow_binding["default"] == "JD_Demos/demos/ARCollectionsDemo"
+    assert solution_binding["value"]["folderPath"]["defaultValue"] == (
+        "JD_Demos/demos/ARCollectionsDemo"
+    )
+
+
+def test_mock_update_definition_exposes_the_api_workflow_argument_contract():
+    flow, _, _ = load_contract()
+    definition = next(
+        definition
+        for definition in flow["definitions"]
+        if definition["nodeType"].startswith("uipath.core.api-workflow.")
+    )
+
+    assert {
+        name: schema["type"]
+        for name, schema in definition["inputDefinition"]["properties"].items()
+    } == {
+        "caseId": "string",
+        "disputeType": "string",
+        "actionCode": "string",
+        "adjustmentAmount": "number",
+        "approvedBy": "string",
+        "approvalComments": "string",
+    }
+    assert definition["inputDefaults"]["adjustmentAmount"] == 0
+    assert definition["outputDefinition"]["output"]["schema"]["properties"] == {
+        "updateId": {"type": "string"},
+        "status": {"type": "string"},
+        "updatedAt": {"type": "string"},
+        "message": {"type": "string"},
+    }
+
+
 def test_quick_form_omits_labels_that_break_app_tasks_external_tag_validation():
     flow, _, _ = load_contract()
     quick_form = nodes_of_type(flow, "uipath.human-in-the-loop.quick-form")[0]
 
     assert "labels" not in quick_form["inputs"]
+
+
+def test_quick_form_is_rebuilt_with_fresh_canonical_task_metadata():
+    flow, _, _ = load_contract()
+    quick_form = nodes_of_type(flow, "uipath.human-in-the-loop.quick-form")[0]
+    inputs = quick_form["inputs"]
+    schema = inputs["schema"]
+
+    assert quick_form["id"] != "reviewArDisputeResolution1"
+    assert inputs["type"] == "quick"
+    assert "id" in schema
+    assert "schemaId" not in schema
+    assert inputs["recipient"]["channels"] == ["ActionCenter"]
+    assert inputs["recipient"]["connections"] == {}
 
 
 def test_quick_form_routes_only_through_its_declared_completed_handle():
@@ -687,6 +754,7 @@ def test_quick_form_routes_only_through_its_declared_completed_handle():
 
 def test_agent_resources_registry_bindings_and_generated_variables_are_complete():
     flow, _, nodes = load_contract()
+    quick_form = nodes_of_type(flow, "uipath.human-in-the-loop.quick-form")[0]
     expected_resources = {
         "triageTaxonomyContext": (
             "uipath.agent.resource.context.index.ar-dispute-triage-index.9e46f4a3-6c15-4cab-9030-08def39d8059",
@@ -776,7 +844,7 @@ def test_agent_resources_registry_bindings_and_generated_variables_are_complete(
             "type": "string",
             "resource": "process",
             "resourceKey": mock_update_key,
-            "default": "solution_folder",
+            "default": "JD_Demos/demos/ARCollectionsDemo",
             "propertyAttribute": "folderPath",
             "resourceSubType": "Api",
         },
@@ -815,8 +883,8 @@ def test_agent_resources_registry_bindings_and_generated_variables_are_complete(
         ("paymentMisapplicationAgent", "error"),
         ("normalizeProposal", "output"),
         ("normalizeProposal", "error"),
-        ("reviewArDisputeResolution1", "output"),
-        ("reviewArDisputeResolution1", "status"),
+        (quick_form["id"], "output"),
+        (quick_form["id"], "status"),
         ("isResolutionApproved", "matchedCase"),
         ("isResolutionApproved", "matchedCaseId"),
         ("mockUpdateDispute1", "output"),

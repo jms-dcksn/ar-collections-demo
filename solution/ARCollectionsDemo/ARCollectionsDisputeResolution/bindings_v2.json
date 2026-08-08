@@ -26,6 +26,30 @@
       }
     },
     {
+      "resource": "process",
+      "key": "e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
+      "id": "processe0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
+      "value": {
+        "folderPath": {
+          "defaultValue": "JD_Demos/demos/ARCollectionsDemo",
+          "isExpression": false,
+          "displayName": "Folder path"
+        },
+        "name": {
+          "defaultValue": "MockUpdateDispute",
+          "isExpression": false,
+          "displayName": "Process name"
+        }
+      },
+      "metadata": {
+        "ActivityName": "Mock Update Dispute",
+        "BindingsVersion": "2.2",
+        "DisplayLabel": "name",
+        "SolutionsSupport": "true",
+        "subType": "Api"
+      }
+    },
+    {
       "resource": "connection",
       "key": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
       "id": "connectionc61c5442-c5d6-4cb2-9c02-f4a541f01e4c",

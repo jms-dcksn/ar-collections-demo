@@ -7,6 +7,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 PROJECT_DIR = REPO_ROOT / "solution" / "ARCollectionsDemo" / "LookupPaymentApplication"
 WORKFLOW_PATH = PROJECT_DIR / "Workflow.json"
+ENTRY_POINTS_PATH = PROJECT_DIR / "entry-points.json"
 VERIFIER_PATH = Path(__file__).with_name("verify_lookup_payment.py")
 
 EXPECTED_INPUT_TYPES = {
@@ -120,6 +121,15 @@ def test_lookup_payment_has_exact_contract_and_no_external_calls():
         if pattern.search(script_content)
     }
     assert not matched_network_primitives
+
+
+def test_lookup_payment_entry_point_exposes_the_workflow_argument_contract():
+    workflow = json.loads(WORKFLOW_PATH.read_text(encoding="utf-8"))
+    entry_points = json.loads(ENTRY_POINTS_PATH.read_text(encoding="utf-8"))
+    entry_point = entry_points["entryPoints"][0]
+
+    assert entry_point["input"] == workflow["input"]["schema"]["document"]
+    assert entry_point["output"] == workflow["output"]["schema"]["document"]
 
 
 def test_verifier_normalizes_pascal_case_business_keys_exactly():

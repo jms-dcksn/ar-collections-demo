@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 WORKFLOW_PATH = (
     ROOT / "solution" / "ARCollectionsDemo" / "MockUpdateDispute" / "Workflow.json"
 )
+ENTRY_POINTS_PATH = WORKFLOW_PATH.with_name("entry-points.json")
 VERIFIER_PATH = Path(__file__).with_name("verify_mock_update.py")
 
 EXPECTED_INPUT_TYPES = {
@@ -76,6 +77,15 @@ def test_mock_update_exposes_exact_input_and_output_contracts():
     assert schema_types(workflow, "output") == EXPECTED_OUTPUT_TYPES
     assert required_fields(workflow, "input") == set(EXPECTED_INPUT_TYPES)
     assert required_fields(workflow, "output") == set(EXPECTED_OUTPUT_TYPES)
+
+
+def test_mock_update_entry_point_exposes_the_workflow_argument_contract():
+    workflow = load_workflow()
+    entry_points = json.loads(ENTRY_POINTS_PATH.read_text())
+    entry_point = entry_points["entryPoints"][0]
+
+    assert entry_point["input"] == workflow["input"]["schema"]["document"]
+    assert entry_point["output"] == workflow["output"]["schema"]["document"]
 
 
 def test_mock_update_has_a_terminating_response_activity():

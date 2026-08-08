@@ -6,8 +6,42 @@
       "filePath": "content/Workflow.json",
       "uniqueId": "2e586327-1338-4b40-b996-05d905bb9dc8",
       "type": "Api",
-      "input": null,
-      "output": null
+      "input": {
+        "type": "object",
+        "properties": {
+          "caseId": { "type": "string" },
+          "disputeType": { "type": "string" },
+          "actionCode": { "type": "string" },
+          "adjustmentAmount": { "type": "number" },
+          "approvedBy": { "type": "string" },
+          "approvalComments": { "type": "string" }
+        },
+        "required": [
+          "caseId",
+          "disputeType",
+          "actionCode",
+          "adjustmentAmount",
+          "approvedBy",
+          "approvalComments"
+        ],
+        "title": "Inputs"
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "updateId": { "type": "string" },
+          "status": { "type": "string" },
+          "updatedAt": { "type": "string" },
+          "message": { "type": "string" }
+        },
+        "required": [
+          "updateId",
+          "status",
+          "updatedAt",
+          "message"
+        ],
+        "title": "Outputs"
+      }
     }
   ]
 }
