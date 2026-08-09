@@ -3993,7 +3993,6 @@
       {
         "id": "loadSampleCase.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4028,6 +4027,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "loadSampleCase",
           "outputId": "error"
@@ -4036,7 +4036,6 @@
       {
         "id": "triageAgent.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4071,6 +4070,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "triageAgent",
           "outputId": "error"
@@ -4115,7 +4115,6 @@
       {
         "id": "poMismatchAgent.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4150,6 +4149,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "poMismatchAgent",
           "outputId": "error"
@@ -4158,7 +4158,6 @@
       {
         "id": "missingPodAgent.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4193,6 +4192,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "missingPodAgent",
           "outputId": "error"
@@ -4201,7 +4201,6 @@
       {
         "id": "paymentMisapplicationAgent.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4236,6 +4235,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "paymentMisapplicationAgent",
           "outputId": "error"
@@ -4253,7 +4253,6 @@
       {
         "id": "normalizeProposal.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4288,6 +4287,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "normalizeProposal",
           "outputId": "error"
@@ -4392,7 +4392,6 @@
       {
         "id": "mockUpdateDispute1.output",
         "type": "object",
-        "description": "The return value of the API workflow",
         "schema": {
           "type": "object",
           "properties": {
@@ -4410,6 +4409,7 @@
             }
           }
         },
+        "description": "The return value of the API workflow",
         "binding": {
           "nodeId": "mockUpdateDispute1",
           "outputId": "output"
@@ -4418,7 +4418,6 @@
       {
         "id": "mockUpdateDispute1.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4453,6 +4452,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "mockUpdateDispute1",
           "outputId": "error"
@@ -4651,18 +4651,8 @@
         }
       },
       {
-        "id": "sendEmail1.output",
-        "type": "object",
-        "description": "The return value of the connector.",
-        "binding": {
-          "nodeId": "sendEmail1",
-          "outputId": "output"
-        }
-      },
-      {
         "id": "sendEmail1.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4697,6 +4687,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "sendEmail1",
           "outputId": "error"
@@ -4736,6 +4727,51 @@
         "binding": {
           "nodeId": "isResolutionApproved",
           "outputId": "matchedCaseId"
+        }
+      },
+      {
+        "id": "triageAgent.output",
+        "type": "object",
+        "description": "Agent response",
+        "binding": {
+          "nodeId": "triageAgent",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "poMismatchAgent.output",
+        "type": "object",
+        "description": "Agent response",
+        "binding": {
+          "nodeId": "poMismatchAgent",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "missingPodAgent.output",
+        "type": "object",
+        "description": "Agent response",
+        "binding": {
+          "nodeId": "missingPodAgent",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "paymentMisapplicationAgent.output",
+        "type": "object",
+        "description": "Agent response",
+        "binding": {
+          "nodeId": "paymentMisapplicationAgent",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "sendEmail1.output",
+        "type": "object",
+        "description": "The return value of the connector.",
+        "binding": {
+          "nodeId": "sendEmail1",
+          "outputId": "output"
         }
       }
     ]
@@ -4855,7 +4891,7 @@
         },
         "size": {
           "width": 96,
-          "height": 96
+          "height": 160
         },
         "collapsed": false
       },
