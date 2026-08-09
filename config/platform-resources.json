@@ -2,6 +2,65 @@
   "folderPath": "JD_Demos/demos",
   "outlookConnection": "james.dickson@uipath.com",
   "connectionKey": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+  "dataFabricEntities": [
+    {
+      "folderKey": "bbe64c10-b957-4adf-a535-77109c673e5a",
+      "displayName": "JD AR Collections Entity",
+      "systemName": "JDARCollectionsEntity",
+      "entityKey": "b6ea47fa-9f93-f111-9b32-000d3ab5d4c4",
+      "fields": [
+        {
+          "name": "caseId",
+          "type": "STRING",
+          "required": true,
+          "unique": true
+        },
+        {
+          "name": "customerName",
+          "type": "STRING",
+          "required": true,
+          "unique": false
+        },
+        {
+          "name": "customerAccountId",
+          "type": "STRING",
+          "required": true,
+          "unique": false
+        },
+        {
+          "name": "invoiceNumber",
+          "type": "STRING",
+          "required": true,
+          "unique": false
+        },
+        {
+          "name": "outstandingBalance",
+          "type": "DECIMAL",
+          "required": true,
+          "unique": false,
+          "decimalPrecision": 2
+        },
+        {
+          "name": "customerReason",
+          "type": "MULTILINE_TEXT",
+          "required": true,
+          "unique": false
+        },
+        {
+          "name": "openedDate",
+          "type": "DATE",
+          "required": true,
+          "unique": false
+        },
+        {
+          "name": "evidence",
+          "type": "MULTILINE_TEXT",
+          "required": true,
+          "unique": false
+        }
+      ]
+    }
+  ],
   "resources": [
     {
       "source": "knowledge/triage/ar-dispute-taxonomy-and-examples.txt",

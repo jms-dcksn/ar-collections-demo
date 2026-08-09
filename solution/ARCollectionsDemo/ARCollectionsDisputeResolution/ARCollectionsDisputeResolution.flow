@@ -34,7 +34,7 @@
         "icon": "code"
       },
       "inputs": {
-        "script": "const cases = {\n  \"AR-PO-001\": {\n    caseId: \"AR-PO-001\",\n    customerName: \"Northstar Manufacturing\",\n    customerAccountId: \"NORTHSTAR-1701\",\n    invoiceNumber: \"INV-10471\",\n    outstandingBalance: 48750,\n    customerReason: \"The invoice exceeds our purchase order and requires correction.\",\n    openedDate: \"2026-07-07\",\n    evidence: { purchaseOrderNumber: \"PO-77124\", invoiceAmount: 48750, poAuthorizedAmount: 47250, difference: 1500 }\n  },\n  \"AR-POD-002\": {\n    caseId: \"AR-POD-002\",\n    customerName: \"Riverbend Retail\",\n    customerAccountId: \"RIVERBEND-2904\",\n    invoiceNumber: \"INV-20482\",\n    outstandingBalance: 22400,\n    customerReason: \"Payment is on hold pending proof of delivery.\",\n    openedDate: \"2026-07-10\",\n    evidence: { deliveredDate: \"2026-06-18\", signer: \"M. Chen\", shipmentQuantity: 80, invoiceQuantity: 80, quantitiesMatch: true }\n  },\n  \"AR-PAY-003\": {\n    caseId: \"AR-PAY-003\",\n    customerName: \"Summit Medical Distribution\",\n    customerAccountId: \"SUMMIT-4402\",\n    invoiceNumber: \"INV-30915\",\n    outstandingBalance: 36800,\n    customerReason: \"We paid this invoice, but the balance is still open.\",\n    openedDate: \"2026-07-14\",\n    evidence: { reportedPaymentAmount: 36800, paymentReference: \"PAY-77821\" }\n  },\n  \"AR-AMB-004\": {\n    caseId: \"AR-AMB-004\",\n    customerName: \"Lakeshore Components\",\n    customerAccountId: \"LAKESHORE-5506\",\n    invoiceNumber: \"INV-40102\",\n    outstandingBalance: 12800,\n    customerReason: \"The balance does not look right; please investigate\",\n    openedDate: \"2026-07-18\",\n    evidence: {}\n  }\n};\nconst caseId = $vars.start.output.caseId;\nif (!Object.prototype.hasOwnProperty.call(cases, caseId)) {\n  throw new Error(\"Unsupported sample caseId: \" + caseId);\n}\nreturn cases[caseId];"
+        "script": "const cases = {\n  \"AR-PO-001\": {\n    caseId: \"AR-PO-001\",\n    customerName: \"Northstar Manufacturing\",\n    customerAccountId: \"NORTHSTAR-1701\",\n    invoiceNumber: \"INV-10471\",\n    outstandingBalance: 48750,\n    customerReason: \"The invoice exceeds our purchase order and requires correction.\",\n    openedDate: \"2026-07-07\",\n    evidence: { purchaseOrderNumber: \"PO-77124\", invoiceAmount: 48750, poAuthorizedAmount: 47250, difference: 1500 }\n  },\n  \"AR-POD-002\": {\n    caseId: \"AR-POD-002\",\n    customerName: \"Riverbend Retail\",\n    customerAccountId: \"RIVERBEND-2904\",\n    invoiceNumber: \"INV-20482\",\n    outstandingBalance: 22400,\n    customerReason: \"Payment is on hold pending proof of delivery.\",\n    openedDate: \"2026-07-10\",\n    evidence: { deliveredDate: \"2026-06-18\", signer: \"M. Chen\", shipmentQuantity: 80, invoiceQuantity: 80, quantitiesMatch: true }\n  },\n  \"AR-PAY-003\": {\n    caseId: \"AR-PAY-003\",\n    customerName: \"Summit Medical Distribution\",\n    customerAccountId: \"SUMMIT-4402\",\n    invoiceNumber: \"INV-30915\",\n    outstandingBalance: 36800,\n    customerReason: \"We paid this invoice, but the balance is still open.\",\n    openedDate: \"2026-07-14\",\n    evidence: { reportedPaymentAmount: 36800, paymentReference: \"PAY-77821\" }\n  },\n  \"AR-AMB-004\": {\n    caseId: \"AR-AMB-004\",\n    customerName: \"Lakeshore Components\",\n    customerAccountId: \"LAKESHORE-5506\",\n    invoiceNumber: \"INV-40102\",\n    outstandingBalance: 12800,\n    customerReason: \"The balance does not look right; please investigate\",\n    openedDate: \"2026-07-18\",\n    evidence: {}\n  }\n};\nconst caseId = $vars.start.output.caseId;\nif (!Object.prototype.hasOwnProperty.call(cases, caseId)) {\n  throw new Error(\"Unsupported sample caseId: \" + caseId);\n}\nreturn { ...cases[caseId], evidence: JSON.stringify(cases[caseId].evidence) };"
       },
       "outputs": {
         "output": {
@@ -3979,6 +3979,7 @@
       {
         "id": "loadSampleCase.error",
         "type": "object",
+        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4013,7 +4014,6 @@
           },
           "additionalProperties": false
         },
-        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "loadSampleCase",
           "outputId": "error"
@@ -4022,6 +4022,7 @@
       {
         "id": "triageAgent.error",
         "type": "object",
+        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4056,7 +4057,6 @@
           },
           "additionalProperties": false
         },
-        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "triageAgent",
           "outputId": "error"
@@ -4101,6 +4101,7 @@
       {
         "id": "poMismatchAgent.error",
         "type": "object",
+        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4135,7 +4136,6 @@
           },
           "additionalProperties": false
         },
-        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "poMismatchAgent",
           "outputId": "error"
@@ -4144,6 +4144,7 @@
       {
         "id": "missingPodAgent.error",
         "type": "object",
+        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4178,7 +4179,6 @@
           },
           "additionalProperties": false
         },
-        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "missingPodAgent",
           "outputId": "error"
@@ -4187,6 +4187,7 @@
       {
         "id": "paymentMisapplicationAgent.error",
         "type": "object",
+        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4221,7 +4222,6 @@
           },
           "additionalProperties": false
         },
-        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "paymentMisapplicationAgent",
           "outputId": "error"
@@ -4239,6 +4239,7 @@
       {
         "id": "normalizeProposal.error",
         "type": "object",
+        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4273,7 +4274,6 @@
           },
           "additionalProperties": false
         },
-        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "normalizeProposal",
           "outputId": "error"
@@ -4376,8 +4376,35 @@
         }
       },
       {
+        "id": "mockUpdateDispute1.output",
+        "type": "object",
+        "description": "The return value of the API workflow",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "updateId": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "updatedAt": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        },
+        "binding": {
+          "nodeId": "mockUpdateDispute1",
+          "outputId": "output"
+        }
+      },
+      {
         "id": "mockUpdateDispute1.error",
         "type": "object",
+        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4412,19 +4439,9 @@
           },
           "additionalProperties": false
         },
-        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "mockUpdateDispute1",
           "outputId": "error"
-        }
-      },
-      {
-        "id": "mockUpdateDispute1.output",
-        "type": "object",
-        "description": "The return value of the API workflow",
-        "binding": {
-          "nodeId": "mockUpdateDispute1",
-          "outputId": "output"
         }
       },
       {
@@ -4620,8 +4637,18 @@
         }
       },
       {
+        "id": "sendEmail1.output",
+        "type": "object",
+        "description": "The return value of the connector.",
+        "binding": {
+          "nodeId": "sendEmail1",
+          "outputId": "output"
+        }
+      },
+      {
         "id": "sendEmail1.error",
         "type": "object",
+        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4656,46 +4683,9 @@
           },
           "additionalProperties": false
         },
-        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "sendEmail1",
           "outputId": "error"
-        }
-      },
-      {
-        "id": "triageAgent.output",
-        "type": "object",
-        "description": "Agent response",
-        "binding": {
-          "nodeId": "triageAgent",
-          "outputId": "output"
-        }
-      },
-      {
-        "id": "poMismatchAgent.output",
-        "type": "object",
-        "description": "Agent response",
-        "binding": {
-          "nodeId": "poMismatchAgent",
-          "outputId": "output"
-        }
-      },
-      {
-        "id": "missingPodAgent.output",
-        "type": "object",
-        "description": "Agent response",
-        "binding": {
-          "nodeId": "missingPodAgent",
-          "outputId": "output"
-        }
-      },
-      {
-        "id": "paymentMisapplicationAgent.output",
-        "type": "object",
-        "description": "Agent response",
-        "binding": {
-          "nodeId": "paymentMisapplicationAgent",
-          "outputId": "output"
         }
       },
       {
@@ -4732,15 +4722,6 @@
         "binding": {
           "nodeId": "isResolutionApproved",
           "outputId": "matchedCaseId"
-        }
-      },
-      {
-        "id": "sendEmail1.output",
-        "type": "object",
-        "description": "The return value of the connector.",
-        "binding": {
-          "nodeId": "sendEmail1",
-          "outputId": "output"
         }
       }
     ]
@@ -4834,7 +4815,7 @@
       "triageAgent": {
         "position": {
           "x": 192,
-          "y": -192
+          "y": -288
         },
         "size": {
           "width": 288,
@@ -4860,7 +4841,7 @@
         },
         "size": {
           "width": 96,
-          "height": 160
+          "height": 96
         },
         "collapsed": false
       },
@@ -4899,8 +4880,8 @@
       },
       "triageTaxonomyContext": {
         "position": {
-          "x": 192,
-          "y": 0
+          "x": 240,
+          "y": -96
         },
         "size": {
           "width": 96,
@@ -4944,7 +4925,7 @@
       "needsManualTriage": {
         "position": {
           "x": 768,
-          "y": -32
+          "y": -96
         },
         "size": {
           "width": 96,
@@ -4954,7 +4935,7 @@
       },
       "mockUpdateDispute1": {
         "position": {
-          "x": 1904,
+          "x": 1920,
           "y": -624
         },
         "size": {
@@ -4965,8 +4946,8 @@
       },
       "needsRework": {
         "position": {
-          "x": 1872,
-          "y": -416
+          "x": 1920,
+          "y": -432
         },
         "size": {
           "width": 96,
@@ -4976,7 +4957,7 @@
       },
       "resolved": {
         "position": {
-          "x": 2240,
+          "x": 2304,
           "y": -624
         },
         "size": {
@@ -4987,7 +4968,7 @@
       },
       "sendEmail1": {
         "position": {
-          "x": 2080,
+          "x": 2112,
           "y": -624
         },
         "size": {
@@ -4998,7 +4979,7 @@
       },
       "quickForm1": {
         "position": {
-          "x": 1504,
+          "x": 1536,
           "y": -528
         },
         "size": {
@@ -5009,7 +4990,7 @@
       },
       "isResolutionApproved": {
         "position": {
-          "x": 1696,
+          "x": 1728,
           "y": -528
         },
         "size": {
