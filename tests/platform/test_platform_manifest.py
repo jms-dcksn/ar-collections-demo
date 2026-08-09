@@ -27,6 +27,7 @@ ALLOWED_MANIFEST_KEYS = {
     "folderPath",
     "outlookConnection",
     "connectionKey",
+    "dataFabricEntities",
     "resources",
 }
 ALLOWED_RESOURCE_KEYS = {
@@ -78,3 +79,42 @@ def test_platform_manifest_has_final_provisioned_identity_fields():
             identity_keys.append(identity_key)
 
     assert len(identity_keys) == len(set(identity_keys))
+
+
+def test_platform_manifest_declares_the_approved_data_fabric_entity():
+    manifest = json.loads(MANIFEST.read_text())
+    entity = manifest.get(
+        "dataFabricEntities",
+        [{"folderKey": None, "displayName": None, "systemName": None, "fields": []}],
+    )[0]
+
+    assert entity["folderKey"] == "bbe64c10-b957-4adf-a535-77109c673e5a"
+    assert entity["displayName"] == "JD AR Collections Entity"
+    assert entity["systemName"] == "JDARCollectionsEntity"
+    _assert_canonical_uuid(entity["entityKey"])
+    assert entity["fields"] == [
+        {"name": "caseId", "type": "STRING", "required": True, "unique": True},
+        {"name": "customerName", "type": "STRING", "required": True, "unique": False},
+        {
+            "name": "customerAccountId",
+            "type": "STRING",
+            "required": True,
+            "unique": False,
+        },
+        {"name": "invoiceNumber", "type": "STRING", "required": True, "unique": False},
+        {
+            "name": "outstandingBalance",
+            "type": "DECIMAL",
+            "required": True,
+            "unique": False,
+            "decimalPrecision": 2,
+        },
+        {
+            "name": "customerReason",
+            "type": "MULTILINE_TEXT",
+            "required": True,
+            "unique": False,
+        },
+        {"name": "openedDate", "type": "DATE", "required": True, "unique": False},
+        {"name": "evidence", "type": "MULTILINE_TEXT", "required": True, "unique": False},
+    ]

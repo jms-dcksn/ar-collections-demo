@@ -282,6 +282,14 @@ def test_start_contract_and_deterministic_loader_cover_all_approved_fixtures():
     assert start_to_loader[0]["targetPort"] == "input"
 
 
+def test_sample_case_loader_serializes_evidence_for_data_fabric():
+    flow, _, _ = load_contract()
+    script = node_with_label(flow, "Load Sample Case")["inputs"]["script"]
+
+    assert "JSON.stringify(cases[caseId].evidence)" in script
+    assert "return { ...cases[caseId], evidence:" in script
+
+
 def test_flow_uses_all_mapped_inline_agents_with_exact_runtime_contracts():
     flow, mapping, _ = load_contract()
     agents = nodes_of_type(flow, "uipath.agent.autonomous")
