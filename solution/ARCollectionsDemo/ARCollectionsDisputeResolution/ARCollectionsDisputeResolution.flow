@@ -747,8 +747,8 @@
       "typeVersion": "1.0.0",
       "display": {
         "label": "MockUpdateDispute",
-        "icon": "api",
-        "subLabel": ""
+        "subLabel": "",
+        "icon": "api"
       },
       "inputs": {
         "caseId": "=js:$vars.normalizeProposal.output.caseId",
@@ -1409,6 +1409,20 @@
       "sourceNodeId": "isResolutionApproved",
       "sourcePort": "true",
       "targetNodeId": "mockUpdateDispute1",
+      "targetPort": "input"
+    },
+    {
+      "id": "xy-edge__quickForm1outcome-approve-isResolutionApprovedinput",
+      "sourceNodeId": "quickForm1",
+      "sourcePort": "outcome-approve",
+      "targetNodeId": "isResolutionApproved",
+      "targetPort": "input"
+    },
+    {
+      "id": "xy-edge__quickForm1outcome-reject-isResolutionApprovedinput",
+      "sourceNodeId": "quickForm1",
+      "sourcePort": "outcome-reject",
+      "targetNodeId": "isResolutionApproved",
       "targetPort": "input"
     }
   ],
