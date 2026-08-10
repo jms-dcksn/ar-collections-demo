@@ -4388,20 +4388,6 @@
   "variables": {
     "globals": [
       {
-        "id": "caseId",
-        "direction": "in",
-        "type": "string",
-        "description": "One supported demo case identifier supplied at Start",
-        "triggerNodeId": "start"
-      },
-      {
-        "id": "recipientEmail",
-        "direction": "in",
-        "type": "string",
-        "description": "Presenter-supplied Outlook recipient",
-        "triggerNodeId": "start"
-      },
-      {
         "id": "status",
         "direction": "out",
         "type": "string"
@@ -4410,7 +4396,7 @@
         "id": "resultCaseId",
         "direction": "out",
         "type": "string",
-        "description": "Original Start case identifier returned for traceability"
+        "description": "Created Data Fabric record case identifier returned for traceability"
       },
       {
         "id": "disputeType",

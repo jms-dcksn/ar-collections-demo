@@ -42,7 +42,7 @@
         }
       },
       "metadata": {
-        "ActivityName": "Lookup Payment Application",
+        "ActivityName": "Mock Update Dispute",
         "BindingsVersion": "2.2",
         "DisplayLabel": "name",
         "SolutionsSupport": "true",
