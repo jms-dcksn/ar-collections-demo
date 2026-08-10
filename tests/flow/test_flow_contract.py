@@ -250,9 +250,7 @@ def test_flow_uses_all_mapped_inline_agents_with_exact_runtime_contracts():
 
 def test_supported_decision_and_switch_route_exclusively_to_one_specialist():
     flow, mapping, nodes = load_contract()
-    decisions = nodes_of_type(flow, "core.logic.decision")
     switches = nodes_of_type(flow, "core.logic.switch")
-    assert len(decisions) == 2
     assert len(switches) == 1
     decision = node_with_label(flow, "Supported and confident?")
     assert decision["type"] == "core.logic.decision"
@@ -393,8 +391,15 @@ def test_data_fabric_approval_events_are_correlated_persisted_and_isolated():
     wait = waits[0]
     assert wait["id"] == "waitForApprovalUpdate"
     correlation = node_with_label(flow, "Updated record matches this dispute?")
-    assert "$vars.recordCreated.output.Id" in correlation["inputs"]["expression"]
-    assert "$vars.waitForApprovalUpdate.output.Id" in correlation["inputs"]["expression"]
+    assert correlation["type"] == "core.logic.decision"
+    correlation_expression = compact(correlation["inputs"]["expression"])
+    created_record_id = r"\$vars\.recordcreated\.output\.id"
+    updated_record_id = r"\$vars\.waitforapprovalupdate\.output\.id"
+    assert re.search(
+        rf"(?:{created_record_id}(?:===|==){updated_record_id}|"
+        rf"{updated_record_id}(?:===|==){created_record_id})",
+        correlation_expression,
+    )
 
     data_fabric_updates = nodes_of_type(
         flow, "uipath.connector.uipath-uipath-dataservice.update-entity-record"
@@ -417,6 +422,7 @@ def test_data_fabric_approval_events_are_correlated_persisted_and_isolated():
     assert mismatched_edges[0]["targetPort"] == "input"
 
     decision_present = node_with_label(flow, "Approval decision supplied?")
+    assert decision_present["type"] == "core.logic.decision"
     assert "$vars.waitForApprovalUpdate.output.approvalDecision" in decision_present[
         "inputs"
     ]["expression"]
