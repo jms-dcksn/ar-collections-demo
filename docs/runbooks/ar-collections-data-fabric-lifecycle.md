@@ -91,7 +91,11 @@ Run the repository checks without live execution:
 
 ```bash
 UV_CACHE_DIR=/private/tmp/ar-collections-uv-cache uv run pytest -q
-npm test
+if [ -f package.json ]; then
+  npm test
+else
+  echo "Skipping npm test: no package.json is present."
+fi
 UIPATH_CLI_DISABLE_VERSION_SYNC=1 uip maestro flow validate solution/ARCollectionsDemo/ARCollectionsDisputeResolution/ARCollectionsDisputeResolution.flow --output json
 git diff --check
 ```

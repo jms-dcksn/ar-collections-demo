@@ -206,4 +206,3 @@ git commit -m "docs: add Data Fabric dispute lifecycle runbook"
 - Coverage: entity schema, event trigger, record-ID wait loop, persistence, side-effect isolation, tests, and runbook are all covered.
 - Scope: Process App implementation, deployment, publish/upload, live debug, retention, and RBAC changes are excluded.
 - Consistency: the tenant entity ID, connection, decision values, and record-ID correlation are constant across tasks.
-
