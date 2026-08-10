@@ -16,6 +16,10 @@ BINDINGS_PATH = (
     / "bindings_v2.json"
 )
 AGENT_MAPPING_PATH = ROOT / "config/agent-projects.json"
+EVAL_SET_PATH = (
+    FLOW_PATH.parent
+    / "evals/2af1fdaa-b414-460f-9f42-b099f793059c/eval-sets/evaluation-set.json"
+)
 
 SUPPORTED_ROUTES = {
     "po_mismatch": "poMismatch",
@@ -246,6 +250,46 @@ def test_flow_uses_all_mapped_inline_agents_with_exact_runtime_contracts():
         }
         assert inputs == specialist_inputs
         assert outputs == PROPOSAL_FIELDS
+
+
+def test_inline_agent_delivery_schema_and_prompt_inputs_are_aligned():
+    flow, _, _ = load_contract()
+
+    for node in nodes_of_type(flow, "uipath.agent.autonomous"):
+        delivered = {
+            item["id"]: item["type"]
+            for item in node["inputs"]["agentInputVariables"]
+        }
+        agent = load_json(FLOW_PATH.parent / node["inputs"]["source"] / "agent.json")
+        declared = {
+            name: definition.get("type")
+            for name, definition in agent["inputSchema"]["properties"].items()
+        }
+        prompt = "\n".join(message["content"] for message in agent["messages"])
+        prompt_variables = [
+            token["rawString"]
+            for message in agent["messages"]
+            for token in message["contentTokens"]
+            if token["type"] == "variable"
+        ]
+
+        assert declared == delivered, node["id"]
+        assert set(prompt_variables) == {
+            f"input.{input_id}" for input_id in delivered
+        }, node["id"]
+        for input_id in delivered:
+            assert prompt.count(f"{{{{input.{input_id}}}}}") == 1, node["id"]
+
+
+def test_eval_set_targets_the_data_fabric_record_created_entrypoint():
+    flow, _, _ = load_contract()
+    eval_set = load_json(EVAL_SET_PATH)
+    entrypoint = eval_set["selectedEntrypoint"]
+
+    assert eval_set["target"] == {"kind": "flow", "entrypoint": entrypoint}
+    matching_nodes = [node for node in flow["nodes"] if node["id"] == entrypoint]
+    assert len(matching_nodes) == 1
+    assert matching_nodes[0]["type"].startswith("uipath.connector.trigger.")
 
 
 def test_supported_decision_and_switch_route_exclusively_to_one_specialist():

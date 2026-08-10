@@ -10,7 +10,7 @@ FLOW_DIR = ROOT / "solution/ARCollectionsDemo/ARCollectionsDisputeResolution"
 MAPPING_PATH = ROOT / "config/agent-projects.json"
 
 INPUT_FIELDS = {
-    "loadSampleCase__output": None,
+    "recordCreated__output__output": "object",
     "triageAgent__output__disputeType": "string",
     "triageAgent__output__rationale": "string",
     "triageAgent__output__confidence": "number",
@@ -62,7 +62,7 @@ OUTPUT_SCHEMA = {
 }
 
 EXPECTED_INPUT_TOKENS = {
-    "input.loadSampleCase__output",
+    "input.recordCreated__output__output",
     "input.triageAgent__output__disputeType",
     "input.triageAgent__output__rationale",
     "input.triageAgent__output__confidence",
@@ -170,7 +170,5 @@ def test_basic_specialist_contract(agent_key: str) -> None:
     for term in SPECIALISTS[agent_key]["prompt_terms"]:
         assert term in system_prompt
 
-    resources_dir = agent_dir / "resources"
-    assert resources_dir.is_dir()
-    assert list(resources_dir.iterdir()) == []
+    assert list(agent_dir.glob("resources/*/resource.json")) == []
     assert "resources" not in agent

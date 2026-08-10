@@ -9,7 +9,7 @@ MAPPING_PATH = ROOT / "config" / "agent-projects.json"
 
 PAYMENT_AGENT_ID = "1c6b5289-1ff4-45f1-b48c-e613f8fd917f"
 INPUT_FIELDS = {
-    "loadSampleCase__output": None,
+    "recordCreated__output__output": "object",
     "triageAgent__output__disputeType": "string",
     "triageAgent__output__rationale": "string",
     "triageAgent__output__confidence": "number",

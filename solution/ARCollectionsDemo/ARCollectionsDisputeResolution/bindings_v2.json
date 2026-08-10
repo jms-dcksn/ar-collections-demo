@@ -110,6 +110,62 @@
         "Operation": "CREATED",
         "FilterExpression": ""
       }
+    },
+    {
+      "resource": "index",
+      "key": "ar-dispute-triage-index",
+      "value": {
+        "name": {
+          "defaultValue": "ar-dispute-triage-index",
+          "isExpression": false,
+          "displayName": "Index Name"
+        },
+        "folderPath": {
+          "defaultValue": "JD_Demos/demos",
+          "isExpression": false,
+          "displayName": "Folder path"
+        }
+      },
+      "metadata": {
+        "bindingsVersion": "2.2",
+        "solutionsSupport": "true"
+      }
+    },
+    {
+      "resource": "process",
+      "key": "LookupPaymentApplication",
+      "value": {
+        "name": {
+          "defaultValue": "LookupPaymentApplication",
+          "isExpression": false,
+          "displayName": "Process name"
+        }
+      },
+      "metadata": {
+        "subType": "api",
+        "bindingsVersion": "2.2",
+        "solutionsSupport": "true"
+      }
+    },
+    {
+      "resource": "index",
+      "key": "ar-payment-resolution-index",
+      "value": {
+        "name": {
+          "defaultValue": "ar-payment-resolution-index",
+          "isExpression": false,
+          "displayName": "Index Name"
+        },
+        "folderPath": {
+          "defaultValue": "JD_Demos/demos",
+          "isExpression": false,
+          "displayName": "Folder path"
+        }
+      },
+      "metadata": {
+        "bindingsVersion": "2.2",
+        "solutionsSupport": "true"
+      }
     }
   ]
 }

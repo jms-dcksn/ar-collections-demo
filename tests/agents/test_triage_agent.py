@@ -6,7 +6,7 @@ from uuid import UUID
 ROOT = Path(__file__).resolve().parents[2]
 FLOW_DIR = ROOT / "solution/ARCollectionsDemo/ARCollectionsDisputeResolution"
 MAPPING_PATH = ROOT / "config/agent-projects.json"
-FLATTENED_INPUT = "loadSampleCase__output"
+FLATTENED_INPUT = "recordCreated__output__output"
 
 
 def _load_json(path: Path):
@@ -45,6 +45,7 @@ def test_triage_agent_has_deterministic_model_and_exact_schemas():
     }
     assert agent["inputSchema"]["type"] == "object"
     assert set(agent["inputSchema"]["properties"]) == {FLATTENED_INPUT}
+    assert agent["inputSchema"]["properties"][FLATTENED_INPUT]["type"] == "object"
     assert agent["outputSchema"]["type"] == "object"
     assert {
         name: definition.get("type")

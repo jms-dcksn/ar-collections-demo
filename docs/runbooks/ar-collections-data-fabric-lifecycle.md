@@ -15,14 +15,14 @@ case-packet fields and a safe demo recipient:
 
 | Field | Example value |
 | --- | --- |
-| `caseId` | A unique supported demo case ID, such as `AR-PAY-003` |
-| `customerName` | `Harbor Clinical Supply` |
-| `customerAccountId` | `HARBOR-7710` |
-| `invoiceNumber` | `INV-88042` |
-| `outstandingBalance` | `12450.00` |
-| `customerReason` | The case's supported payment-misapplication reason |
-| `openedDate` | A valid date |
-| `evidence` | JSON text for the case evidence |
+| `caseId` | `AR-PAY-003` |
+| `customerName` | `Summit Medical Distribution` |
+| `customerAccountId` | `SUMMIT-4402` |
+| `invoiceNumber` | `INV-30915` |
+| `outstandingBalance` | `36800.00` |
+| `customerReason` | `We paid this invoice, but the balance is still open.` |
+| `openedDate` | `2026-07-14` |
+| `evidence` | `{"reportedPaymentAmount":36800,"paymentReference":"PAY-77821"}` |
 | `recipientEmail` | A monitored, permitted demo mailbox |
 
 Record the Data Fabric-generated `Id` immediately. It is the only correlation
