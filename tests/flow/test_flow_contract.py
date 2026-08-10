@@ -435,7 +435,25 @@ def test_data_fabric_approval_events_are_correlated_persisted_and_isolated():
         assert record_ids, f"missing recordId input on {data_fabric_update['id']}"
         assert "=js:$vars.recordCreated.output.Id" in json.dumps(record_ids)
 
-    assert wait["id"] in reachable(flow, normalize["id"])
+    triage = node_with_label(flow, "Grounded Dispute Triage")
+    triaging_persistence = node_with_label(flow, "Persist Triaging")
+    triage_edges = outgoing(flow, triage["id"], "success")
+    assert len(triage_edges) == 1
+    assert triage_edges[0]["targetNodeId"] == triaging_persistence["id"]
+    triaging_edges = outgoing(flow, triaging_persistence["id"])
+    assert len(triaging_edges) == 1
+    assert triaging_edges[0]["targetNodeId"] == node_with_label(
+        flow, "Supported and confident?"
+    )["id"]
+
+    awaiting_approval_persistence = node_with_label(flow, "Persist Awaiting Approval")
+    normalize_edges = outgoing(flow, normalize["id"], "success")
+    assert len(normalize_edges) == 1
+    assert normalize_edges[0]["targetNodeId"] == awaiting_approval_persistence["id"]
+    awaiting_approval_edges = outgoing(flow, awaiting_approval_persistence["id"])
+    assert len(awaiting_approval_edges) == 1
+    assert awaiting_approval_edges[0]["targetNodeId"] == wait["id"]
+
     wait_edges = outgoing(flow, wait["id"])
     assert len(wait_edges) == 1
     assert wait_edges[0]["targetNodeId"] == correlation["id"]
