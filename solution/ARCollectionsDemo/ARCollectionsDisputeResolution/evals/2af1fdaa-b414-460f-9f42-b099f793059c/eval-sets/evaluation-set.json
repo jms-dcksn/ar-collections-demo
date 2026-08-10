@@ -14,8 +14,8 @@
   "updatedAt": "2026-08-09T02:57:47.933Z",
   "target": {
     "kind": "flow",
-    "entrypoint": "start"
+    "entrypoint": "recordCreated"
   },
   "nodeEval": false,
-  "selectedEntrypoint": "start"
+  "selectedEntrypoint": "recordCreated"
 }

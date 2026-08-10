@@ -67,6 +67,105 @@
         "UseConnectionService": "true",
         "Connector": "uipath-microsoft-outlook365"
       }
+    },
+    {
+      "resource": "connection",
+      "key": "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+      "id": "connection6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+      "value": {
+        "ConnectionId": {
+          "defaultValue": "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+          "isExpression": false,
+          "displayName": "uipath-uipath-dataservice connection"
+        }
+      },
+      "metadata": {
+        "ActivityName": "Record Created",
+        "BindingsVersion": "2.2",
+        "DisplayLabel": "uipath-uipath-dataservice connection",
+        "UseConnectionService": "true",
+        "Connector": "uipath-uipath-dataservice"
+      }
+    },
+    {
+      "resource": "EventTrigger",
+      "key": "6cd4c047-ab49-4aad-8cfa-5681db3db20b_recordCreated",
+      "id": "EventTrigger6cd4c047-ab49-4aad-8cfa-5681db3db20b_recordCreated",
+      "value": {
+        "ConnectionId": {
+          "defaultValue": "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+          "isExpression": false
+        },
+        "EntryPointUniqueId": {
+          "defaultValue": "c53b2611-0852-4811-9b4a-4c4974e07bfa",
+          "isExpression": false
+        }
+      },
+      "metadata": {
+        "UseConnectionService": "true",
+        "Connector": "uipath-uipath-dataservice",
+        "ActivityName": "Record Created",
+        "BindingsVersion": "2.2",
+        "ObjectName": "JDARCollectionsEntity",
+        "Operation": "CREATED",
+        "FilterExpression": ""
+      }
+    },
+    {
+      "resource": "index",
+      "key": "ar-dispute-triage-index",
+      "value": {
+        "name": {
+          "defaultValue": "ar-dispute-triage-index",
+          "isExpression": false,
+          "displayName": "Index Name"
+        },
+        "folderPath": {
+          "defaultValue": "JD_Demos/demos",
+          "isExpression": false,
+          "displayName": "Folder path"
+        }
+      },
+      "metadata": {
+        "bindingsVersion": "2.2",
+        "solutionsSupport": "true"
+      }
+    },
+    {
+      "resource": "process",
+      "key": "LookupPaymentApplication",
+      "value": {
+        "name": {
+          "defaultValue": "LookupPaymentApplication",
+          "isExpression": false,
+          "displayName": "Process name"
+        }
+      },
+      "metadata": {
+        "subType": "api",
+        "bindingsVersion": "2.2",
+        "solutionsSupport": "true"
+      }
+    },
+    {
+      "resource": "index",
+      "key": "ar-payment-resolution-index",
+      "value": {
+        "name": {
+          "defaultValue": "ar-payment-resolution-index",
+          "isExpression": false,
+          "displayName": "Index Name"
+        },
+        "folderPath": {
+          "defaultValue": "JD_Demos/demos",
+          "isExpression": false,
+          "displayName": "Folder path"
+        }
+      },
+      "metadata": {
+        "bindingsVersion": "2.2",
+        "solutionsSupport": "true"
+      }
     }
   ]
 }

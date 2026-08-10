@@ -11,8 +11,9 @@
   "inputSchema": {
     "type": "object",
     "properties": {
-      "loadSampleCase__output": {
-        "description": "Bound from $vars.loadSampleCase.output"
+      "recordCreated__output__output": {
+        "type": "object",
+        "description": "Data Fabric dispute record from $vars.recordCreated.output"
       }
     }
   },
@@ -50,7 +51,7 @@
     },
     {
       "role": "user",
-      "content": "Classify this AR dispute case packet.\n\nCase packet:\n{{input.loadSampleCase__output}}\n\nReturn only JSON with exactly these fields: disputeType, rationale, confidence.",
+      "content": "Classify this AR dispute case packet.\n\nCase packet:\n{{input.recordCreated__output__output}}\n\nReturn only JSON with exactly these fields: disputeType, rationale, confidence.",
       "contentTokens": [
         {
           "type": "simpleText",
@@ -58,7 +59,7 @@
         },
         {
           "type": "variable",
-          "rawString": "input.loadSampleCase__output"
+          "rawString": "input.recordCreated__output__output"
         },
         {
           "type": "simpleText",

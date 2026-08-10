@@ -16,6 +16,10 @@ BINDINGS_PATH = (
     / "bindings_v2.json"
 )
 AGENT_MAPPING_PATH = ROOT / "config/agent-projects.json"
+EVAL_SET_PATH = (
+    FLOW_PATH.parent
+    / "evals/2af1fdaa-b414-460f-9f42-b099f793059c/eval-sets/evaluation-set.json"
+)
 
 SUPPORTED_ROUTES = {
     "po_mismatch": "poMismatch",
@@ -49,16 +53,6 @@ RESULT_FIELDS = {
     "emailSent",
     "resourcesUsed",
     "auditSummary",
-}
-COMMON_CASE_FIELDS = {
-    "caseId",
-    "customerName",
-    "customerAccountId",
-    "invoiceNumber",
-    "outstandingBalance",
-    "customerReason",
-    "openedDate",
-    "evidence",
 }
 ARTIFACT_PORTS = {"context", "tool", "escalation", "memory"}
 
@@ -133,19 +127,6 @@ def compact(text):
     return re.sub(r"\s+", "", text).casefold()
 
 
-def fixture_sections(script):
-    positions = []
-    for case_id in ("AR-PO-001", "AR-POD-002", "AR-PAY-003", "AR-AMB-004"):
-        assert case_id in script
-        positions.append((script.index(case_id), case_id))
-    positions.sort()
-    sections = {}
-    for index, (start, case_id) in enumerate(positions):
-        end = positions[index + 1][0] if index + 1 < len(positions) else len(script)
-        sections[case_id] = script[start:end]
-    return sections
-
-
 def string_array_sets(script):
     arrays = []
     for body in re.findall(r"\[([^\[\]]*)\]", script, flags=re.DOTALL):
@@ -198,96 +179,25 @@ def bindings_in(value):
     ]
 
 
-def test_start_contract_and_deterministic_loader_cover_all_approved_fixtures():
+def test_data_fabric_record_created_trigger_starts_the_dispute_lifecycle():
     flow, _, _ = load_contract()
-    starts = nodes_of_type(flow, "core.trigger.manual")
-    assert len(starts) == 1
-    start = starts[0]
+    created = nodes_of_type(
+        flow, "uipath.connector.trigger.uipath-uipath-dataservice.record-created"
+    )
+    waits = nodes_of_type(
+        flow, "uipath.connector.event.uipath-uipath-dataservice.record-updated"
+    )
+    assert len(created) == len(waits) == 1
+    assert created[0]["id"] == "recordCreated"
+    assert waits[0]["id"] == "waitForApprovalUpdate"
+    assert not nodes_of_type(flow, "core.trigger.manual")
+    assert not nodes_of_type(flow, "uipath.human-in-the-loop.quick-form")
 
-    globals_ = flow.get("variables", {}).get("globals", [])
-    start_inputs = {
-        variable["id"]: variable
-        for variable in globals_
-        if variable.get("direction") in {"in", "inout"}
-    }
-    assert set(start_inputs) == {"caseId", "recipientEmail"}
-    for variable in start_inputs.values():
-        assert variable["direction"] == "in"
-        assert variable["type"] == "string"
-        assert variable["triggerNodeId"] == start["id"]
-
-    loader = node_with_label(flow, "Load Sample Case")
-    assert loader["type"] == "core.action.script"
-    script = loader["inputs"]["script"]
-    sections = fixture_sections(script)
-    for section in sections.values():
-        for field in COMMON_CASE_FIELDS:
-            assert field.casefold() in section.casefold()
-
-    expected_values = {
-        "AR-PO-001": (
-            "Northstar Manufacturing",
-            "NORTHSTAR-1701",
-            "INV-10471",
-            "48750",
-            "2026-07-07",
-            "invoiceAmount",
-            "poAuthorizedAmount",
-            "47250",
-            "difference",
-            "1500",
-        ),
-        "AR-POD-002": (
-            "Riverbend Retail",
-            "RIVERBEND-2904",
-            "INV-20482",
-            "22400",
-            "2026-07-10",
-            "2026-06-18",
-            "M. Chen",
-            "quantitiesMatch",
-            "true",
-        ),
-        "AR-PAY-003": (
-            "Summit Medical Distribution",
-            "SUMMIT-4402",
-            "INV-30915",
-            "36800",
-            "2026-07-14",
-            "reportedPayment",
-            "PAY-77821",
-        ),
-        "AR-AMB-004": (
-            "Lakeshore Components",
-            "INV-40102",
-            "12800",
-            "The balance does not look right; please investigate",
-        ),
-    }
-    for case_id, values in expected_values.items():
-        section = sections[case_id].casefold()
-        for value in values:
-            assert value.casefold() in section
-
-    payment_section = sections["AR-PAY-003"].casefold()
-    assert "applicationstatus" not in payment_section
-    assert "appliedinvoicenumber" not in payment_section
-    assert "evidence:{}" in compact(sections["AR-AMB-004"])
-    assert "throw" in script.casefold()
-    assert "caseid" in script.casefold()
-
-    start_to_loader = outgoing(flow, start["id"], "output")
-    assert len(start_to_loader) == 1
-    assert start_to_loader[0]["targetNodeId"] == loader["id"]
-    assert start_to_loader[0]["targetPort"] == "input"
-
-
-def test_sample_case_loader_serializes_evidence_for_data_fabric():
-    flow, _, _ = load_contract()
-    script = node_with_label(flow, "Load Sample Case")["inputs"]["script"]
-
-    assert "JSON.stringify(cases[caseId].evidence)" in script
-    assert "return { ...cases[caseId], evidence:" in script
+    triage = node_with_label(flow, "Grounded Dispute Triage")
+    start_edges = outgoing(flow, created[0]["id"], "output")
+    assert len(start_edges) == 1
+    assert start_edges[0]["targetNodeId"] == triage["id"]
+    assert start_edges[0]["targetPort"] == "input"
 
 
 def test_flow_uses_all_mapped_inline_agents_with_exact_runtime_contracts():
@@ -301,11 +211,11 @@ def test_flow_uses_all_mapped_inline_agents_with_exact_runtime_contracts():
     triage_inputs = {
         item["id"]: item for item in triage["inputs"]["agentInputVariables"]
     }
-    assert set(triage_inputs) == {"loadSampleCase__output__output"}
-    assert triage_inputs["loadSampleCase__output__output"]["type"] == "object"
+    assert set(triage_inputs) == {"recordCreated__output__output"}
+    assert triage_inputs["recordCreated__output__output"]["type"] == "object"
     assert (
-        triage_inputs["loadSampleCase__output__output"]["binding"]
-        == "=$vars.loadSampleCase.output"
+        triage_inputs["recordCreated__output__output"]["binding"]
+        == "=$vars.recordCreated.output"
     )
     assert {item["id"]: item["type"] for item in triage["inputs"]["agentOutputVariables"]} == {
         "disputeType": "string",
@@ -314,7 +224,7 @@ def test_flow_uses_all_mapped_inline_agents_with_exact_runtime_contracts():
     }
 
     specialist_inputs = {
-        "loadSampleCase__output__output": ("object", "=$vars.loadSampleCase.output"),
+        "recordCreated__output__output": ("object", "=$vars.recordCreated.output"),
         "triageAgent__output__disputeType": (
             "string",
             "=$vars.triageAgent.output.disputeType",
@@ -342,11 +252,49 @@ def test_flow_uses_all_mapped_inline_agents_with_exact_runtime_contracts():
         assert outputs == PROPOSAL_FIELDS
 
 
+def test_inline_agent_delivery_schema_and_prompt_inputs_are_aligned():
+    flow, _, _ = load_contract()
+
+    for node in nodes_of_type(flow, "uipath.agent.autonomous"):
+        delivered = {
+            item["id"]: item["type"]
+            for item in node["inputs"]["agentInputVariables"]
+        }
+        agent = load_json(FLOW_PATH.parent / node["inputs"]["source"] / "agent.json")
+        declared = {
+            name: definition.get("type")
+            for name, definition in agent["inputSchema"]["properties"].items()
+        }
+        prompt = "\n".join(message["content"] for message in agent["messages"])
+        prompt_variables = [
+            token["rawString"]
+            for message in agent["messages"]
+            for token in message["contentTokens"]
+            if token["type"] == "variable"
+        ]
+
+        assert declared == delivered, node["id"]
+        assert set(prompt_variables) == {
+            f"input.{input_id}" for input_id in delivered
+        }, node["id"]
+        for input_id in delivered:
+            assert prompt.count(f"{{{{input.{input_id}}}}}") == 1, node["id"]
+
+
+def test_eval_set_targets_the_data_fabric_record_created_entrypoint():
+    flow, _, _ = load_contract()
+    eval_set = load_json(EVAL_SET_PATH)
+    entrypoint = eval_set["selectedEntrypoint"]
+
+    assert eval_set["target"] == {"kind": "flow", "entrypoint": entrypoint}
+    matching_nodes = [node for node in flow["nodes"] if node["id"] == entrypoint]
+    assert len(matching_nodes) == 1
+    assert matching_nodes[0]["type"].startswith("uipath.connector.trigger.")
+
+
 def test_supported_decision_and_switch_route_exclusively_to_one_specialist():
     flow, mapping, nodes = load_contract()
-    decisions = nodes_of_type(flow, "core.logic.decision")
     switches = nodes_of_type(flow, "core.logic.switch")
-    assert len(decisions) == 2
     assert len(switches) == 1
     decision = node_with_label(flow, "Supported and confident?")
     assert decision["type"] == "core.logic.decision"
@@ -434,30 +382,44 @@ def test_normalize_proposal_selects_one_branch_and_verifies_exact_contract():
 
 
 def test_manual_triage_is_side_effect_free_and_every_end_maps_result_contract():
-    flow, mapping, nodes = load_contract()
+    flow, _, nodes = load_contract()
     decision = node_with_label(flow, "Supported and confident?")
     assert decision["type"] == "core.logic.decision"
     false_edges = outgoing(flow, decision["id"], "false")
     assert len(false_edges) == 1
     assert false_edges[0]["targetPort"] == "input"
 
-    manual_end = nodes[false_edges[0]["targetNodeId"]]
+    manual_persistence = node_with_label(flow, "Persist Needs Manual Triage")
+    assert (
+        manual_persistence["type"]
+        == "uipath.connector.uipath-uipath-dataservice.update-entity-record"
+    )
+    assert false_edges[0]["targetNodeId"] == manual_persistence["id"]
+    persistence_edges = outgoing(flow, manual_persistence["id"])
+    assert len(persistence_edges) == 1
+    assert persistence_edges[0]["targetPort"] == "input"
+
+    manual_end = nodes[persistence_edges[0]["targetNodeId"]]
     assert manual_end["type"] == "core.control.end"
     assert "needs_manual_triage" in json.dumps(manual_end).casefold()
-    manual_reachable = reachable(flow, manual_end["id"])
+    manual_reachable = reachable(flow, manual_persistence["id"])
 
-    specialist_sources = {mapping[name] for name in SUPPORTED_ROUTES.values()}
+    agent_ids = {
+        node["id"]
+        for node in nodes_of_type(flow, "uipath.agent.autonomous")
+    }
+    wait = node_with_label(flow, "Wait for Approval Update")
+    outlook = node_with_label(flow, "Send Email")
 
     def is_forbidden(node):
-        node_type = node["type"]
         return (
-            node.get("inputs", {}).get("source") in specialist_sources
-            or node_type.startswith("uipath.core.api-workflow.")
-            or node_type == "uipath.human-in-the-loop.quick-form"
-            or node_type.startswith("uipath.connector.")
+            node["id"] in agent_ids
+            or node["type"].startswith("uipath.core.api-workflow.")
+            or node["id"] in {wait["id"], outlook["id"]}
         )
 
     assert not any(is_forbidden(nodes[node_id]) for node_id in manual_reachable)
+    assert manual_reachable == {manual_persistence["id"], manual_end["id"]}
 
     outputs = manual_end["outputs"]
     assert set(outputs) == RESULT_FIELDS
@@ -471,74 +433,94 @@ def test_manual_triage_is_side_effect_free_and_every_end_maps_result_contract():
 
     ends = nodes_of_type(flow, "core.control.end")
     assert ends
-    start = nodes_of_type(flow, "core.trigger.manual")[0]
     for end in ends:
         assert set(end.get("outputs", {})) == RESULT_FIELDS
-        assert f"=js:$vars.{start['id']}.output.caseId" in json.dumps(
+        assert "=js:$vars.recordCreated.output.caseId" in json.dumps(
             end["outputs"]["resultCaseId"]
         )
 
 
-def test_collector_approval_routes_rejection_and_approval_to_their_business_exits():
+def test_data_fabric_approval_events_are_correlated_persisted_and_isolated():
     flow, _, nodes = load_contract()
     normalize = node_with_label(flow, "Normalize Proposal")
-    quick_forms = nodes_of_type(flow, "uipath.human-in-the-loop.quick-form")
-    assert len(quick_forms) == 1
-    quick_form = quick_forms[0]
+    waits = nodes_of_type(
+        flow, "uipath.connector.event.uipath-uipath-dataservice.record-updated"
+    )
+    assert len(waits) == 1
+    wait = waits[0]
+    assert wait["id"] == "waitForApprovalUpdate"
+    correlation = node_with_label(flow, "Updated record matches this dispute?")
+    assert correlation["type"] == "core.logic.decision"
+    correlation_expression = compact(correlation["inputs"]["expression"])
+    created_record_id = r"\$vars\.recordcreated\.output\.id"
+    updated_record_id = r"\$vars\.waitforapprovalupdate\.output\.id"
+    assert re.search(
+        rf"(?:{created_record_id}(?:===|==){updated_record_id}|"
+        rf"{updated_record_id}(?:===|==){created_record_id})",
+        correlation_expression,
+    )
 
-    fields = {field["id"]: field for field in quick_form["inputs"]["schema"]["fields"]}
-    expected_input_fields = {
-        "customerName": ("string", "vars.loadSampleCase.output.customerName"),
-        "invoiceNumber": ("string", "vars.loadSampleCase.output.invoiceNumber"),
-        "outstandingBalance": ("number", "vars.loadSampleCase.output.outstandingBalance"),
-        "disputeType": ("string", "vars.triageAgent.output.disputeType"),
-        "triageRationale": ("string", "vars.triageAgent.output.rationale"),
-        "triageConfidence": ("number", "vars.triageAgent.output.confidence"),
-        "evidenceSummary": ("string", "vars.normalizeProposal.output.evidenceSummary"),
-        "rootCause": ("string", "vars.normalizeProposal.output.rootCause"),
-        "recommendedAction": ("string", "vars.normalizeProposal.output.recommendedAction"),
-        "actionCode": ("string", "vars.normalizeProposal.output.actionCode"),
-        "adjustmentAmount": ("number", "vars.normalizeProposal.output.adjustmentAmount"),
-        "specialistConfidence": ("number", "vars.normalizeProposal.output.confidence"),
-        "emailSubject": ("string", "vars.normalizeProposal.output.emailSubject"),
-        "emailBody": ("string", "vars.normalizeProposal.output.emailBody"),
+    data_fabric_updates = nodes_of_type(
+        flow, "uipath.connector.uipath-uipath-dataservice.update-entity-record"
+    )
+    assert {
+        update["display"]["label"] for update in data_fabric_updates
+    } == {
+        "Persist Triaging",
+        "Persist Needs Manual Triage",
+        "Persist Awaiting Approval",
+        "Persist Approved",
+        "Persist Rejected",
+        "Persist Updating",
+        "Persist Resolved",
     }
-    assert set(fields) == set(expected_input_fields) | {"approvedBy", "approvalComments"}
-    for field_id, (field_type, binding) in expected_input_fields.items():
-        assert fields[field_id]["type"] == field_type
-        assert fields[field_id]["direction"] == "input"
-        assert fields[field_id]["binding"] == binding
-        assert fields[field_id]["label"].strip()
-    for field_id, variable in {
-        "approvedBy": "vars.approvedBy",
-        "approvalComments": "vars.approvalCommentsInput",
-    }.items():
-        assert fields[field_id]["type"] == "string"
-        assert fields[field_id]["direction"] == "output"
-        assert fields[field_id]["variable"] == variable
-        assert fields[field_id]["required"] is True
-        assert fields[field_id]["label"].strip()
-    assert quick_form["inputs"]["schema"]["outcomes"] == [
-        {
-            "id": "approve",
-            "name": "Approve",
-            "type": "string",
-            "isPrimary": True,
-            "action": "Continue",
-        },
-        {
-            "id": "reject",
-            "name": "Reject",
-            "type": "string",
-            "isPrimary": False,
-            "action": "End",
-        },
-    ]
+    for data_fabric_update in data_fabric_updates:
+        record_ids = values_named(data_fabric_update, "recordId")
+        assert record_ids, f"missing recordId input on {data_fabric_update['id']}"
+        assert "=js:$vars.recordCreated.output.Id" in json.dumps(record_ids)
 
+    triage = node_with_label(flow, "Grounded Dispute Triage")
+    triaging_persistence = node_with_label(flow, "Persist Triaging")
+    triage_edges = outgoing(flow, triage["id"], "success")
+    assert len(triage_edges) == 1
+    assert triage_edges[0]["targetNodeId"] == triaging_persistence["id"]
+    triaging_edges = outgoing(flow, triaging_persistence["id"])
+    assert len(triaging_edges) == 1
+    assert triaging_edges[0]["targetNodeId"] == node_with_label(
+        flow, "Supported and confident?"
+    )["id"]
+
+    awaiting_approval_persistence = node_with_label(flow, "Persist Awaiting Approval")
     normalize_edges = outgoing(flow, normalize["id"], "success")
     assert len(normalize_edges) == 1
-    assert normalize_edges[0]["targetNodeId"] == quick_form["id"]
-    assert normalize_edges[0]["targetPort"] == "input"
+    assert normalize_edges[0]["targetNodeId"] == awaiting_approval_persistence["id"]
+    awaiting_approval_edges = outgoing(flow, awaiting_approval_persistence["id"])
+    assert len(awaiting_approval_edges) == 1
+    assert awaiting_approval_edges[0]["targetNodeId"] == wait["id"]
+
+    wait_edges = outgoing(flow, wait["id"])
+    assert len(wait_edges) == 1
+    assert wait_edges[0]["targetNodeId"] == correlation["id"]
+    assert wait_edges[0]["targetPort"] == "input"
+
+    mismatched_edges = outgoing(flow, correlation["id"], "false")
+    assert len(mismatched_edges) == 1
+    assert mismatched_edges[0]["targetNodeId"] == wait["id"]
+    assert mismatched_edges[0]["targetPort"] == "input"
+
+    decision_present = node_with_label(flow, "Approval decision supplied?")
+    assert decision_present["type"] == "core.logic.decision"
+    assert "$vars.waitForApprovalUpdate.output.approvalDecision" in decision_present[
+        "inputs"
+    ]["expression"]
+    matched_edges = outgoing(flow, correlation["id"], "true")
+    assert len(matched_edges) == 1
+    assert matched_edges[0]["targetNodeId"] == decision_present["id"]
+    assert matched_edges[0]["targetPort"] == "input"
+    decisionless_edges = outgoing(flow, decision_present["id"], "false")
+    assert len(decisionless_edges) == 1
+    assert decisionless_edges[0]["targetNodeId"] == wait["id"]
+    assert decisionless_edges[0]["targetPort"] == "input"
 
     update_nodes = [
         node
@@ -570,28 +552,45 @@ def test_collector_approval_routes_rejection_and_approval_to_their_business_exit
         resolved["id"],
     }
 
-    completed_edges = outgoing(flow, quick_form["id"], "completed")
-    assert len(completed_edges) == 1
-    completed_edge = completed_edges[0]
-    assert completed_edge["targetPort"] == "input"
-    approval_decision = nodes[completed_edge["targetNodeId"]]
+    approval_decision = node_with_label(flow, "Resolution approved?")
     assert approval_decision["type"] == "core.logic.decision"
+    assert "$vars.waitForApprovalUpdate.output.approvalDecision" in approval_decision[
+        "inputs"
+    ]["expression"]
+    decision_edges = outgoing(flow, decision_present["id"], "true")
+    assert len(decision_edges) == 1
+    assert decision_edges[0]["targetNodeId"] == approval_decision["id"]
+    assert decision_edges[0]["targetPort"] == "input"
 
     rejection_edges = outgoing(flow, approval_decision["id"], "false")
     assert len(rejection_edges) == 1
     rejection_edge = rejection_edges[0]
-    assert rejection_edge["targetNodeId"] == needs_rework["id"]
+    rejected_persistence = node_with_label(flow, "Persist Rejected")
+    assert rejection_edge["targetNodeId"] == rejected_persistence["id"]
+    rejected_edges = outgoing(flow, rejected_persistence["id"])
+    assert len(rejected_edges) == 1
+    assert rejected_edges[0]["targetNodeId"] == needs_rework["id"]
     rejection_reachable = reachable(flow, rejection_edge["targetNodeId"])
     assert {
         node_id for node_id in rejection_reachable if nodes[node_id]["type"] == "core.control.end"
     } == {needs_rework["id"]}
     assert update["id"] not in rejection_reachable
     assert outlook["id"] not in rejection_reachable
+    assert wait["id"] not in rejection_reachable
 
     approval_edges = outgoing(flow, approval_decision["id"], "true")
     assert len(approval_edges) == 1
     approval_edge = approval_edges[0]
-    assert approval_edge["targetNodeId"] == update["id"]
+    approved_persistence = node_with_label(flow, "Persist Approved")
+    updating_persistence = node_with_label(flow, "Persist Updating")
+    resolved_persistence = node_with_label(flow, "Persist Resolved")
+    assert approval_edge["targetNodeId"] == approved_persistence["id"]
+    approved_edges = outgoing(flow, approved_persistence["id"])
+    assert len(approved_edges) == 1
+    assert approved_edges[0]["targetNodeId"] == updating_persistence["id"]
+    updating_edges = outgoing(flow, updating_persistence["id"])
+    assert len(updating_edges) == 1
+    assert updating_edges[0]["targetNodeId"] == update["id"]
     approval_reachable = reachable(flow, approval_edge["targetNodeId"])
     assert {
         node_id for node_id in approval_reachable if nodes[node_id]["type"] == "core.control.end"
@@ -608,23 +607,25 @@ def test_collector_approval_routes_rejection_and_approval_to_their_business_exit
     assert update_edges[0]["targetNodeId"] == outlook["id"]
     outlook_edges = outgoing(flow, outlook["id"])
     assert len(outlook_edges) == 1
-    assert outlook_edges[0]["targetNodeId"] == resolved["id"]
+    assert outlook_edges[0]["targetNodeId"] == resolved_persistence["id"]
+    resolved_edges = outgoing(flow, resolved_persistence["id"])
+    assert len(resolved_edges) == 1
+    assert resolved_edges[0]["targetNodeId"] == resolved["id"]
 
     expected_update_bindings = {
         "caseId": f"=js:$vars.{normalize['id']}.output.caseId",
         "disputeType": f"=js:$vars.{normalize['id']}.output.disputeType",
         "actionCode": f"=js:$vars.{normalize['id']}.output.actionCode",
         "adjustmentAmount": f"=js:$vars.{normalize['id']}.output.adjustmentAmount",
-        "approvedBy": f"=js:$vars.{quick_form['id']}.output.approvedBy",
-        "approvalComments": f"=js:$vars.{quick_form['id']}.output.approvalCommentsInput",
+        "approvedBy": "=js:$vars.waitForApprovalUpdate.output.approvedBy",
+        "approvalComments": "=js:$vars.waitForApprovalUpdate.output.approvalComments",
     }
     for input_name, expected_binding in expected_update_bindings.items():
         configured_values = values_named(update, input_name)
         assert configured_values, f"missing MockUpdateDispute input {input_name}"
         assert expected_binding in json.dumps(configured_values)
 
-    start = nodes_of_type(flow, "core.trigger.manual")[0]
-    recipient_binding = f"=js:$vars.{start['id']}.output.recipientEmail"
+    recipient_binding = "=js:$vars.recordCreated.output.recipientEmail"
     to_values = values_named(outlook, "message.toRecipients")
     assert to_values
     assert bindings_in(to_values) == [recipient_binding]
@@ -650,36 +651,22 @@ def test_collector_approval_routes_rejection_and_approval_to_their_business_exit
     rework_outputs = needs_rework["outputs"]
     assert "false" in json.dumps(rework_outputs["emailSent"]).casefold()
     assert "null" in json.dumps(rework_outputs["updateResult"]).casefold()
-    assert f"$vars.{quick_form['id']}.output.approvalCommentsInput" in json.dumps(
+    assert "$vars.waitForApprovalUpdate.output.approvalComments" in json.dumps(
         rework_outputs["approvalComments"]
     )
+    for outputs in (rework_outputs, resolved_outputs):
+        assert "$vars.waitForApprovalUpdate.output.approvalDecision" in json.dumps(
+            outputs["approvalDecision"]
+        )
+        assert "$vars.waitForApprovalUpdate.output.approvalComments" in json.dumps(
+            outputs["approvalComments"]
+        )
 
     for node in flow["nodes"]:
         node_text = f"{node['type']} {node.get('display', {}).get('label', '')}".casefold()
         assert "retry" not in node_text
         assert "catch" not in node_text
         assert "technical error" not in node_text
-
-
-def test_mock_update_uses_the_generated_quick_form_output_property():
-    flow, _, _ = load_contract()
-    quick_form = nodes_of_type(flow, "uipath.human-in-the-loop.quick-form")[0]
-    update = next(
-        node
-        for node in flow["nodes"]
-        if node["type"].startswith("uipath.core.api-workflow.")
-    )
-
-    comment_field = next(
-        field
-        for field in quick_form["inputs"]["schema"]["fields"]
-        if field["id"] == "approvalComments"
-    )
-    generated_property = comment_field["variable"].removeprefix("vars.")
-
-    assert update["inputs"]["approvalComments"] == (
-        f"=js:$vars.{quick_form['id']}.output.{generated_property}"
-    )
 
 
 def test_mock_update_uses_the_deployed_api_workflow_folder():
@@ -730,39 +717,8 @@ def test_mock_update_definition_exposes_the_api_workflow_argument_contract():
     }
 
 
-def test_quick_form_omits_labels_that_break_app_tasks_external_tag_validation():
-    flow, _, _ = load_contract()
-    quick_form = nodes_of_type(flow, "uipath.human-in-the-loop.quick-form")[0]
-
-    assert "labels" not in quick_form["inputs"]
-
-
-def test_quick_form_is_rebuilt_with_fresh_canonical_task_metadata():
-    flow, _, _ = load_contract()
-    quick_form = nodes_of_type(flow, "uipath.human-in-the-loop.quick-form")[0]
-    inputs = quick_form["inputs"]
-    schema = inputs["schema"]
-
-    assert quick_form["id"] != "reviewArDisputeResolution1"
-    assert inputs["type"] == "quick"
-    assert "id" in schema
-    assert "schemaId" not in schema
-    assert inputs["recipient"]["channels"] == ["ActionCenter"]
-    assert inputs["recipient"]["connections"] == {}
-
-
-def test_quick_form_routes_only_through_its_declared_completed_handle():
-    flow, _, _ = load_contract()
-    quick_form = nodes_of_type(flow, "uipath.human-in-the-loop.quick-form")[0]
-
-    assert [edge["sourcePort"] for edge in outgoing(flow, quick_form["id"])] == [
-        "completed"
-    ]
-
-
 def test_agent_resources_registry_bindings_and_generated_variables_are_complete():
     flow, _, nodes = load_contract()
-    quick_form = nodes_of_type(flow, "uipath.human-in-the-loop.quick-form")[0]
     expected_resources = {
         "triageTaxonomyContext": (
             "uipath.agent.resource.context.index.ar-dispute-triage-index.9e46f4a3-6c15-4cab-9030-08def39d8059",
@@ -861,19 +817,34 @@ def test_agent_resources_registry_bindings_and_generated_variables_are_complete(
         binding for binding in flow["bindings"] if binding["resource"] == "process"
     ] == expected_lookup_bindings + expected_mock_update_bindings
 
-    outlook_bindings = [
+    connection_bindings = [
         binding for binding in flow["bindings"] if binding["resource"] == "connection"
     ]
-    assert len(outlook_bindings) == 2
-    assert {binding["propertyAttribute"] for binding in outlook_bindings} == {
-        "ConnectionId",
-        "FolderKey",
-    }
-    assert {binding["resourceKey"] for binding in outlook_bindings} == {
-        binding["default"]
-        for binding in outlook_bindings
-        if binding["propertyAttribute"] == "ConnectionId"
-    }
+    assert [
+        (binding["name"], binding["resourceKey"], binding["propertyAttribute"])
+        for binding in connection_bindings
+    ] == [
+        (
+            "uipath-microsoft-outlook365 connection",
+            "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+            "ConnectionId",
+        ),
+        (
+            "FolderKey",
+            "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+            "FolderKey",
+        ),
+        (
+            "uipath-uipath-dataservice connection",
+            "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+            "ConnectionId",
+        ),
+        (
+            "FolderKey",
+            "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+            "FolderKey",
+        ),
+    ]
 
     node_variables = flow["variables"]["nodes"]
     assert len({variable["id"] for variable in node_variables}) == len(node_variables)
@@ -882,19 +853,14 @@ def test_agent_resources_registry_bindings_and_generated_variables_are_complete(
         for variable in node_variables
     }
     required_bindings = {
-        ("start", "output"),
-        ("loadSampleCase", "output"),
-        ("loadSampleCase", "error"),
+        ("recordCreated", "output"),
         ("triageAgent", "error"),
         ("poMismatchAgent", "error"),
         ("missingPodAgent", "error"),
         ("paymentMisapplicationAgent", "error"),
         ("normalizeProposal", "output"),
         ("normalizeProposal", "error"),
-        (quick_form["id"], "output"),
-        (quick_form["id"], "status"),
-        ("isResolutionApproved", "matchedCase"),
-        ("isResolutionApproved", "matchedCaseId"),
+        ("waitForApprovalUpdate", "output"),
         ("mockUpdateDispute1", "output"),
         ("mockUpdateDispute1", "error"),
         ("sendEmail1", "output"),

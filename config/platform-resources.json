@@ -4,10 +4,10 @@
   "connectionKey": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
   "dataFabricEntities": [
     {
-      "folderKey": "bbe64c10-b957-4adf-a535-77109c673e5a",
+      "folderKey": null,
       "displayName": "JD AR Collections Entity",
       "systemName": "JDARCollectionsEntity",
-      "entityKey": "b6ea47fa-9f93-f111-9b32-000d3ab5d4c4",
+      "entityKey": "bc0fc734-bf94-f111-9b32-000d3ab5d4c4",
       "fields": [
         {
           "name": "caseId",
@@ -56,6 +56,135 @@
           "name": "evidence",
           "type": "MULTILINE_TEXT",
           "required": true,
+          "unique": false
+        },
+        {
+          "name": "recipientEmail",
+          "type": "STRING",
+          "required": true,
+          "unique": false
+        },
+        {
+          "name": "lifecycleState",
+          "type": "STRING",
+          "required": false,
+          "unique": false
+        },
+        {
+          "name": "disputeType",
+          "type": "STRING",
+          "required": false,
+          "unique": false
+        },
+        {
+          "name": "triageRationale",
+          "type": "MULTILINE_TEXT",
+          "required": false,
+          "unique": false
+        },
+        {
+          "name": "triageConfidence",
+          "type": "DECIMAL",
+          "required": false,
+          "unique": false,
+          "decimalPrecision": 4
+        },
+        {
+          "name": "evidenceSummary",
+          "type": "MULTILINE_TEXT",
+          "required": false,
+          "unique": false
+        },
+        {
+          "name": "rootCause",
+          "type": "MULTILINE_TEXT",
+          "required": false,
+          "unique": false
+        },
+        {
+          "name": "recommendedAction",
+          "type": "MULTILINE_TEXT",
+          "required": false,
+          "unique": false
+        },
+        {
+          "name": "actionCode",
+          "type": "STRING",
+          "required": false,
+          "unique": false
+        },
+        {
+          "name": "adjustmentAmount",
+          "type": "DECIMAL",
+          "required": false,
+          "unique": false,
+          "decimalPrecision": 2
+        },
+        {
+          "name": "specialistConfidence",
+          "type": "DECIMAL",
+          "required": false,
+          "unique": false,
+          "decimalPrecision": 4
+        },
+        {
+          "name": "approvalSummary",
+          "type": "MULTILINE_TEXT",
+          "required": false,
+          "unique": false
+        },
+        {
+          "name": "emailSubject",
+          "type": "STRING",
+          "required": false,
+          "unique": false
+        },
+        {
+          "name": "emailBody",
+          "type": "MULTILINE_TEXT",
+          "required": false,
+          "unique": false
+        },
+        {
+          "name": "resourcesUsed",
+          "type": "MULTILINE_TEXT",
+          "required": false,
+          "unique": false
+        },
+        {
+          "name": "approvalDecision",
+          "type": "STRING",
+          "required": false,
+          "unique": false
+        },
+        {
+          "name": "approvedBy",
+          "type": "STRING",
+          "required": false,
+          "unique": false
+        },
+        {
+          "name": "approvalComments",
+          "type": "MULTILINE_TEXT",
+          "required": false,
+          "unique": false
+        },
+        {
+          "name": "updateResult",
+          "type": "MULTILINE_TEXT",
+          "required": false,
+          "unique": false
+        },
+        {
+          "name": "emailSent",
+          "type": "BOOLEAN",
+          "required": false,
+          "unique": false
+        },
+        {
+          "name": "auditSummary",
+          "type": "MULTILINE_TEXT",
+          "required": false,
           "unique": false
         }
       ]
