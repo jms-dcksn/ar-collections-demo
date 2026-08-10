@@ -338,29 +338,44 @@ def test_normalize_proposal_selects_one_branch_and_verifies_exact_contract():
 
 
 def test_manual_triage_is_side_effect_free_and_every_end_maps_result_contract():
-    flow, mapping, nodes = load_contract()
+    flow, _, nodes = load_contract()
     decision = node_with_label(flow, "Supported and confident?")
     assert decision["type"] == "core.logic.decision"
     false_edges = outgoing(flow, decision["id"], "false")
     assert len(false_edges) == 1
     assert false_edges[0]["targetPort"] == "input"
 
-    manual_end = nodes[false_edges[0]["targetNodeId"]]
+    manual_persistence = node_with_label(flow, "Persist Needs Manual Triage")
+    assert (
+        manual_persistence["type"]
+        == "uipath.connector.uipath-uipath-dataservice.update-entity-record"
+    )
+    assert false_edges[0]["targetNodeId"] == manual_persistence["id"]
+    persistence_edges = outgoing(flow, manual_persistence["id"])
+    assert len(persistence_edges) == 1
+    assert persistence_edges[0]["targetPort"] == "input"
+
+    manual_end = nodes[persistence_edges[0]["targetNodeId"]]
     assert manual_end["type"] == "core.control.end"
     assert "needs_manual_triage" in json.dumps(manual_end).casefold()
-    manual_reachable = reachable(flow, manual_end["id"])
+    manual_reachable = reachable(flow, manual_persistence["id"])
 
-    specialist_sources = {mapping[name] for name in SUPPORTED_ROUTES.values()}
+    agent_ids = {
+        node["id"]
+        for node in nodes_of_type(flow, "uipath.agent.autonomous")
+    }
+    wait = node_with_label(flow, "Wait for Approval Update")
+    outlook = node_with_label(flow, "Send Email")
 
     def is_forbidden(node):
-        node_type = node["type"]
         return (
-            node.get("inputs", {}).get("source") in specialist_sources
-            or node_type.startswith("uipath.core.api-workflow.")
-            or node_type.startswith("uipath.connector.")
+            node["id"] in agent_ids
+            or node["type"].startswith("uipath.core.api-workflow.")
+            or node["id"] in {wait["id"], outlook["id"]}
         )
 
     assert not any(is_forbidden(nodes[node_id]) for node_id in manual_reachable)
+    assert manual_reachable == {manual_persistence["id"], manual_end["id"]}
 
     outputs = manual_end["outputs"]
     assert set(outputs) == RESULT_FIELDS
@@ -404,7 +419,17 @@ def test_data_fabric_approval_events_are_correlated_persisted_and_isolated():
     data_fabric_updates = nodes_of_type(
         flow, "uipath.connector.uipath-uipath-dataservice.update-entity-record"
     )
-    assert data_fabric_updates
+    assert {
+        update["display"]["label"] for update in data_fabric_updates
+    } == {
+        "Persist Triaging",
+        "Persist Needs Manual Triage",
+        "Persist Awaiting Approval",
+        "Persist Approved",
+        "Persist Rejected",
+        "Persist Updating",
+        "Persist Resolved",
+    }
     for data_fabric_update in data_fabric_updates:
         record_ids = values_named(data_fabric_update, "recordId")
         assert record_ids, f"missing recordId input on {data_fabric_update['id']}"
@@ -478,17 +503,32 @@ def test_data_fabric_approval_events_are_correlated_persisted_and_isolated():
     rejection_edges = outgoing(flow, approval_decision["id"], "false")
     assert len(rejection_edges) == 1
     rejection_edge = rejection_edges[0]
+    rejected_persistence = node_with_label(flow, "Persist Rejected")
+    assert rejection_edge["targetNodeId"] == rejected_persistence["id"]
+    rejected_edges = outgoing(flow, rejected_persistence["id"])
+    assert len(rejected_edges) == 1
+    assert rejected_edges[0]["targetNodeId"] == needs_rework["id"]
     rejection_reachable = reachable(flow, rejection_edge["targetNodeId"])
     assert {
         node_id for node_id in rejection_reachable if nodes[node_id]["type"] == "core.control.end"
     } == {needs_rework["id"]}
     assert update["id"] not in rejection_reachable
     assert outlook["id"] not in rejection_reachable
+    assert wait["id"] not in rejection_reachable
 
     approval_edges = outgoing(flow, approval_decision["id"], "true")
     assert len(approval_edges) == 1
     approval_edge = approval_edges[0]
-    assert approval_edge["targetNodeId"] == update["id"]
+    approved_persistence = node_with_label(flow, "Persist Approved")
+    updating_persistence = node_with_label(flow, "Persist Updating")
+    resolved_persistence = node_with_label(flow, "Persist Resolved")
+    assert approval_edge["targetNodeId"] == approved_persistence["id"]
+    approved_edges = outgoing(flow, approved_persistence["id"])
+    assert len(approved_edges) == 1
+    assert approved_edges[0]["targetNodeId"] == updating_persistence["id"]
+    updating_edges = outgoing(flow, updating_persistence["id"])
+    assert len(updating_edges) == 1
+    assert updating_edges[0]["targetNodeId"] == update["id"]
     approval_reachable = reachable(flow, approval_edge["targetNodeId"])
     assert {
         node_id for node_id in approval_reachable if nodes[node_id]["type"] == "core.control.end"
@@ -505,7 +545,10 @@ def test_data_fabric_approval_events_are_correlated_persisted_and_isolated():
     assert update_edges[0]["targetNodeId"] == outlook["id"]
     outlook_edges = outgoing(flow, outlook["id"])
     assert len(outlook_edges) == 1
-    assert outlook_edges[0]["targetNodeId"] == resolved["id"]
+    assert outlook_edges[0]["targetNodeId"] == resolved_persistence["id"]
+    resolved_edges = outgoing(flow, resolved_persistence["id"])
+    assert len(resolved_edges) == 1
+    assert resolved_edges[0]["targetNodeId"] == resolved["id"]
 
     expected_update_bindings = {
         "caseId": f"=js:$vars.{normalize['id']}.output.caseId",
@@ -712,19 +755,34 @@ def test_agent_resources_registry_bindings_and_generated_variables_are_complete(
         binding for binding in flow["bindings"] if binding["resource"] == "process"
     ] == expected_lookup_bindings + expected_mock_update_bindings
 
-    outlook_bindings = [
+    connection_bindings = [
         binding for binding in flow["bindings"] if binding["resource"] == "connection"
     ]
-    assert len(outlook_bindings) == 2
-    assert {binding["propertyAttribute"] for binding in outlook_bindings} == {
-        "ConnectionId",
-        "FolderKey",
-    }
-    assert {binding["resourceKey"] for binding in outlook_bindings} == {
-        binding["default"]
-        for binding in outlook_bindings
-        if binding["propertyAttribute"] == "ConnectionId"
-    }
+    assert [
+        (binding["name"], binding["resourceKey"], binding["propertyAttribute"])
+        for binding in connection_bindings
+    ] == [
+        (
+            "uipath-microsoft-outlook365 connection",
+            "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+            "ConnectionId",
+        ),
+        (
+            "FolderKey",
+            "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+            "FolderKey",
+        ),
+        (
+            "uipath-uipath-dataservice connection",
+            "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+            "ConnectionId",
+        ),
+        (
+            "FolderKey",
+            "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+            "FolderKey",
+        ),
+    ]
 
     node_variables = flow["variables"]["nodes"]
     assert len({variable["id"] for variable in node_variables}) == len(node_variables)
