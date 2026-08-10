@@ -88,10 +88,10 @@ def test_platform_manifest_declares_the_approved_data_fabric_entity():
         [{"folderKey": None, "displayName": None, "systemName": None, "fields": []}],
     )[0]
 
-    assert entity["folderKey"] == "bbe64c10-b957-4adf-a535-77109c673e5a"
+    assert entity["folderKey"] is None
     assert entity["displayName"] == "JD AR Collections Entity"
     assert entity["systemName"] == "JDARCollectionsEntity"
-    _assert_canonical_uuid(entity["entityKey"])
+    assert entity["entityKey"] == "bc0fc734-bf94-f111-9b32-000d3ab5d4c4"
     assert entity["fields"] == [
         {"name": "caseId", "type": "STRING", "required": True, "unique": True},
         {"name": "customerName", "type": "STRING", "required": True, "unique": False},
@@ -117,4 +117,83 @@ def test_platform_manifest_declares_the_approved_data_fabric_entity():
         },
         {"name": "openedDate", "type": "DATE", "required": True, "unique": False},
         {"name": "evidence", "type": "MULTILINE_TEXT", "required": True, "unique": False},
+        {"name": "recipientEmail", "type": "STRING", "required": True, "unique": False},
+        {"name": "lifecycleState", "type": "STRING", "required": False, "unique": False},
+        {"name": "disputeType", "type": "STRING", "required": False, "unique": False},
+        {
+            "name": "triageRationale",
+            "type": "MULTILINE_TEXT",
+            "required": False,
+            "unique": False,
+        },
+        {
+            "name": "triageConfidence",
+            "type": "DECIMAL",
+            "required": False,
+            "unique": False,
+            "decimalPrecision": 4,
+        },
+        {
+            "name": "evidenceSummary",
+            "type": "MULTILINE_TEXT",
+            "required": False,
+            "unique": False,
+        },
+        {"name": "rootCause", "type": "MULTILINE_TEXT", "required": False, "unique": False},
+        {
+            "name": "recommendedAction",
+            "type": "MULTILINE_TEXT",
+            "required": False,
+            "unique": False,
+        },
+        {"name": "actionCode", "type": "STRING", "required": False, "unique": False},
+        {
+            "name": "adjustmentAmount",
+            "type": "DECIMAL",
+            "required": False,
+            "unique": False,
+            "decimalPrecision": 2,
+        },
+        {
+            "name": "specialistConfidence",
+            "type": "DECIMAL",
+            "required": False,
+            "unique": False,
+            "decimalPrecision": 4,
+        },
+        {
+            "name": "approvalSummary",
+            "type": "MULTILINE_TEXT",
+            "required": False,
+            "unique": False,
+        },
+        {"name": "emailSubject", "type": "STRING", "required": False, "unique": False},
+        {"name": "emailBody", "type": "MULTILINE_TEXT", "required": False, "unique": False},
+        {
+            "name": "resourcesUsed",
+            "type": "MULTILINE_TEXT",
+            "required": False,
+            "unique": False,
+        },
+        {
+            "name": "approvalDecision",
+            "type": "STRING",
+            "required": False,
+            "unique": False,
+        },
+        {"name": "approvedBy", "type": "STRING", "required": False, "unique": False},
+        {
+            "name": "approvalComments",
+            "type": "MULTILINE_TEXT",
+            "required": False,
+            "unique": False,
+        },
+        {
+            "name": "updateResult",
+            "type": "MULTILINE_TEXT",
+            "required": False,
+            "unique": False,
+        },
+        {"name": "emailSent", "type": "BOOLEAN", "required": False, "unique": False},
+        {"name": "auditSummary", "type": "MULTILINE_TEXT", "required": False, "unique": False},
     ]
