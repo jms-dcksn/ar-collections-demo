@@ -1,0 +1,1 @@
+export function PlaceholderPage({ title }: { title: string }) { return <div className="page"><div className="eyebrow">Workspace</div><h1 className="page-title">{title}</h1><section className="card empty">This demo route is ready for the next operational capability.</section></div> }
