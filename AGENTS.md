@@ -47,6 +47,7 @@ to work.
 | `knowledge` | Context Grounding source content for triage and payment resolution |
 | `tests` | Python contract tests for agents, Flow, API Workflows, knowledge, and platform manifests |
 | `docs/runbooks` | Demo operation and verification procedures |
+| `docs/context/data-fabric-record-creation.md` | Entity identity, demo record scripts, and Coded App creation flow |
 | `docs/superpowers/specs` | Approved architecture and feature designs |
 
 `solution/ARCollectionsDemo/AGENTS.md` is authoritative for files under the
