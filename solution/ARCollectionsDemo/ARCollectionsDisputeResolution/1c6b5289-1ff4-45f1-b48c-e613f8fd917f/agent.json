@@ -20,9 +20,9 @@
       "triageAgent__output__confidence": {
         "type": "number"
       },
-      "recordCreated__output__output": {
+      "recordCreated__output": {
         "type": "object",
-        "description": "Data Fabric dispute record from $vars.recordCreated.output"
+        "description": "Bound from $vars.recordCreated.output"
       }
     }
   },
@@ -87,7 +87,7 @@
     },
     {
       "role": "user",
-      "content": "Resolve this routed payment-misapplication case.\n\nCase packet: {{input.recordCreated__output__output}}\nRouted dispute type: {{input.triageAgent__output__disputeType}}\nTriage rationale: {{input.triageAgent__output__rationale}}\nTriage confidence: {{input.triageAgent__output__confidence}}\n\nCall LookupPaymentApplication and search ar-payment-resolution-index before reasoning. Require consistent evidence from both resources, then return only the required 12-field structured contract.",
+      "content": "Resolve this routed payment-misapplication case.\n\nCase packet: {{input.recordCreated__output}}\nRouted dispute type: {{input.triageAgent__output__disputeType}}\nTriage rationale: {{input.triageAgent__output__rationale}}\nTriage confidence: {{input.triageAgent__output__confidence}}\n\nCall LookupPaymentApplication and search ar-payment-resolution-index before reasoning. Require consistent evidence from both resources, then return only the required 12-field structured contract.",
       "contentTokens": [
         {
           "type": "simpleText",
@@ -95,7 +95,7 @@
         },
         {
           "type": "variable",
-          "rawString": "input.recordCreated__output__output"
+          "rawString": "input.recordCreated__output"
         },
         {
           "type": "simpleText",

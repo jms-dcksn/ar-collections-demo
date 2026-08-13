@@ -2,8 +2,8 @@
   "docVersion": "1.0.0",
   "resource": {
     "name": "MockUpdateDispute_1",
-    "kind": "Process",
-    "type": "Api",
+    "kind": "process",
+    "type": "api",
     "apiVersion": "orchestrator.uipath.com/v1",
     "isOverridable": true,
     "dependencies": [

@@ -983,7 +983,9 @@
       "type": "uipath.connector.trigger.uipath-uipath-dataservice.record-created",
       "typeVersion": "1.0.0",
       "display": {
-        "label": "Record Created"
+        "label": "Record Created",
+        "icon": "https://cloud.uipath.com/a17c9af1-091d-4dd2-9cec-ed787c6601c8/studio_/typecache/icons/98381fa079bbcf73264f551006d6ef7580fb53992f3d9f94361eb5d9e06040cb.svg",
+        "subLabel": ""
       },
       "inputs": {
         "entryPointId": "c53b2611-0852-4811-9b4a-4c4974e07bfa",
@@ -992,16 +994,29 @@
           "connectionId": "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
           "connectionResourceId": "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
           "connectionFolderKey": "bbe64c10-b957-4adf-a535-77109c673e5a",
-          "eventParameters": {},
           "objectName": "JDARCollectionsEntity",
           "eventType": "CREATED",
           "eventMode": "webhooks",
-          "filterExpression": "",
-          "configuration": "=jsonString:{\"essentialConfiguration\":{\"instanceParameters\":{\"connectorKey\":\"uipath-uipath-dataservice\",\"activityType\":\"GenericTrigger\",\"version\":\"1.0.0\",\"eventOperation\":\"CREATED\",\"eventMode\":\"polling\",\"supportsStreaming\":false},\"packageVersion\":\"1.0.0\",\"connectorVersion\":null,\"executionType\":null,\"httpMethod\":null,\"path\":null,\"filter\":null}}",
+          "configuration": "=jsonString:{\"essentialConfiguration\":{\"connectorVersion\":\"1.70.0\",\"executionType\":null,\"customFieldsRequestDetails\":null,\"instanceParameters\":{\"connectorKey\":\"uipath-uipath-dataservice\",\"activityType\":\"GenericTrigger\",\"version\":\"1.0.0\",\"eventOperation\":\"CREATED\",\"eventMode\":\"polling\",\"supportsStreaming\":false},\"objectName\":\"JDARCollectionsEntity\",\"packageVersion\":\"1.0.0\",\"httpMethod\":null,\"path\":null,\"filter\":null},\"optionalConfiguration\":{\"_textBlocks\":[],\"objectActions\":null,\"connectorName\":\"UiPath Data Fabric\",\"agentIdentity\":null,\"maxPageSize\":null,\"jobArguments\":null,\"isAutopilotInvalidConfig\":false,\"additionalHeaders\":null,\"cachedLookupValues\":[[\"objectName\",[{\"id\":\"JDARCollectionsEntity\",\"displayColumns\":[\"JDARCollectionsEntity\"],\"stringFormatDisplayColumns\":\"{0}\"}]]],\"cachedBrowserItems\":[],\"cachedPropertyMappings\":[],\"primaryKeys\":[],\"objectDisplayName\":\"JDARCollectionsEntity\",\"baseObject\":null,\"eventMode\":[\"webhooks\"],\"eventOperation\":null,\"language\":\"6cd4c047-ab49-4aad-8cfa-5681db3db20b\",\"hasBreakingChanges\":false,\"debugDisabled\":false,\"hasStaticLeftOperandFilterBuilder\":false,\"isV2TriggerBaseUrl\":false,\"fieldsContainer\":{\"outputTypeDefinition\":\"{\\\"CreateTime\\\":string;\\\"CreatedBy\\\":{\\\"CreateTime\\\":string;\\\"Email\\\":string;\\\"Id\\\":string;\\\"IsActive\\\":boolean;\\\"Name\\\":string;\\\"Type\\\":number;\\\"UpdateTime\\\":string};\\\"Id\\\":string;\\\"UpdateTime\\\":string;\\\"UpdatedBy\\\":{\\\"CreateTime\\\":string;\\\"Email\\\":string;\\\"Id\\\":string;\\\"IsActive\\\":boolean;\\\"Name\\\":string;\\\"Type\\\":number;\\\"UpdateTime\\\":string};\\\"actionCode\\\":string;\\\"adjustmentAmount\\\":number;\\\"approvalComments\\\":string;\\\"approvalDecision\\\":string;\\\"approvalSummary\\\":string;\\\"approvedBy\\\":string;\\\"auditSummary\\\":string;\\\"caseId\\\":string;\\\"customerAccountId\\\":string;\\\"customerName\\\":string;\\\"customerReason\\\":string;\\\"disputeType\\\":string;\\\"emailBody\\\":string;\\\"emailSent\\\":boolean;\\\"emailSubject\\\":string;\\\"evidence\\\":string;\\\"evidenceSummary\\\":string;\\\"invoiceNumber\\\":string;\\\"lifecycleState\\\":string;\\\"openedDate\\\":string;\\\"outstandingBalance\\\":number;\\\"recipientEmail\\\":string;\\\"recommendedAction\\\":string;\\\"resourcesUsed\\\":string;\\\"rootCause\\\":string;\\\"specialistConfidence\\\":number;\\\"triageConfidence\\\":number;\\\"triageRationale\\\":string;\\\"updateResult\\\":string}\",\"outputJsonSchema\":{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"type\":\"object\",\"properties\":{\"triageConfidence\":{\"title\":\"Triage confidence\",\"type\":\"number\"},\"UpdatedBy\":{\"title\":\"Updated by\",\"$ref\":\"#/definitions/UpdatedBy\"},\"emailBody\":{\"title\":\"Email body\",\"type\":\"string\"},\"evidence\":{\"title\":\"Evidence\",\"type\":\"string\"},\"disputeType\":{\"title\":\"Dispute type\",\"type\":\"string\"},\"approvedBy\":{\"title\":\"Approved by\",\"type\":\"string\"},\"evidenceSummary\":{\"title\":\"Evidence summary\",\"type\":\"string\"},\"CreatedBy\":{\"title\":\"Created by\",\"$ref\":\"#/definitions/CreatedBy\"},\"emailSubject\":{\"title\":\"Email subject\",\"type\":\"string\"},\"auditSummary\":{\"title\":\"Audit summary\",\"type\":\"string\"},\"caseId\":{\"title\":\"Case ID\",\"type\":\"string\"},\"invoiceNumber\":{\"title\":\"Invoice number\",\"type\":\"string\"},\"rootCause\":{\"title\":\"Root cause\",\"type\":\"string\"},\"actionCode\":{\"title\":\"Action code\",\"type\":\"string\"},\"customerReason\":{\"title\":\"Customer reason\",\"type\":\"string\"},\"recipientEmail\":{\"title\":\"Recipient email\",\"type\":\"string\"},\"outstandingBalance\":{\"title\":\"Outstanding balance\",\"type\":\"number\"},\"lifecycleState\":{\"title\":\"Lifecycle state\",\"type\":\"string\"},\"triageRationale\":{\"title\":\"Triage rationale\",\"type\":\"string\"},\"approvalDecision\":{\"title\":\"Approval decision\",\"type\":\"string\"},\"CreateTime\":{\"title\":\"Create time\",\"type\":\"string\"},\"approvalSummary\":{\"title\":\"Approval summary\",\"type\":\"string\"},\"specialistConfidence\":{\"title\":\"Specialist confidence\",\"type\":\"number\"},\"updateResult\":{\"title\":\"Update result\",\"type\":\"string\"},\"resourcesUsed\":{\"title\":\"Resources used\",\"type\":\"string\"},\"approvalComments\":{\"title\":\"Approval comments\",\"type\":\"string\"},\"customerName\":{\"title\":\"Customer name\",\"type\":\"string\"},\"openedDate\":{\"title\":\"Opened date\",\"type\":\"string\"},\"recommendedAction\":{\"title\":\"Recommended action\",\"type\":\"string\"},\"customerAccountId\":{\"title\":\"Customer account ID\",\"type\":\"string\"},\"emailSent\":{\"title\":\"Email sent\",\"type\":\"boolean\"},\"UpdateTime\":{\"title\":\"Update time\",\"type\":\"string\"},\"Id\":{\"title\":\"Id\",\"type\":\"string\"},\"adjustmentAmount\":{\"title\":\"Adjustment amount\",\"type\":\"number\"}},\"definitions\":{\"UpdatedBy\":{\"type\":\"object\",\"properties\":{\"UpdateTime\":{\"title\":\"Updated by update time\",\"type\":\"string\"},\"Name\":{\"title\":\"Updated by name\",\"type\":\"string\"},\"Id\":{\"title\":\"Updated by ID\",\"type\":\"string\"},\"CreateTime\":{\"title\":\"Updated by create time\",\"type\":\"string\"},\"IsActive\":{\"title\":\"Updated by is active\",\"type\":\"boolean\"},\"Type\":{\"title\":\"Updated by type\",\"type\":\"integer\"},\"Email\":{\"title\":\"Updated by email\",\"type\":\"string\"}}},\"CreatedBy\":{\"type\":\"object\",\"properties\":{\"Type\":{\"title\":\"Created by type\",\"type\":\"integer\"},\"UpdateTime\":{\"title\":\"Created by update time\",\"type\":\"string\"},\"Id\":{\"title\":\"Created by ID\",\"type\":\"string\"},\"Name\":{\"title\":\"Created by name\",\"type\":\"string\"},\"Email\":{\"title\":\"Created by email\",\"type\":\"string\"},\"CreateTime\":{\"title\":\"Created by create time\",\"type\":\"string\"},\"IsActive\":{\"title\":\"Created by is active\",\"type\":\"boolean\"}}}}},\"hasFileOutput\":false,\"populateOutputFields\":true,\"inputFields\":[],\"outputFields\":[{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"JDARCollectionsEntity\",\"name\":\"JDARCollectionsEntity\",\"displayName\":\"JDARCollectionsEntity\",\"description\":\"\",\"type\":\"GeneratedJDARCollectionsEntity_Trigger\",\"sortOrder\":null,\"format\":null,\"mask\":null,\"defaultValue\":null,\"primaryKey\":false,\"lookup\":null,\"enum\":null,\"design\":null,\"fieldActions\":null,\"searchable\":false,\"searchableOperators\":null,\"searchableNames\":null,\"searchableJoins\":null,\"required\":false,\"request\":false,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"output\",\"onCanvas\":null,\"isJitField\":true,\"isFieldActionParent\":false,\"isMainResponseField\":true,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Object\",\"assemblyQualifiedName\":\"Object\",\"isValueType\":false},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null}],\"jitTypeNeedsRefresh\":false,\"eventFields\":[{\"name\":\"CreateTime\",\"displayName\":\"CreateTime\",\"type\":\"string\",\"format\":\"date-time\",\"mask\":\"yyyy-MM-dd'T'HH:mm:ss.SSSXXX\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"DATETIMEOFFSET\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"DateTimeOffset\",\"assemblyQualifiedName\":\"DateTimeOffset\",\"isValueType\":false}},{\"name\":\"CreatedBy.CreateTime\",\"displayName\":\"CreatedBy.CreateTime\",\"type\":\"string\",\"format\":\"date-time\",\"mask\":\"yyyy-MM-dd'T'HH:mm:ss.SSSXXX\",\"sampleValue\":null,\"isCuratedEventField\":false,\"nativeType\":\"DATETIMEOFFSET\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"DateTimeOffset\",\"assemblyQualifiedName\":\"DateTimeOffset\",\"isValueType\":false}},{\"name\":\"CreatedBy.Email\",\"displayName\":\"CreatedBy.Email\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":false,\"nativeType\":\"NVARCHAR\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"CreatedBy.Id\",\"displayName\":\"CreatedBy.Id\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":false,\"nativeType\":\"UNIQUEIDENTIFIER\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"CreatedBy.IsActive\",\"displayName\":\"CreatedBy.IsActive\",\"type\":\"boolean\",\"sampleValue\":null,\"isCuratedEventField\":false,\"nativeType\":\"BIT\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Boolean\",\"assemblyQualifiedName\":\"Boolean\",\"isValueType\":true}},{\"name\":\"CreatedBy.Name\",\"displayName\":\"CreatedBy.Name\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":false,\"nativeType\":\"NVARCHAR\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"CreatedBy.Type\",\"displayName\":\"CreatedBy.Type\",\"type\":\"integer\",\"format\":\"int32\",\"enum\":[{\"name\":\"Application\",\"value\":3},{\"name\":\"Group\",\"value\":1},{\"name\":\"Robot\",\"value\":2},{\"name\":\"User\",\"value\":0}],\"sampleValue\":null,\"isCuratedEventField\":false,\"nativeType\":\"INT\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Enum\",\"assemblyQualifiedName\":\"Enum\",\"isValueType\":false}},{\"name\":\"CreatedBy.UpdateTime\",\"displayName\":\"CreatedBy.UpdateTime\",\"type\":\"string\",\"format\":\"date-time\",\"mask\":\"yyyy-MM-dd'T'HH:mm:ss.SSSXXX\",\"sampleValue\":null,\"isCuratedEventField\":false,\"nativeType\":\"DATETIMEOFFSET\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"DateTimeOffset\",\"assemblyQualifiedName\":\"DateTimeOffset\",\"isValueType\":false}},{\"name\":\"Id\",\"displayName\":\"Id\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"UNIQUEIDENTIFIER\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"UpdateTime\",\"displayName\":\"UpdateTime\",\"type\":\"string\",\"format\":\"date-time\",\"mask\":\"yyyy-MM-dd'T'HH:mm:ss.SSSXXX\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"DATETIMEOFFSET\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"DateTimeOffset\",\"assemblyQualifiedName\":\"DateTimeOffset\",\"isValueType\":false}},{\"name\":\"UpdatedBy.CreateTime\",\"displayName\":\"UpdatedBy.CreateTime\",\"type\":\"string\",\"format\":\"date-time\",\"mask\":\"yyyy-MM-dd'T'HH:mm:ss.SSSXXX\",\"sampleValue\":null,\"isCuratedEventField\":false,\"nativeType\":\"DATETIMEOFFSET\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"DateTimeOffset\",\"assemblyQualifiedName\":\"DateTimeOffset\",\"isValueType\":false}},{\"name\":\"UpdatedBy.Email\",\"displayName\":\"UpdatedBy.Email\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":false,\"nativeType\":\"NVARCHAR\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"UpdatedBy.Id\",\"displayName\":\"UpdatedBy.Id\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":false,\"nativeType\":\"UNIQUEIDENTIFIER\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"UpdatedBy.IsActive\",\"displayName\":\"UpdatedBy.IsActive\",\"type\":\"boolean\",\"sampleValue\":null,\"isCuratedEventField\":false,\"nativeType\":\"BIT\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Boolean\",\"assemblyQualifiedName\":\"Boolean\",\"isValueType\":true}},{\"name\":\"UpdatedBy.Name\",\"displayName\":\"UpdatedBy.Name\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":false,\"nativeType\":\"NVARCHAR\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"UpdatedBy.Type\",\"displayName\":\"UpdatedBy.Type\",\"type\":\"integer\",\"format\":\"int32\",\"enum\":[{\"name\":\"Application\",\"value\":3},{\"name\":\"Group\",\"value\":1},{\"name\":\"Robot\",\"value\":2},{\"name\":\"User\",\"value\":0}],\"sampleValue\":null,\"isCuratedEventField\":false,\"nativeType\":\"INT\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Enum\",\"assemblyQualifiedName\":\"Enum\",\"isValueType\":false}},{\"name\":\"UpdatedBy.UpdateTime\",\"displayName\":\"UpdatedBy.UpdateTime\",\"type\":\"string\",\"format\":\"date-time\",\"mask\":\"yyyy-MM-dd'T'HH:mm:ss.SSSXXX\",\"sampleValue\":null,\"isCuratedEventField\":false,\"nativeType\":\"DATETIMEOFFSET\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"DateTimeOffset\",\"assemblyQualifiedName\":\"DateTimeOffset\",\"isValueType\":false}},{\"name\":\"actionCode\",\"displayName\":\"actionCode\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"NVARCHAR\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"adjustmentAmount\",\"displayName\":\"adjustmentAmount\",\"type\":\"number\",\"format\":\"double\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"DECIMAL\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Double\",\"assemblyQualifiedName\":\"Double\",\"isValueType\":true}},{\"name\":\"approvalComments\",\"displayName\":\"approvalComments\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"MULTILINE\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"approvalDecision\",\"displayName\":\"approvalDecision\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"NVARCHAR\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"approvalSummary\",\"displayName\":\"approvalSummary\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"MULTILINE\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"approvedBy\",\"displayName\":\"approvedBy\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"NVARCHAR\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"auditSummary\",\"displayName\":\"auditSummary\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"MULTILINE\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"caseId\",\"displayName\":\"caseId\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"NVARCHAR\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"customerAccountId\",\"displayName\":\"customerAccountId\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"NVARCHAR\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"customerName\",\"displayName\":\"customerName\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"NVARCHAR\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"customerReason\",\"displayName\":\"customerReason\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"MULTILINE\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"disputeType\",\"displayName\":\"disputeType\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"NVARCHAR\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"emailBody\",\"displayName\":\"emailBody\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"MULTILINE\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"emailSent\",\"displayName\":\"emailSent\",\"type\":\"boolean\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"BIT\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Boolean\",\"assemblyQualifiedName\":\"Boolean\",\"isValueType\":true}},{\"name\":\"emailSubject\",\"displayName\":\"emailSubject\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"NVARCHAR\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"evidence\",\"displayName\":\"evidence\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"MULTILINE\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"evidenceSummary\",\"displayName\":\"evidenceSummary\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"MULTILINE\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"invoiceNumber\",\"displayName\":\"invoiceNumber\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"NVARCHAR\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"lifecycleState\",\"displayName\":\"lifecycleState\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"NVARCHAR\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"openedDate\",\"displayName\":\"openedDate\",\"type\":\"string\",\"format\":\"date\",\"mask\":\"yyyy-MM-dd\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"DATE\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"DateTimeOffset\",\"assemblyQualifiedName\":\"DateTimeOffset\",\"isValueType\":false}},{\"name\":\"outstandingBalance\",\"displayName\":\"outstandingBalance\",\"type\":\"number\",\"format\":\"double\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"DECIMAL\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Double\",\"assemblyQualifiedName\":\"Double\",\"isValueType\":true}},{\"name\":\"recipientEmail\",\"displayName\":\"recipientEmail\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"NVARCHAR\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"recommendedAction\",\"displayName\":\"recommendedAction\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"MULTILINE\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"resourcesUsed\",\"displayName\":\"resourcesUsed\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"MULTILINE\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"rootCause\",\"displayName\":\"rootCause\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"MULTILINE\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"specialistConfidence\",\"displayName\":\"specialistConfidence\",\"type\":\"number\",\"format\":\"double\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"DECIMAL\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Double\",\"assemblyQualifiedName\":\"Double\",\"isValueType\":true}},{\"name\":\"triageConfidence\",\"displayName\":\"triageConfidence\",\"type\":\"number\",\"format\":\"double\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"DECIMAL\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Double\",\"assemblyQualifiedName\":\"Double\",\"isValueType\":true}},{\"name\":\"triageRationale\",\"displayName\":\"triageRationale\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"MULTILINE\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}},{\"name\":\"updateResult\",\"displayName\":\"updateResult\",\"type\":\"string\",\"sampleValue\":null,\"isCuratedEventField\":true,\"nativeType\":\"MULTILINE\",\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true}}]},\"filterNeedsRefresh\":false,\"filterExpression\":null,\"obsoleteEventFields\":false,\"filterWidget\":null}}",
           "uiPathActivityTypeId": "af2a53ad-5d90-3d4e-bf3c-55b6d91595cd",
           "errorState": {
             "issues": []
+          },
+          "telemetryData": {
+            "connectorKey": "uipath-uipath-dataservice",
+            "connectorName": "UiPath Data Fabric",
+            "objectName": "JDARCollectionsEntity",
+            "objectDisplayName": "JDARCollectionsEntity",
+            "primaryKeyName": ""
           }
+        }
+      },
+      "outputs": {
+        "output": {
+          "type": "object",
+          "description": "The return value of the connector trigger.",
+          "source": "=result.response",
+          "var": "output"
         }
       }
     },
@@ -1010,7 +1025,9 @@
       "type": "uipath.connector.event.uipath-uipath-dataservice.record-updated",
       "typeVersion": "1.0.0",
       "display": {
-        "label": "Wait for Approval Update"
+        "label": "Wait for Approval Update",
+        "icon": "https://cloud.uipath.com/a17c9af1-091d-4dd2-9cec-ed787c6601c8/studio_/typecache/icons/98381fa079bbcf73264f551006d6ef7580fb53992f3d9f94361eb5d9e06040cb.svg",
+        "subLabel": ""
       },
       "inputs": {
         "detail": {
@@ -1018,16 +1035,65 @@
           "connectionId": "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
           "connectionResourceId": "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
           "connectionFolderKey": "bbe64c10-b957-4adf-a535-77109c673e5a",
-          "eventParameters": {},
-          "objectName": "JDARCollectionsEntity",
           "eventType": "UPDATED",
-          "eventMode": "webhooks",
-          "filterExpression": "",
-          "configuration": "=jsonString:{\"essentialConfiguration\":{\"instanceParameters\":{\"connectorKey\":\"uipath-uipath-dataservice\",\"activityType\":\"CuratedWaitFor\",\"version\":\"1.0.0\",\"eventOperation\":\"UPDATED\",\"eventMode\":\"polling\",\"supportsStreaming\":false},\"packageVersion\":\"1.0.0\",\"connectorVersion\":null,\"executionType\":null,\"httpMethod\":null,\"path\":null,\"filter\":null}}",
+          "eventMode": "polling",
+          "configuration": "=jsonString:{\"essentialConfiguration\":{\"connectorVersion\":null,\"executionType\":null,\"customFieldsRequestDetails\":null,\"instanceParameters\":{\"connectorKey\":\"uipath-uipath-dataservice\",\"activityType\":\"CuratedWaitFor\",\"version\":\"1.0.0\",\"eventOperation\":\"UPDATED\",\"eventMode\":\"polling\",\"supportsStreaming\":false},\"packageVersion\":\"1.0.0\",\"httpMethod\":null,\"path\":null,\"filter\":null}}",
           "uiPathActivityTypeId": "dacc5ee7-9ad5-39c5-aa03-39a312c6d451",
           "errorState": {
             "issues": []
+          },
+          "telemetryData": {
+            "connectorKey": "uipath-uipath-dataservice",
+            "primaryKeyName": ""
           }
+        }
+      },
+      "outputs": {
+        "output": {
+          "type": "object",
+          "description": "The return value of the connector event.",
+          "source": "=result.response",
+          "var": "output"
+        },
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          },
+          "source": "=Error",
+          "var": "error"
         }
       }
     },
@@ -1036,7 +1102,9 @@
       "type": "uipath.connector.uipath-uipath-dataservice.update-entity-record",
       "typeVersion": "1.0.0",
       "display": {
-        "label": "Persist Triaging"
+        "label": "Persist Triaging",
+        "icon": "https://cloud.uipath.com/a17c9af1-091d-4dd2-9cec-ed787c6601c8/studio_/typecache/icons/98381fa079bbcf73264f551006d6ef7580fb53992f3d9f94361eb5d9e06040cb.svg",
+        "subLabel": ""
       },
       "inputs": {
         "detail": {
@@ -1046,25 +1114,82 @@
           "connectionFolderKey": "bbe64c10-b957-4adf-a535-77109c673e5a",
           "method": "PUT",
           "endpoint": "/v2/{entityName}/UpdateEntityRecord",
-          "bodyParameters": {
-            "lifecycleState": "triaging",
-            "disputeType": "=js:$vars.triageAgent.output.disputeType",
-            "triageRationale": "=js:$vars.triageAgent.output.rationale",
-            "triageConfidence": "=js:$vars.triageAgent.output.confidence",
-            "auditSummary": "Triage classification completed."
-          },
-          "queryParameters": {
-            "recordId": "=js:$vars.recordCreated.output.Id",
-            "expansionLevel": 3
-          },
           "pathParameters": {
             "entityName": "JDARCollectionsEntity"
           },
+          "queryParameters": {
+            "recordId": "=js:($vars.recordCreated.output.Id)",
+            "expansionLevel": 3
+          },
+          "bodyParameters": {
+            "auditSummary": "Triage classification completed.",
+            "disputeType": "=js:($vars.triageAgent.output.disputeType)",
+            "lifecycleState": "triaging",
+            "triageConfidence": "=js:($vars.triageAgent.output.confidence)",
+            "triageRationale": "=js:($vars.triageAgent.output.rationale)"
+          },
+          "objectName": "UpdateEntityRecordV2",
+          "configuration": "=jsonString:{\"essentialConfiguration\":{\"connectorVersion\":\"1.70.0\",\"customFieldsRequestDetails\":{\"objectActionName\":\"GenerateSchema\",\"parameterValues\":[[\"entityName\",\"JDARCollectionsEntity\"]]},\"instanceParameters\":{\"connectorKey\":\"uipath-uipath-dataservice\",\"objectName\":\"UpdateEntityRecordV2\",\"httpMethod\":\"PUT\",\"activityType\":\"Curated\",\"version\":\"1.0.0\",\"supportsStreaming\":false,\"subType\":\"standard\"},\"objectName\":\"UpdateEntityRecordV2\",\"operation\":\"replace\",\"packageVersion\":\"1.0.0\",\"httpMethod\":\"PUT\",\"path\":\"/v2/{entityName}/UpdateEntityRecord\",\"unifiedTypesCompatible\":true,\"savedJitInputFieldId\":\"in_UpdateEntityRecordV2\"},\"optionalConfiguration\":{\"_textBlocks\":[{\"name\":\"schemaAPIErrorMessage\",\"text\":\"Could not generate schema for the chosen entity.\",\"severity\":\"error\"}],\"objectActions\":[{\"actionType\":\"api\",\"rules\":[{\"type\":\"path\",\"refFieldName\":\"entityName\",\"refFieldValues\":[\"*\"],\"isCleared\":false,\"isVariable\":false}],\"name\":\"GenerateSchema\",\"apiConfiguration\":{\"url\":\"/standard-objects/{entityName}/UpdateEntityRecord/metadata\",\"method\":\"GET\"},\"onSuccess\":{\"type\":\"remap\",\"remapConfiguration\":{\"input\":\"replace\",\"output\":\"replace\"}},\"onFailure\":{\"type\":\"remap\",\"remapConfiguration\":{\"input\":\"noop\",\"output\":\"noop\"},\"actions\":[{\"actionType\":\"showMessages\",\"refFieldName\":\"entityName\",\"messages\":[\"schemaAPIErrorMessage\"]}]}},{\"actionType\":\"reset\",\"rules\":[{\"type\":\"path\",\"refFieldName\":\"entityName\",\"isCleared\":true,\"isVariable\":false}],\"name\":\"ClearContent\"}],\"connectorName\":\"UiPath Data Fabric\",\"agentIdentity\":null,\"maxPageSize\":null,\"jobArguments\":null,\"isAutopilotInvalidConfig\":false,\"additionalHeaders\":null,\"cachedLookupValues\":[[\"entityName\",[{\"id\":\"JDARCollectionsEntity\",\"displayColumns\":[\"JDARCollectionsEntity\"],\"stringFormatDisplayColumns\":\"\"}]]],\"cachedBrowserItems\":[],\"cachedPropertyMappings\":[],\"primaryKeys\":[],\"objectDisplayName\":\"Update Entity Record\",\"eventMode\":null,\"eventOperation\":null,\"hasBreakingChanges\":false,\"fieldsContainer\":{\"outputTypeDefinition\":\"{\\\"CreateTime\\\":string;\\\"CreatedBy\\\":{\\\"CreateTime\\\":string;\\\"Email\\\":string;\\\"Id\\\":string;\\\"IsActive\\\":boolean;\\\"Name\\\":string;\\\"Type\\\":number;\\\"UpdateTime\\\":string};\\\"Id\\\":string;\\\"UpdateTime\\\":string;\\\"UpdatedBy\\\":{\\\"CreateTime\\\":string;\\\"Email\\\":string;\\\"Id\\\":string;\\\"IsActive\\\":boolean;\\\"Name\\\":string;\\\"Type\\\":number;\\\"UpdateTime\\\":string};\\\"actionCode\\\":string;\\\"adjustmentAmount\\\":number;\\\"approvalComments\\\":string;\\\"approvalDecision\\\":string;\\\"approvalSummary\\\":string;\\\"approvedBy\\\":string;\\\"auditSummary\\\":string;\\\"caseId\\\":string;\\\"customerAccountId\\\":string;\\\"customerName\\\":string;\\\"customerReason\\\":string;\\\"disputeType\\\":string;\\\"emailBody\\\":string;\\\"emailSent\\\":boolean;\\\"emailSubject\\\":string;\\\"evidence\\\":string;\\\"evidenceSummary\\\":string;\\\"invoiceNumber\\\":string;\\\"lifecycleState\\\":string;\\\"openedDate\\\":string;\\\"outstandingBalance\\\":number;\\\"recipientEmail\\\":string;\\\"recommendedAction\\\":string;\\\"resourcesUsed\\\":string;\\\"rootCause\\\":string;\\\"specialistConfidence\\\":number;\\\"triageConfidence\\\":number;\\\"triageRationale\\\":string;\\\"updateResult\\\":string}\",\"outputJsonSchema\":{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"type\":\"object\",\"properties\":{\"triageConfidence\":{\"title\":\"Triage confidence\",\"type\":\"number\"},\"UpdatedBy\":{\"title\":\"Updated by\",\"$ref\":\"#/definitions/UpdatedBy\"},\"evidence\":{\"title\":\"Evidence\",\"type\":\"string\"},\"emailBody\":{\"title\":\"Email body\",\"type\":\"string\"},\"disputeType\":{\"title\":\"Dispute type\",\"type\":\"string\"},\"approvedBy\":{\"title\":\"Approved by\",\"type\":\"string\"},\"evidenceSummary\":{\"title\":\"Evidence summary\",\"type\":\"string\"},\"CreatedBy\":{\"title\":\"Created by\",\"$ref\":\"#/definitions/CreatedBy\"},\"emailSubject\":{\"title\":\"Email subject\",\"type\":\"string\"},\"auditSummary\":{\"title\":\"Audit summary\",\"type\":\"string\"},\"caseId\":{\"title\":\"Case ID\",\"type\":\"string\"},\"rootCause\":{\"title\":\"Root cause\",\"type\":\"string\"},\"invoiceNumber\":{\"title\":\"Invoice number\",\"type\":\"string\"},\"customerReason\":{\"title\":\"Customer reason\",\"type\":\"string\"},\"actionCode\":{\"title\":\"Action code\",\"type\":\"string\"},\"recipientEmail\":{\"title\":\"Recipient email\",\"type\":\"string\"},\"outstandingBalance\":{\"title\":\"Outstanding balance\",\"type\":\"number\"},\"lifecycleState\":{\"title\":\"Lifecycle state\",\"type\":\"string\"},\"triageRationale\":{\"title\":\"Triage rationale\",\"type\":\"string\"},\"approvalDecision\":{\"title\":\"Approval decision\",\"type\":\"string\"},\"CreateTime\":{\"title\":\"Create time\",\"type\":\"string\"},\"approvalSummary\":{\"title\":\"Approval summary\",\"type\":\"string\"},\"specialistConfidence\":{\"title\":\"Specialist confidence\",\"type\":\"number\"},\"updateResult\":{\"title\":\"Update result\",\"type\":\"string\"},\"approvalComments\":{\"title\":\"Approval comments\",\"type\":\"string\"},\"resourcesUsed\":{\"title\":\"Resources used\",\"type\":\"string\"},\"customerName\":{\"title\":\"Customer name\",\"type\":\"string\"},\"openedDate\":{\"title\":\"Opened date\",\"type\":\"string\"},\"recommendedAction\":{\"title\":\"Recommended action\",\"type\":\"string\"},\"customerAccountId\":{\"title\":\"Customer account ID\",\"type\":\"string\"},\"emailSent\":{\"title\":\"Email sent\",\"type\":\"boolean\"},\"UpdateTime\":{\"title\":\"Update time\",\"type\":\"string\"},\"Id\":{\"title\":\"Id\",\"type\":\"string\"},\"adjustmentAmount\":{\"title\":\"Adjustment amount\",\"type\":\"number\"}},\"definitions\":{\"UpdatedBy\":{\"type\":\"object\",\"properties\":{\"UpdateTime\":{\"title\":\"Updated by update time\",\"type\":\"string\"},\"Name\":{\"title\":\"Updated by name\",\"type\":\"string\"},\"Id\":{\"title\":\"Updated by ID\",\"type\":\"string\",\"description\":\"Choose from the dropdown or provide the related entity's record ID directly.\"},\"CreateTime\":{\"title\":\"Updated by create time\",\"type\":\"string\"},\"IsActive\":{\"title\":\"Updated by is active\",\"type\":\"boolean\"},\"Type\":{\"title\":\"Updated by type\",\"type\":\"integer\"},\"Email\":{\"title\":\"Updated by email\",\"type\":\"string\"}}},\"CreatedBy\":{\"type\":\"object\",\"properties\":{\"Type\":{\"title\":\"Created by type\",\"type\":\"integer\"},\"UpdateTime\":{\"title\":\"Created by update time\",\"type\":\"string\"},\"Id\":{\"title\":\"Created by ID\",\"type\":\"string\",\"description\":\"Choose from the dropdown or provide the related entity's record ID directly.\"},\"Name\":{\"title\":\"Created by name\",\"type\":\"string\"},\"Email\":{\"title\":\"Created by email\",\"type\":\"string\"},\"CreateTime\":{\"title\":\"Created by create time\",\"type\":\"string\"},\"IsActive\":{\"title\":\"Created by is active\",\"type\":\"boolean\"}}}}},\"hasFileOutput\":false,\"populateOutputFields\":true,\"inputFields\":[{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"entityName\",\"name\":\"entityName\",\"displayName\":\"Entity\",\"description\":\"Enter entity name\",\"type\":\"string\",\"sortOrder\":1,\"primaryKey\":false,\"lookup\":{\"objectName\":\"system\",\"lookupNames\":[\"name\"],\"lookupValue\":\"name\",\"path\":\"/standard-objects-hybrid\"},\"design\":{\"loadByDefault\":true,\"isMultiSelect\":false,\"enableUserOverride\":false,\"isHidden\":false,\"position\":\"primary\",\"validation\":false},\"fieldActions\":[],\"searchable\":false,\"searchableOperators\":null,\"searchableNames\":null,\"required\":true,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"path\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":true,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"recordId\",\"name\":\"recordId\",\"displayName\":\"Record ID\",\"description\":\"Enter Record ID to update the corresponding record\",\"type\":\"string\",\"sortOrder\":2,\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableOperators\":null,\"searchableNames\":null,\"required\":true,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"query\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":true,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"expansionLevel\",\"name\":\"expansionLevel\",\"displayName\":\"Record level depth\",\"description\":\"Specify the depth of related records to be retrieved from the service. This property supports values from 1 to 3.\",\"type\":\"integer\",\"sortOrder\":3,\"format\":\"int32\",\"defaultValue\":3,\"primaryKey\":false,\"enum\":[{\"name\":\"1\",\"value\":1},{\"name\":\"2\",\"value\":2},{\"name\":\"3\",\"value\":3}],\"design\":{\"loadByDefault\":false,\"isMultiSelect\":false,\"enableUserOverride\":false,\"isHidden\":false,\"fieldActions\":[{\"actionType\":\"showMessages\",\"rules\":[{\"type\":\"field\",\"refFieldName\":\"expansionLevel\",\"isCleared\":true,\"isVariable\":false,\"isWorkflowExpression\":true,\"isConstantValue\":true}],\"messages\":[\"expansionLevelInfoMessage\"]}],\"position\":\"secondary\",\"textBlocks\":[{\"name\":\"expansionLevelInfoMessage\",\"text\":\"Related record depth: Specify depth 1-3 for related records. Default: 3.\"}],\"validation\":false},\"fieldActions\":[{\"actionType\":\"showMessages\",\"rules\":[{\"type\":\"field\",\"refFieldName\":\"expansionLevel\",\"isCleared\":true,\"isVariable\":false,\"isWorkflowExpression\":true,\"isConstantValue\":true}],\"messages\":[\"expansionLevelInfoMessage\"]}],\"searchable\":false,\"searchableOperators\":null,\"searchableNames\":null,\"required\":false,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"query\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":true,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Int\",\"assemblyQualifiedName\":\"Int\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"actionCode\",\"name\":\"actionCode\",\"displayName\":\"actionCode\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"adjustmentAmount\",\"name\":\"adjustmentAmount\",\"displayName\":\"adjustmentAmount\",\"type\":\"number\",\"format\":\"double\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Double\",\"assemblyQualifiedName\":\"Double\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"approvalComments\",\"name\":\"approvalComments\",\"displayName\":\"approvalComments\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"approvalDecision\",\"name\":\"approvalDecision\",\"displayName\":\"approvalDecision\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"approvalSummary\",\"name\":\"approvalSummary\",\"displayName\":\"approvalSummary\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"approvedBy\",\"name\":\"approvedBy\",\"displayName\":\"approvedBy\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"auditSummary\",\"name\":\"auditSummary\",\"displayName\":\"auditSummary\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"caseId\",\"name\":\"caseId\",\"displayName\":\"caseId\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"customerAccountId\",\"name\":\"customerAccountId\",\"displayName\":\"customerAccountId\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"customerName\",\"name\":\"customerName\",\"displayName\":\"customerName\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"customerReason\",\"name\":\"customerReason\",\"displayName\":\"customerReason\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"disputeType\",\"name\":\"disputeType\",\"displayName\":\"disputeType\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"emailBody\",\"name\":\"emailBody\",\"displayName\":\"emailBody\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"emailSent\",\"name\":\"emailSent\",\"displayName\":\"emailSent\",\"type\":\"boolean\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Boolean\",\"assemblyQualifiedName\":\"Boolean\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"emailSubject\",\"name\":\"emailSubject\",\"displayName\":\"emailSubject\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"evidence\",\"name\":\"evidence\",\"displayName\":\"evidence\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"evidenceSummary\",\"name\":\"evidenceSummary\",\"displayName\":\"evidenceSummary\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"invoiceNumber\",\"name\":\"invoiceNumber\",\"displayName\":\"invoiceNumber\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"lifecycleState\",\"name\":\"lifecycleState\",\"displayName\":\"lifecycleState\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"openedDate\",\"name\":\"openedDate\",\"displayName\":\"openedDate\",\"type\":\"string\",\"format\":\"date\",\"mask\":\"yyyy-MM-dd\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"DateTimeOffset\",\"assemblyQualifiedName\":\"DateTimeOffset\",\"isValueType\":false},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"outstandingBalance\",\"name\":\"outstandingBalance\",\"displayName\":\"outstandingBalance\",\"type\":\"number\",\"format\":\"double\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Double\",\"assemblyQualifiedName\":\"Double\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"recipientEmail\",\"name\":\"recipientEmail\",\"displayName\":\"recipientEmail\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"recommendedAction\",\"name\":\"recommendedAction\",\"displayName\":\"recommendedAction\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"resourcesUsed\",\"name\":\"resourcesUsed\",\"displayName\":\"resourcesUsed\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"rootCause\",\"name\":\"rootCause\",\"displayName\":\"rootCause\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"specialistConfidence\",\"name\":\"specialistConfidence\",\"displayName\":\"specialistConfidence\",\"type\":\"number\",\"format\":\"double\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Double\",\"assemblyQualifiedName\":\"Double\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"triageConfidence\",\"name\":\"triageConfidence\",\"displayName\":\"triageConfidence\",\"type\":\"number\",\"format\":\"double\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Double\",\"assemblyQualifiedName\":\"Double\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"triageRationale\",\"name\":\"triageRationale\",\"displayName\":\"triageRationale\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"updateResult\",\"name\":\"updateResult\",\"displayName\":\"updateResult\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null}],\"outputFields\":[{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"out_CreatedBy_sub_Id\",\"name\":\"CreatedBy.Id\",\"displayName\":\"CreatedBy.Id\",\"description\":\"Choose from the dropdown or provide the related entity's record ID directly.\",\"type\":\"string\",\"primaryKey\":true,\"lookup\":{\"lookupNames\":[\"Name\",\"Id\"],\"objectName\":\"SystemUser\",\"path\":\"/SystemUser\",\"lookupValue\":\"Id\"},\"design\":{\"description\":\"Choose from the dropdown or provide the related entity's record ID directly.\"},\"fieldActions\":[],\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":false,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"output\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":true,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"out_Id\",\"name\":\"Id\",\"displayName\":\"Id\",\"type\":\"string\",\"primaryKey\":true,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":false,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"output\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":true,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"out_UpdatedBy_sub_Id\",\"name\":\"UpdatedBy.Id\",\"displayName\":\"UpdatedBy.Id\",\"description\":\"Choose from the dropdown or provide the related entity's record ID directly.\",\"type\":\"string\",\"primaryKey\":true,\"lookup\":{\"lookupNames\":[\"Name\",\"Id\"],\"objectName\":\"SystemUser\",\"path\":\"/SystemUser\",\"lookupValue\":\"Id\"},\"design\":{\"description\":\"Choose from the dropdown or provide the related entity's record ID directly.\"},\"fieldActions\":[],\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":false,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"output\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":true,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"UpdateEntityRecordV2\",\"name\":\"UpdateEntityRecordV2\",\"displayName\":\"Record\",\"description\":\"Updated record\",\"type\":\"GeneratedUpdateEntityRecordV2\",\"sortOrder\":null,\"format\":null,\"mask\":null,\"defaultValue\":null,\"primaryKey\":false,\"lookup\":null,\"enum\":null,\"design\":null,\"fieldActions\":null,\"searchable\":false,\"searchableOperators\":null,\"searchableNames\":null,\"searchableJoins\":null,\"required\":false,\"request\":false,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"output\",\"onCanvas\":null,\"isJitField\":true,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Object\",\"assemblyQualifiedName\":\"Object\",\"isValueType\":false},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null}],\"jitTypeNeedsRefresh\":false,\"jitInputField\":{\"typeScriptDefinition\":\"{\\\"actionCode\\\":string;\\\"adjustmentAmount\\\":number;\\\"approvalComments\\\":string;\\\"approvalDecision\\\":string;\\\"approvalSummary\\\":string;\\\"approvedBy\\\":string;\\\"auditSummary\\\":string;\\\"caseId\\\":string;\\\"customerAccountId\\\":string;\\\"customerName\\\":string;\\\"customerReason\\\":string;\\\"disputeType\\\":string;\\\"emailBody\\\":string;\\\"emailSent\\\":boolean;\\\"emailSubject\\\":string;\\\"evidence\\\":string;\\\"evidenceSummary\\\":string;\\\"invoiceNumber\\\":string;\\\"lifecycleState\\\":string;\\\"openedDate\\\":string;\\\"outstandingBalance\\\":number;\\\"recipientEmail\\\":string;\\\"recommendedAction\\\":string;\\\"resourcesUsed\\\":string;\\\"rootCause\\\":string;\\\"specialistConfidence\\\":number;\\\"triageConfidence\\\":number;\\\"triageRationale\\\":string;\\\"updateResult\\\":string}\",\"useUrlInput\":false,\"id\":\"in_UpdateEntityRecordV2\",\"name\":\"UpdateEntityRecordV2\",\"displayName\":\"Record\",\"description\":\"Record input object\",\"type\":\"GeneratedUpdateEntityRecordV2\",\"sortOrder\":null,\"format\":null,\"mask\":null,\"defaultValue\":\"{\\n  \\\"actionCode\\\": null,\\n  \\\"adjustmentAmount\\\": null,\\n  \\\"approvalComments\\\": null,\\n  \\\"approvalDecision\\\": null,\\n  \\\"approvalSummary\\\": null,\\n  \\\"approvedBy\\\": null,\\n  \\\"auditSummary\\\": null,\\n  \\\"caseId\\\": null,\\n  \\\"customerAccountId\\\": null,\\n  \\\"customerName\\\": null,\\n  \\\"customerReason\\\": null,\\n  \\\"disputeType\\\": null,\\n  \\\"emailBody\\\": null,\\n  \\\"emailSent\\\": null,\\n  \\\"emailSubject\\\": null,\\n  \\\"evidence\\\": null,\\n  \\\"evidenceSummary\\\": null,\\n  \\\"invoiceNumber\\\": null,\\n  \\\"lifecycleState\\\": null,\\n  \\\"openedDate\\\": null,\\n  \\\"outstandingBalance\\\": null,\\n  \\\"recipientEmail\\\": null,\\n  \\\"recommendedAction\\\": null,\\n  \\\"resourcesUsed\\\": null,\\n  \\\"rootCause\\\": null,\\n  \\\"specialistConfidence\\\": null,\\n  \\\"triageConfidence\\\": null,\\n  \\\"triageRationale\\\": null,\\n  \\\"updateResult\\\": null\\n}\",\"primaryKey\":false,\"lookup\":null,\"enum\":null,\"design\":null,\"fieldActions\":null,\"searchable\":false,\"searchableOperators\":null,\"searchableNames\":null,\"searchableJoins\":null,\"required\":true,\"request\":false,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"jitObjectInput\",\"onCanvas\":null,\"isJitField\":true,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Object\",\"assemblyQualifiedName\":\"Object\",\"isValueType\":false},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},\"inputMode\":null,\"searchableFields\":[],\"hasUnifiedTypes\":false,\"jitTypeHash\":null}}}",
           "uiPathActivityTypeId": "718fdc36-73a8-3607-8604-ddef95bb9967",
           "errorState": {
             "issues": []
           },
-          "configuration": "=jsonString:{\"essentialConfiguration\":{\"instanceParameters\":{\"connectorKey\":\"uipath-uipath-dataservice\",\"objectName\":\"UpdateEntityRecordV2\",\"httpMethod\":\"PUT\",\"activityType\":\"Curated\",\"version\":\"1.0.0\",\"supportsStreaming\":false,\"subType\":\"standard\"},\"objectName\":\"UpdateEntityRecordV2\",\"operation\":\"replace\",\"httpMethod\":\"PUT\",\"path\":\"/v2/{entityName}/UpdateEntityRecord\",\"packageVersion\":\"1.0.0\",\"connectorVersion\":null,\"executionType\":null,\"customFieldsRequestDetails\":{\"objectActionName\":\"GenerateSchema\",\"parameterValues\":[[\"entityName\",\"JDARCollectionsEntity\"]]},\"unifiedTypesCompatible\":true}}"
+          "telemetryData": {
+            "connectorKey": "uipath-uipath-dataservice",
+            "connectorName": "UiPath Data Fabric",
+            "operationType": "replace",
+            "objectName": "UpdateEntityRecordV2",
+            "objectDisplayName": "Update Entity Record",
+            "primaryKeyName": ""
+          }
+        }
+      },
+      "outputs": {
+        "output": {
+          "type": "object",
+          "description": "The return value of the connector.",
+          "source": "=result.response",
+          "var": "output"
+        },
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          },
+          "source": "=Error",
+          "var": "error"
         }
       }
     },
@@ -1073,7 +1198,8 @@
       "type": "uipath.connector.uipath-uipath-dataservice.update-entity-record",
       "typeVersion": "1.0.0",
       "display": {
-        "label": "Persist Needs Manual Triage"
+        "label": "Persist Needs Manual Triage",
+        "icon": "https://cloud.uipath.com/a17c9af1-091d-4dd2-9cec-ed787c6601c8/studio_/typecache/icons/98381fa079bbcf73264f551006d6ef7580fb53992f3d9f94361eb5d9e06040cb.svg"
       },
       "inputs": {
         "detail": {
@@ -1104,6 +1230,54 @@
           },
           "configuration": "=jsonString:{\"essentialConfiguration\":{\"instanceParameters\":{\"connectorKey\":\"uipath-uipath-dataservice\",\"objectName\":\"UpdateEntityRecordV2\",\"httpMethod\":\"PUT\",\"activityType\":\"Curated\",\"version\":\"1.0.0\",\"supportsStreaming\":false,\"subType\":\"standard\"},\"objectName\":\"UpdateEntityRecordV2\",\"operation\":\"replace\",\"httpMethod\":\"PUT\",\"path\":\"/v2/{entityName}/UpdateEntityRecord\",\"packageVersion\":\"1.0.0\",\"connectorVersion\":null,\"executionType\":null,\"customFieldsRequestDetails\":{\"objectActionName\":\"GenerateSchema\",\"parameterValues\":[[\"entityName\",\"JDARCollectionsEntity\"]]},\"unifiedTypesCompatible\":true}}"
         }
+      },
+      "outputs": {
+        "output": {
+          "type": "object",
+          "description": "The return value of the connector.",
+          "source": "=result.response",
+          "var": "output"
+        },
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          },
+          "source": "=Error",
+          "var": "error"
+        }
       }
     },
     {
@@ -1111,7 +1285,9 @@
       "type": "uipath.connector.uipath-uipath-dataservice.update-entity-record",
       "typeVersion": "1.0.0",
       "display": {
-        "label": "Persist Awaiting Approval"
+        "label": "Persist Awaiting Approval",
+        "icon": "https://cloud.uipath.com/a17c9af1-091d-4dd2-9cec-ed787c6601c8/studio_/typecache/icons/98381fa079bbcf73264f551006d6ef7580fb53992f3d9f94361eb5d9e06040cb.svg",
+        "subLabel": ""
       },
       "inputs": {
         "detail": {
@@ -1121,37 +1297,94 @@
           "connectionFolderKey": "bbe64c10-b957-4adf-a535-77109c673e5a",
           "method": "PUT",
           "endpoint": "/v2/{entityName}/UpdateEntityRecord",
-          "bodyParameters": {
-            "lifecycleState": "awaiting_approval",
-            "caseId": "=js:$vars.normalizeProposal.output.caseId",
-            "disputeType": "=js:$vars.normalizeProposal.output.disputeType",
-            "triageRationale": "=js:$vars.triageAgent.output.rationale",
-            "triageConfidence": "=js:$vars.triageAgent.output.confidence",
-            "evidenceSummary": "=js:$vars.normalizeProposal.output.evidenceSummary",
-            "rootCause": "=js:$vars.normalizeProposal.output.rootCause",
-            "recommendedAction": "=js:$vars.normalizeProposal.output.recommendedAction",
-            "actionCode": "=js:$vars.normalizeProposal.output.actionCode",
-            "adjustmentAmount": "=js:$vars.normalizeProposal.output.adjustmentAmount",
-            "specialistConfidence": "=js:$vars.normalizeProposal.output.confidence",
-            "approvalSummary": "=js:$vars.normalizeProposal.output.approvalSummary",
-            "emailSubject": "=js:$vars.normalizeProposal.output.emailSubject",
-            "emailBody": "=js:$vars.normalizeProposal.output.emailBody",
-            "resourcesUsed": "=js:$vars.normalizeProposal.output.resourcesUsed",
-            "emailSent": false,
-            "auditSummary": "Proposal normalized and awaiting a matching approval update."
-          },
-          "queryParameters": {
-            "recordId": "=js:$vars.recordCreated.output.Id",
-            "expansionLevel": 3
-          },
           "pathParameters": {
             "entityName": "JDARCollectionsEntity"
           },
+          "queryParameters": {
+            "recordId": "=js:($vars.recordCreated.output.Id)",
+            "expansionLevel": 3
+          },
+          "bodyParameters": {
+            "actionCode": "=js:($vars.normalizeProposal.output.actionCode)",
+            "adjustmentAmount": "=js:($vars.normalizeProposal.output.adjustmentAmount)",
+            "approvalSummary": "=js:($vars.normalizeProposal.output.approvalSummary)",
+            "auditSummary": "Proposal normalized and awaiting a matching approval update.",
+            "caseId": "=js:($vars.normalizeProposal.output.caseId)",
+            "disputeType": "=js:($vars.normalizeProposal.output.disputeType)",
+            "emailBody": "=js:($vars.normalizeProposal.output.emailBody)",
+            "emailSent": false,
+            "emailSubject": "=js:($vars.normalizeProposal.output.emailSubject)",
+            "evidenceSummary": "=js:($vars.normalizeProposal.output.evidenceSummary)",
+            "lifecycleState": "awaiting_approval",
+            "recommendedAction": "=js:($vars.normalizeProposal.output.recommendedAction)",
+            "resourcesUsed": "=js:($vars.normalizeProposal.output.resourcesUsed)",
+            "rootCause": "=js:($vars.normalizeProposal.output.rootCause)",
+            "specialistConfidence": "=js:($vars.normalizeProposal.output.confidence)",
+            "triageConfidence": "=js:($vars.triageAgent.output.confidence)",
+            "triageRationale": "=js:($vars.triageAgent.output.rationale)"
+          },
+          "objectName": "UpdateEntityRecordV2",
+          "configuration": "=jsonString:{\"essentialConfiguration\":{\"connectorVersion\":\"1.70.0\",\"customFieldsRequestDetails\":{\"objectActionName\":\"GenerateSchema\",\"parameterValues\":[[\"entityName\",\"JDARCollectionsEntity\"]]},\"instanceParameters\":{\"connectorKey\":\"uipath-uipath-dataservice\",\"objectName\":\"UpdateEntityRecordV2\",\"httpMethod\":\"PUT\",\"activityType\":\"Curated\",\"version\":\"1.0.0\",\"supportsStreaming\":false,\"subType\":\"standard\"},\"objectName\":\"UpdateEntityRecordV2\",\"operation\":\"replace\",\"packageVersion\":\"1.0.0\",\"httpMethod\":\"PUT\",\"path\":\"/v2/{entityName}/UpdateEntityRecord\",\"unifiedTypesCompatible\":true,\"savedJitInputFieldId\":\"in_UpdateEntityRecordV2\"},\"optionalConfiguration\":{\"_textBlocks\":[{\"name\":\"schemaAPIErrorMessage\",\"text\":\"Could not generate schema for the chosen entity.\",\"severity\":\"error\"}],\"objectActions\":[{\"actionType\":\"api\",\"rules\":[{\"type\":\"path\",\"refFieldName\":\"entityName\",\"refFieldValues\":[\"*\"],\"isCleared\":false,\"isVariable\":false}],\"name\":\"GenerateSchema\",\"apiConfiguration\":{\"url\":\"/standard-objects/{entityName}/UpdateEntityRecord/metadata\",\"method\":\"GET\"},\"onSuccess\":{\"type\":\"remap\",\"remapConfiguration\":{\"input\":\"replace\",\"output\":\"replace\"}},\"onFailure\":{\"type\":\"remap\",\"remapConfiguration\":{\"input\":\"noop\",\"output\":\"noop\"},\"actions\":[{\"actionType\":\"showMessages\",\"refFieldName\":\"entityName\",\"messages\":[\"schemaAPIErrorMessage\"]}]}},{\"actionType\":\"reset\",\"rules\":[{\"type\":\"path\",\"refFieldName\":\"entityName\",\"isCleared\":true,\"isVariable\":false}],\"name\":\"ClearContent\"}],\"connectorName\":\"UiPath Data Fabric\",\"agentIdentity\":null,\"maxPageSize\":null,\"jobArguments\":null,\"isAutopilotInvalidConfig\":false,\"additionalHeaders\":null,\"cachedLookupValues\":[[\"entityName\",[{\"id\":\"JDARCollectionsEntity\",\"displayColumns\":[\"JDARCollectionsEntity\"],\"stringFormatDisplayColumns\":\"\"}]]],\"cachedBrowserItems\":[],\"cachedPropertyMappings\":[],\"primaryKeys\":[],\"objectDisplayName\":\"Update Entity Record\",\"eventMode\":null,\"eventOperation\":null,\"hasBreakingChanges\":false,\"fieldsContainer\":{\"outputTypeDefinition\":\"{\\\"CreateTime\\\":string;\\\"CreatedBy\\\":{\\\"CreateTime\\\":string;\\\"Email\\\":string;\\\"Id\\\":string;\\\"IsActive\\\":boolean;\\\"Name\\\":string;\\\"Type\\\":number;\\\"UpdateTime\\\":string};\\\"Id\\\":string;\\\"UpdateTime\\\":string;\\\"UpdatedBy\\\":{\\\"CreateTime\\\":string;\\\"Email\\\":string;\\\"Id\\\":string;\\\"IsActive\\\":boolean;\\\"Name\\\":string;\\\"Type\\\":number;\\\"UpdateTime\\\":string};\\\"actionCode\\\":string;\\\"adjustmentAmount\\\":number;\\\"approvalComments\\\":string;\\\"approvalDecision\\\":string;\\\"approvalSummary\\\":string;\\\"approvedBy\\\":string;\\\"auditSummary\\\":string;\\\"caseId\\\":string;\\\"customerAccountId\\\":string;\\\"customerName\\\":string;\\\"customerReason\\\":string;\\\"disputeType\\\":string;\\\"emailBody\\\":string;\\\"emailSent\\\":boolean;\\\"emailSubject\\\":string;\\\"evidence\\\":string;\\\"evidenceSummary\\\":string;\\\"invoiceNumber\\\":string;\\\"lifecycleState\\\":string;\\\"openedDate\\\":string;\\\"outstandingBalance\\\":number;\\\"recipientEmail\\\":string;\\\"recommendedAction\\\":string;\\\"resourcesUsed\\\":string;\\\"rootCause\\\":string;\\\"specialistConfidence\\\":number;\\\"triageConfidence\\\":number;\\\"triageRationale\\\":string;\\\"updateResult\\\":string}\",\"outputJsonSchema\":{\"$schema\":\"http://json-schema.org/draft-07/schema#\",\"type\":\"object\",\"properties\":{\"triageConfidence\":{\"title\":\"Triage confidence\",\"type\":\"number\"},\"UpdatedBy\":{\"title\":\"Updated by\",\"$ref\":\"#/definitions/UpdatedBy\"},\"evidence\":{\"title\":\"Evidence\",\"type\":\"string\"},\"emailBody\":{\"title\":\"Email body\",\"type\":\"string\"},\"disputeType\":{\"title\":\"Dispute type\",\"type\":\"string\"},\"approvedBy\":{\"title\":\"Approved by\",\"type\":\"string\"},\"evidenceSummary\":{\"title\":\"Evidence summary\",\"type\":\"string\"},\"CreatedBy\":{\"title\":\"Created by\",\"$ref\":\"#/definitions/CreatedBy\"},\"emailSubject\":{\"title\":\"Email subject\",\"type\":\"string\"},\"auditSummary\":{\"title\":\"Audit summary\",\"type\":\"string\"},\"caseId\":{\"title\":\"Case ID\",\"type\":\"string\"},\"rootCause\":{\"title\":\"Root cause\",\"type\":\"string\"},\"invoiceNumber\":{\"title\":\"Invoice number\",\"type\":\"string\"},\"customerReason\":{\"title\":\"Customer reason\",\"type\":\"string\"},\"actionCode\":{\"title\":\"Action code\",\"type\":\"string\"},\"recipientEmail\":{\"title\":\"Recipient email\",\"type\":\"string\"},\"outstandingBalance\":{\"title\":\"Outstanding balance\",\"type\":\"number\"},\"lifecycleState\":{\"title\":\"Lifecycle state\",\"type\":\"string\"},\"triageRationale\":{\"title\":\"Triage rationale\",\"type\":\"string\"},\"approvalDecision\":{\"title\":\"Approval decision\",\"type\":\"string\"},\"CreateTime\":{\"title\":\"Create time\",\"type\":\"string\"},\"approvalSummary\":{\"title\":\"Approval summary\",\"type\":\"string\"},\"specialistConfidence\":{\"title\":\"Specialist confidence\",\"type\":\"number\"},\"updateResult\":{\"title\":\"Update result\",\"type\":\"string\"},\"approvalComments\":{\"title\":\"Approval comments\",\"type\":\"string\"},\"resourcesUsed\":{\"title\":\"Resources used\",\"type\":\"string\"},\"customerName\":{\"title\":\"Customer name\",\"type\":\"string\"},\"openedDate\":{\"title\":\"Opened date\",\"type\":\"string\"},\"recommendedAction\":{\"title\":\"Recommended action\",\"type\":\"string\"},\"customerAccountId\":{\"title\":\"Customer account ID\",\"type\":\"string\"},\"emailSent\":{\"title\":\"Email sent\",\"type\":\"boolean\"},\"UpdateTime\":{\"title\":\"Update time\",\"type\":\"string\"},\"Id\":{\"title\":\"Id\",\"type\":\"string\"},\"adjustmentAmount\":{\"title\":\"Adjustment amount\",\"type\":\"number\"}},\"definitions\":{\"UpdatedBy\":{\"type\":\"object\",\"properties\":{\"UpdateTime\":{\"title\":\"Updated by update time\",\"type\":\"string\"},\"Name\":{\"title\":\"Updated by name\",\"type\":\"string\"},\"Id\":{\"title\":\"Updated by ID\",\"type\":\"string\",\"description\":\"Choose from the dropdown or provide the related entity's record ID directly.\"},\"CreateTime\":{\"title\":\"Updated by create time\",\"type\":\"string\"},\"IsActive\":{\"title\":\"Updated by is active\",\"type\":\"boolean\"},\"Type\":{\"title\":\"Updated by type\",\"type\":\"integer\"},\"Email\":{\"title\":\"Updated by email\",\"type\":\"string\"}}},\"CreatedBy\":{\"type\":\"object\",\"properties\":{\"Type\":{\"title\":\"Created by type\",\"type\":\"integer\"},\"UpdateTime\":{\"title\":\"Created by update time\",\"type\":\"string\"},\"Id\":{\"title\":\"Created by ID\",\"type\":\"string\",\"description\":\"Choose from the dropdown or provide the related entity's record ID directly.\"},\"Name\":{\"title\":\"Created by name\",\"type\":\"string\"},\"Email\":{\"title\":\"Created by email\",\"type\":\"string\"},\"CreateTime\":{\"title\":\"Created by create time\",\"type\":\"string\"},\"IsActive\":{\"title\":\"Created by is active\",\"type\":\"boolean\"}}}}},\"hasFileOutput\":false,\"populateOutputFields\":true,\"inputFields\":[{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"entityName\",\"name\":\"entityName\",\"displayName\":\"Entity\",\"description\":\"Enter entity name\",\"type\":\"string\",\"sortOrder\":1,\"primaryKey\":false,\"lookup\":{\"objectName\":\"system\",\"lookupNames\":[\"name\"],\"lookupValue\":\"name\",\"path\":\"/standard-objects-hybrid\"},\"design\":{\"loadByDefault\":true,\"isMultiSelect\":false,\"enableUserOverride\":false,\"isHidden\":false,\"position\":\"primary\",\"validation\":false},\"fieldActions\":[],\"searchable\":false,\"searchableOperators\":null,\"searchableNames\":null,\"required\":true,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"path\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":true,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"recordId\",\"name\":\"recordId\",\"displayName\":\"Record ID\",\"description\":\"Enter Record ID to update the corresponding record\",\"type\":\"string\",\"sortOrder\":2,\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableOperators\":null,\"searchableNames\":null,\"required\":true,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"query\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":true,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"expansionLevel\",\"name\":\"expansionLevel\",\"displayName\":\"Record level depth\",\"description\":\"Specify the depth of related records to be retrieved from the service. This property supports values from 1 to 3.\",\"type\":\"integer\",\"sortOrder\":3,\"format\":\"int32\",\"defaultValue\":3,\"primaryKey\":false,\"enum\":[{\"name\":\"1\",\"value\":1},{\"name\":\"2\",\"value\":2},{\"name\":\"3\",\"value\":3}],\"design\":{\"loadByDefault\":false,\"isMultiSelect\":false,\"enableUserOverride\":false,\"isHidden\":false,\"fieldActions\":[{\"actionType\":\"showMessages\",\"rules\":[{\"type\":\"field\",\"refFieldName\":\"expansionLevel\",\"isCleared\":true,\"isVariable\":false,\"isWorkflowExpression\":true,\"isConstantValue\":true}],\"messages\":[\"expansionLevelInfoMessage\"]}],\"position\":\"secondary\",\"textBlocks\":[{\"name\":\"expansionLevelInfoMessage\",\"text\":\"Related record depth: Specify depth 1-3 for related records. Default: 3.\"}],\"validation\":false},\"fieldActions\":[{\"actionType\":\"showMessages\",\"rules\":[{\"type\":\"field\",\"refFieldName\":\"expansionLevel\",\"isCleared\":true,\"isVariable\":false,\"isWorkflowExpression\":true,\"isConstantValue\":true}],\"messages\":[\"expansionLevelInfoMessage\"]}],\"searchable\":false,\"searchableOperators\":null,\"searchableNames\":null,\"required\":false,\"request\":true,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"query\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":true,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Int\",\"assemblyQualifiedName\":\"Int\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"actionCode\",\"name\":\"actionCode\",\"displayName\":\"actionCode\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"adjustmentAmount\",\"name\":\"adjustmentAmount\",\"displayName\":\"adjustmentAmount\",\"type\":\"number\",\"format\":\"double\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Double\",\"assemblyQualifiedName\":\"Double\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"approvalComments\",\"name\":\"approvalComments\",\"displayName\":\"approvalComments\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"approvalDecision\",\"name\":\"approvalDecision\",\"displayName\":\"approvalDecision\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"approvalSummary\",\"name\":\"approvalSummary\",\"displayName\":\"approvalSummary\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"approvedBy\",\"name\":\"approvedBy\",\"displayName\":\"approvedBy\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"auditSummary\",\"name\":\"auditSummary\",\"displayName\":\"auditSummary\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"caseId\",\"name\":\"caseId\",\"displayName\":\"caseId\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"customerAccountId\",\"name\":\"customerAccountId\",\"displayName\":\"customerAccountId\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"customerName\",\"name\":\"customerName\",\"displayName\":\"customerName\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"customerReason\",\"name\":\"customerReason\",\"displayName\":\"customerReason\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"disputeType\",\"name\":\"disputeType\",\"displayName\":\"disputeType\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"emailBody\",\"name\":\"emailBody\",\"displayName\":\"emailBody\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"emailSent\",\"name\":\"emailSent\",\"displayName\":\"emailSent\",\"type\":\"boolean\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Boolean\",\"assemblyQualifiedName\":\"Boolean\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"emailSubject\",\"name\":\"emailSubject\",\"displayName\":\"emailSubject\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"evidence\",\"name\":\"evidence\",\"displayName\":\"evidence\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"evidenceSummary\",\"name\":\"evidenceSummary\",\"displayName\":\"evidenceSummary\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"invoiceNumber\",\"name\":\"invoiceNumber\",\"displayName\":\"invoiceNumber\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"lifecycleState\",\"name\":\"lifecycleState\",\"displayName\":\"lifecycleState\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"openedDate\",\"name\":\"openedDate\",\"displayName\":\"openedDate\",\"type\":\"string\",\"format\":\"date\",\"mask\":\"yyyy-MM-dd\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"DateTimeOffset\",\"assemblyQualifiedName\":\"DateTimeOffset\",\"isValueType\":false},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"outstandingBalance\",\"name\":\"outstandingBalance\",\"displayName\":\"outstandingBalance\",\"type\":\"number\",\"format\":\"double\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Double\",\"assemblyQualifiedName\":\"Double\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"recipientEmail\",\"name\":\"recipientEmail\",\"displayName\":\"recipientEmail\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"recommendedAction\",\"name\":\"recommendedAction\",\"displayName\":\"recommendedAction\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"resourcesUsed\",\"name\":\"resourcesUsed\",\"displayName\":\"resourcesUsed\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"rootCause\",\"name\":\"rootCause\",\"displayName\":\"rootCause\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"specialistConfidence\",\"name\":\"specialistConfidence\",\"displayName\":\"specialistConfidence\",\"type\":\"number\",\"format\":\"double\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Double\",\"assemblyQualifiedName\":\"Double\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"triageConfidence\",\"name\":\"triageConfidence\",\"displayName\":\"triageConfidence\",\"type\":\"number\",\"format\":\"double\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Double\",\"assemblyQualifiedName\":\"Double\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"triageRationale\",\"name\":\"triageRationale\",\"displayName\":\"triageRationale\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":true,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"updateResult\",\"name\":\"updateResult\",\"displayName\":\"updateResult\",\"type\":\"string\",\"primaryKey\":false,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":true,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"body\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null}],\"outputFields\":[{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"out_CreatedBy_sub_Id\",\"name\":\"CreatedBy.Id\",\"displayName\":\"CreatedBy.Id\",\"description\":\"Choose from the dropdown or provide the related entity's record ID directly.\",\"type\":\"string\",\"primaryKey\":true,\"lookup\":{\"lookupNames\":[\"Name\",\"Id\"],\"objectName\":\"SystemUser\",\"path\":\"/SystemUser\",\"lookupValue\":\"Id\"},\"design\":{\"description\":\"Choose from the dropdown or provide the related entity's record ID directly.\"},\"fieldActions\":[],\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":false,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"output\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":true,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"out_Id\",\"name\":\"Id\",\"displayName\":\"Id\",\"type\":\"string\",\"primaryKey\":true,\"fieldActions\":null,\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":false,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"output\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":true,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"out_UpdatedBy_sub_Id\",\"name\":\"UpdatedBy.Id\",\"displayName\":\"UpdatedBy.Id\",\"description\":\"Choose from the dropdown or provide the related entity's record ID directly.\",\"type\":\"string\",\"primaryKey\":true,\"lookup\":{\"lookupNames\":[\"Name\",\"Id\"],\"objectName\":\"SystemUser\",\"path\":\"/SystemUser\",\"lookupValue\":\"Id\"},\"design\":{\"description\":\"Choose from the dropdown or provide the related entity's record ID directly.\"},\"fieldActions\":[],\"searchable\":false,\"searchableJoins\":null,\"required\":false,\"request\":false,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"output\",\"onCanvas\":null,\"isJitField\":false,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":true,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"String\",\"assemblyQualifiedName\":\"String\",\"isValueType\":true},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},{\"typeScriptDefinition\":null,\"useUrlInput\":false,\"id\":\"UpdateEntityRecordV2\",\"name\":\"UpdateEntityRecordV2\",\"displayName\":\"Record\",\"description\":\"Updated record\",\"type\":\"GeneratedUpdateEntityRecordV2\",\"sortOrder\":null,\"format\":null,\"mask\":null,\"defaultValue\":null,\"primaryKey\":false,\"lookup\":null,\"enum\":null,\"design\":null,\"fieldActions\":null,\"searchable\":false,\"searchableOperators\":null,\"searchableNames\":null,\"searchableJoins\":null,\"required\":false,\"request\":false,\"response\":true,\"responseCurated\":false,\"fieldLocation\":\"output\",\"onCanvas\":null,\"isJitField\":true,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Object\",\"assemblyQualifiedName\":\"Object\",\"isValueType\":false},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null}],\"jitTypeNeedsRefresh\":false,\"jitInputField\":{\"typeScriptDefinition\":\"{\\\"actionCode\\\":string;\\\"adjustmentAmount\\\":number;\\\"approvalComments\\\":string;\\\"approvalDecision\\\":string;\\\"approvalSummary\\\":string;\\\"approvedBy\\\":string;\\\"auditSummary\\\":string;\\\"caseId\\\":string;\\\"customerAccountId\\\":string;\\\"customerName\\\":string;\\\"customerReason\\\":string;\\\"disputeType\\\":string;\\\"emailBody\\\":string;\\\"emailSent\\\":boolean;\\\"emailSubject\\\":string;\\\"evidence\\\":string;\\\"evidenceSummary\\\":string;\\\"invoiceNumber\\\":string;\\\"lifecycleState\\\":string;\\\"openedDate\\\":string;\\\"outstandingBalance\\\":number;\\\"recipientEmail\\\":string;\\\"recommendedAction\\\":string;\\\"resourcesUsed\\\":string;\\\"rootCause\\\":string;\\\"specialistConfidence\\\":number;\\\"triageConfidence\\\":number;\\\"triageRationale\\\":string;\\\"updateResult\\\":string}\",\"useUrlInput\":false,\"id\":\"in_UpdateEntityRecordV2\",\"name\":\"UpdateEntityRecordV2\",\"displayName\":\"Record\",\"description\":\"Record input object\",\"type\":\"GeneratedUpdateEntityRecordV2\",\"sortOrder\":null,\"format\":null,\"mask\":null,\"defaultValue\":\"{\\n  \\\"actionCode\\\": null,\\n  \\\"adjustmentAmount\\\": null,\\n  \\\"approvalComments\\\": null,\\n  \\\"approvalDecision\\\": null,\\n  \\\"approvalSummary\\\": null,\\n  \\\"approvedBy\\\": null,\\n  \\\"auditSummary\\\": null,\\n  \\\"caseId\\\": null,\\n  \\\"customerAccountId\\\": null,\\n  \\\"customerName\\\": null,\\n  \\\"customerReason\\\": null,\\n  \\\"disputeType\\\": null,\\n  \\\"emailBody\\\": null,\\n  \\\"emailSent\\\": null,\\n  \\\"emailSubject\\\": null,\\n  \\\"evidence\\\": null,\\n  \\\"evidenceSummary\\\": null,\\n  \\\"invoiceNumber\\\": null,\\n  \\\"lifecycleState\\\": null,\\n  \\\"openedDate\\\": null,\\n  \\\"outstandingBalance\\\": null,\\n  \\\"recipientEmail\\\": null,\\n  \\\"recommendedAction\\\": null,\\n  \\\"resourcesUsed\\\": null,\\n  \\\"rootCause\\\": null,\\n  \\\"specialistConfidence\\\": null,\\n  \\\"triageConfidence\\\": null,\\n  \\\"triageRationale\\\": null,\\n  \\\"updateResult\\\": null\\n}\",\"primaryKey\":false,\"lookup\":null,\"enum\":null,\"design\":null,\"fieldActions\":null,\"searchable\":false,\"searchableOperators\":null,\"searchableNames\":null,\"searchableJoins\":null,\"required\":true,\"request\":false,\"response\":false,\"responseCurated\":false,\"fieldLocation\":\"jitObjectInput\",\"onCanvas\":null,\"isJitField\":true,\"isFieldActionParent\":false,\"isMainResponseField\":false,\"isMethodParameter\":false,\"isBackgroundField\":false,\"filterTree\":null,\"filterNeedsRefresh\":null,\"arrayInputPaths\":null,\"clrType\":{\"_elementType\":null,\"_isNullable\":false,\"isArray\":false,\"genericTypeArguments\":[],\"fullName\":null,\"name\":\"Object\",\"assemblyQualifiedName\":\"Object\",\"isValueType\":false},\"forceExpressionEditor\":false,\"requiredGroups\":null,\"disableExpressions\":false,\"backingField\":null,\"searchableDisplayName\":null,\"selectedResourceId\":null},\"inputMode\":null,\"searchableFields\":[],\"hasUnifiedTypes\":false,\"jitTypeHash\":null}}}",
           "uiPathActivityTypeId": "718fdc36-73a8-3607-8604-ddef95bb9967",
           "errorState": {
             "issues": []
           },
-          "configuration": "=jsonString:{\"essentialConfiguration\":{\"instanceParameters\":{\"connectorKey\":\"uipath-uipath-dataservice\",\"objectName\":\"UpdateEntityRecordV2\",\"httpMethod\":\"PUT\",\"activityType\":\"Curated\",\"version\":\"1.0.0\",\"supportsStreaming\":false,\"subType\":\"standard\"},\"objectName\":\"UpdateEntityRecordV2\",\"operation\":\"replace\",\"httpMethod\":\"PUT\",\"path\":\"/v2/{entityName}/UpdateEntityRecord\",\"packageVersion\":\"1.0.0\",\"connectorVersion\":null,\"executionType\":null,\"customFieldsRequestDetails\":{\"objectActionName\":\"GenerateSchema\",\"parameterValues\":[[\"entityName\",\"JDARCollectionsEntity\"]]},\"unifiedTypesCompatible\":true}}"
+          "telemetryData": {
+            "connectorKey": "uipath-uipath-dataservice",
+            "connectorName": "UiPath Data Fabric",
+            "operationType": "replace",
+            "objectName": "UpdateEntityRecordV2",
+            "objectDisplayName": "Update Entity Record",
+            "primaryKeyName": ""
+          }
+        }
+      },
+      "outputs": {
+        "output": {
+          "type": "object",
+          "description": "The return value of the connector.",
+          "source": "=result.response",
+          "var": "output"
+        },
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          },
+          "source": "=Error",
+          "var": "error"
         }
       }
     },
@@ -1160,7 +1393,8 @@
       "type": "uipath.connector.uipath-uipath-dataservice.update-entity-record",
       "typeVersion": "1.0.0",
       "display": {
-        "label": "Persist Approved"
+        "label": "Persist Approved",
+        "icon": "https://cloud.uipath.com/a17c9af1-091d-4dd2-9cec-ed787c6601c8/studio_/typecache/icons/98381fa079bbcf73264f551006d6ef7580fb53992f3d9f94361eb5d9e06040cb.svg"
       },
       "inputs": {
         "detail": {
@@ -1190,6 +1424,54 @@
           },
           "configuration": "=jsonString:{\"essentialConfiguration\":{\"instanceParameters\":{\"connectorKey\":\"uipath-uipath-dataservice\",\"objectName\":\"UpdateEntityRecordV2\",\"httpMethod\":\"PUT\",\"activityType\":\"Curated\",\"version\":\"1.0.0\",\"supportsStreaming\":false,\"subType\":\"standard\"},\"objectName\":\"UpdateEntityRecordV2\",\"operation\":\"replace\",\"httpMethod\":\"PUT\",\"path\":\"/v2/{entityName}/UpdateEntityRecord\",\"packageVersion\":\"1.0.0\",\"connectorVersion\":null,\"executionType\":null,\"customFieldsRequestDetails\":{\"objectActionName\":\"GenerateSchema\",\"parameterValues\":[[\"entityName\",\"JDARCollectionsEntity\"]]},\"unifiedTypesCompatible\":true}}"
         }
+      },
+      "outputs": {
+        "output": {
+          "type": "object",
+          "description": "The return value of the connector.",
+          "source": "=result.response",
+          "var": "output"
+        },
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          },
+          "source": "=Error",
+          "var": "error"
+        }
       }
     },
     {
@@ -1197,7 +1479,8 @@
       "type": "uipath.connector.uipath-uipath-dataservice.update-entity-record",
       "typeVersion": "1.0.0",
       "display": {
-        "label": "Persist Rejected"
+        "label": "Persist Rejected",
+        "icon": "https://cloud.uipath.com/a17c9af1-091d-4dd2-9cec-ed787c6601c8/studio_/typecache/icons/98381fa079bbcf73264f551006d6ef7580fb53992f3d9f94361eb5d9e06040cb.svg"
       },
       "inputs": {
         "detail": {
@@ -1228,6 +1511,54 @@
           },
           "configuration": "=jsonString:{\"essentialConfiguration\":{\"instanceParameters\":{\"connectorKey\":\"uipath-uipath-dataservice\",\"objectName\":\"UpdateEntityRecordV2\",\"httpMethod\":\"PUT\",\"activityType\":\"Curated\",\"version\":\"1.0.0\",\"supportsStreaming\":false,\"subType\":\"standard\"},\"objectName\":\"UpdateEntityRecordV2\",\"operation\":\"replace\",\"httpMethod\":\"PUT\",\"path\":\"/v2/{entityName}/UpdateEntityRecord\",\"packageVersion\":\"1.0.0\",\"connectorVersion\":null,\"executionType\":null,\"customFieldsRequestDetails\":{\"objectActionName\":\"GenerateSchema\",\"parameterValues\":[[\"entityName\",\"JDARCollectionsEntity\"]]},\"unifiedTypesCompatible\":true}}"
         }
+      },
+      "outputs": {
+        "output": {
+          "type": "object",
+          "description": "The return value of the connector.",
+          "source": "=result.response",
+          "var": "output"
+        },
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          },
+          "source": "=Error",
+          "var": "error"
+        }
       }
     },
     {
@@ -1235,7 +1566,8 @@
       "type": "uipath.connector.uipath-uipath-dataservice.update-entity-record",
       "typeVersion": "1.0.0",
       "display": {
-        "label": "Persist Updating"
+        "label": "Persist Updating",
+        "icon": "https://cloud.uipath.com/a17c9af1-091d-4dd2-9cec-ed787c6601c8/studio_/typecache/icons/98381fa079bbcf73264f551006d6ef7580fb53992f3d9f94361eb5d9e06040cb.svg"
       },
       "inputs": {
         "detail": {
@@ -1262,6 +1594,54 @@
           },
           "configuration": "=jsonString:{\"essentialConfiguration\":{\"instanceParameters\":{\"connectorKey\":\"uipath-uipath-dataservice\",\"objectName\":\"UpdateEntityRecordV2\",\"httpMethod\":\"PUT\",\"activityType\":\"Curated\",\"version\":\"1.0.0\",\"supportsStreaming\":false,\"subType\":\"standard\"},\"objectName\":\"UpdateEntityRecordV2\",\"operation\":\"replace\",\"httpMethod\":\"PUT\",\"path\":\"/v2/{entityName}/UpdateEntityRecord\",\"packageVersion\":\"1.0.0\",\"connectorVersion\":null,\"executionType\":null,\"customFieldsRequestDetails\":{\"objectActionName\":\"GenerateSchema\",\"parameterValues\":[[\"entityName\",\"JDARCollectionsEntity\"]]},\"unifiedTypesCompatible\":true}}"
         }
+      },
+      "outputs": {
+        "output": {
+          "type": "object",
+          "description": "The return value of the connector.",
+          "source": "=result.response",
+          "var": "output"
+        },
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          },
+          "source": "=Error",
+          "var": "error"
+        }
       }
     },
     {
@@ -1269,7 +1649,8 @@
       "type": "uipath.connector.uipath-uipath-dataservice.update-entity-record",
       "typeVersion": "1.0.0",
       "display": {
-        "label": "Persist Resolved"
+        "label": "Persist Resolved",
+        "icon": "https://cloud.uipath.com/a17c9af1-091d-4dd2-9cec-ed787c6601c8/studio_/typecache/icons/98381fa079bbcf73264f551006d6ef7580fb53992f3d9f94361eb5d9e06040cb.svg"
       },
       "inputs": {
         "detail": {
@@ -1298,6 +1679,54 @@
           },
           "configuration": "=jsonString:{\"essentialConfiguration\":{\"instanceParameters\":{\"connectorKey\":\"uipath-uipath-dataservice\",\"objectName\":\"UpdateEntityRecordV2\",\"httpMethod\":\"PUT\",\"activityType\":\"Curated\",\"version\":\"1.0.0\",\"supportsStreaming\":false,\"subType\":\"standard\"},\"objectName\":\"UpdateEntityRecordV2\",\"operation\":\"replace\",\"httpMethod\":\"PUT\",\"path\":\"/v2/{entityName}/UpdateEntityRecord\",\"packageVersion\":\"1.0.0\",\"connectorVersion\":null,\"executionType\":null,\"customFieldsRequestDetails\":{\"objectActionName\":\"GenerateSchema\",\"parameterValues\":[[\"entityName\",\"JDARCollectionsEntity\"]]},\"unifiedTypesCompatible\":true}}"
         }
+      },
+      "outputs": {
+        "output": {
+          "type": "object",
+          "description": "The return value of the connector.",
+          "source": "=result.response",
+          "var": "output"
+        },
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          },
+          "source": "=Error",
+          "var": "error"
+        }
       }
     },
     {
@@ -1305,7 +1734,8 @@
       "type": "core.logic.decision",
       "typeVersion": "1.2",
       "display": {
-        "label": "Updated record matches this dispute?"
+        "label": "Updated record matches this dispute?",
+        "icon": "trending-up-down"
       },
       "inputs": {
         "trueLabel": "Matching record",
@@ -1318,7 +1748,8 @@
       "type": "core.logic.decision",
       "typeVersion": "1.2",
       "display": {
-        "label": "Approval decision supplied?"
+        "label": "Approval decision supplied?",
+        "icon": "trending-up-down"
       },
       "inputs": {
         "trueLabel": "Decision supplied",
@@ -1540,154 +1971,6 @@
     }
   ],
   "definitions": [
-    {
-      "nodeType": "core.action.script",
-      "version": "1.1",
-      "category": "data-operations",
-      "description": "Run custom JavaScript code",
-      "tags": [
-        "code",
-        "javascript",
-        "python"
-      ],
-      "sortOrder": 70,
-      "supportsErrorHandling": true,
-      "display": {
-        "label": "Script",
-        "icon": "code"
-      },
-      "handleConfiguration": [
-        {
-          "position": "left",
-          "handles": [
-            {
-              "id": "input",
-              "type": "target",
-              "handleType": "input"
-            }
-          ]
-        },
-        {
-          "position": "right",
-          "handles": [
-            {
-              "id": "success",
-              "type": "source",
-              "handleType": "output"
-            },
-            {
-              "id": "error",
-              "label": "Error",
-              "type": "source",
-              "handleType": "output",
-              "visible": "{inputs.errorHandlingEnabled}",
-              "constraints": {
-                "maxConnections": 1
-              }
-            }
-          ]
-        }
-      ],
-      "debug": {
-        "runtime": "clientScript"
-      },
-      "model": {
-        "type": "bpmn:ScriptTask"
-      },
-      "inputDefinition": {
-        "type": "object",
-        "properties": {
-          "script": {
-            "type": "string",
-            "minLength": 1,
-            "errorMessage": "Add a script function",
-            "validationSeverity": "warning"
-          }
-        },
-        "required": [
-          "script"
-        ]
-      },
-      "inputDefaults": {
-        "script": ""
-      },
-      "outputDefinition": {
-        "output": {
-          "type": "any",
-          "description": "The return value of the script",
-          "source": "=result.response",
-          "var": "output"
-        },
-        "error": {
-          "type": "object",
-          "description": "Error information if the node fails",
-          "source": "=Error",
-          "var": "error",
-          "schema": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "type": "object",
-            "required": [
-              "code",
-              "message",
-              "detail",
-              "category",
-              "status"
-            ],
-            "properties": {
-              "code": {
-                "type": "string",
-                "description": "Error code as a string"
-              },
-              "message": {
-                "type": "string",
-                "description": "High-level error message"
-              },
-              "detail": {
-                "type": "string",
-                "description": "Detailed error description"
-              },
-              "category": {
-                "type": "string",
-                "description": "Error category"
-              },
-              "status": {
-                "type": "integer",
-                "description": "HTTP status code"
-              }
-            },
-            "additionalProperties": false
-          }
-        }
-      },
-      "form": {
-        "id": "script-properties",
-        "title": "Script configuration",
-        "sections": [
-          {
-            "id": "script",
-            "title": "Script",
-            "collapsible": true,
-            "defaultExpanded": true,
-            "fields": [
-              {
-                "name": "inputs.script",
-                "type": "custom",
-                "component": "script-editor",
-                "componentProps": {
-                  "language": "javascript",
-                  "returnType": "any",
-                  "validationMode": "script",
-                  "minHeight": 200,
-                  "placeholder": " // Return any value\nreturn {\n  message: \"Web request response\",\n  data: $vars.httpRequest1.output\n};"
-                },
-                "label": "Code",
-                "description": "JavaScript expression that returns a result"
-              }
-            ]
-          }
-        ]
-      }
-    },
     {
       "nodeType": "uipath.agent.autonomous",
       "version": "1.3",
@@ -3272,6 +3555,154 @@
       "outputDefinition": {}
     },
     {
+      "nodeType": "core.action.script",
+      "version": "1.1",
+      "category": "data-operations",
+      "description": "Run custom JavaScript code",
+      "tags": [
+        "code",
+        "javascript",
+        "python"
+      ],
+      "sortOrder": 70,
+      "supportsErrorHandling": true,
+      "display": {
+        "label": "Script",
+        "icon": "code"
+      },
+      "handleConfiguration": [
+        {
+          "position": "left",
+          "handles": [
+            {
+              "id": "input",
+              "type": "target",
+              "handleType": "input"
+            }
+          ]
+        },
+        {
+          "position": "right",
+          "handles": [
+            {
+              "id": "success",
+              "type": "source",
+              "handleType": "output"
+            },
+            {
+              "id": "error",
+              "label": "Error",
+              "type": "source",
+              "handleType": "output",
+              "visible": "{inputs.errorHandlingEnabled}",
+              "constraints": {
+                "maxConnections": 1
+              }
+            }
+          ]
+        }
+      ],
+      "debug": {
+        "runtime": "clientScript"
+      },
+      "model": {
+        "type": "bpmn:ScriptTask"
+      },
+      "inputDefinition": {
+        "type": "object",
+        "properties": {
+          "script": {
+            "type": "string",
+            "minLength": 1,
+            "errorMessage": "Add a script function",
+            "validationSeverity": "warning"
+          }
+        },
+        "required": [
+          "script"
+        ]
+      },
+      "inputDefaults": {
+        "script": ""
+      },
+      "outputDefinition": {
+        "output": {
+          "type": "any",
+          "description": "The return value of the script",
+          "source": "=result.response",
+          "var": "output"
+        },
+        "error": {
+          "type": "object",
+          "description": "Error information if the node fails",
+          "source": "=Error",
+          "var": "error",
+          "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "required": [
+              "code",
+              "message",
+              "detail",
+              "category",
+              "status"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code as a string"
+              },
+              "message": {
+                "type": "string",
+                "description": "High-level error message"
+              },
+              "detail": {
+                "type": "string",
+                "description": "Detailed error description"
+              },
+              "category": {
+                "type": "string",
+                "description": "Error category"
+              },
+              "status": {
+                "type": "integer",
+                "description": "HTTP status code"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "form": {
+        "id": "script-properties",
+        "title": "Script configuration",
+        "sections": [
+          {
+            "id": "script",
+            "title": "Script",
+            "collapsible": true,
+            "defaultExpanded": true,
+            "fields": [
+              {
+                "name": "inputs.script",
+                "type": "custom",
+                "component": "script-editor",
+                "componentProps": {
+                  "language": "javascript",
+                  "returnType": "any",
+                  "validationMode": "script",
+                  "minHeight": 200,
+                  "placeholder": " // Return any value\nreturn {\n  message: \"Web request response\",\n  data: $vars.httpRequest1.output\n};"
+                },
+                "label": "Code",
+                "description": "JavaScript expression that returns a result"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
       "nodeType": "core.control.end",
       "version": "1.0",
       "category": "control-flow",
@@ -3699,7 +4130,7 @@
                     "packageId": "113595",
                     "svgIconUrl": "icons/160499b52f7cea190b530fe6f40da7ee03455a8d3fb72dd7f4f68d61e7865a3a.svg",
                     "displayName": "Send Email",
-                    "assemblyQualifiedName": "UiPath.IntegrationService.Activities.Runtime.Activities.ConnectorActivity, UiPath.IntegrationService.Activities.Runtime, Version=1.29.0.0, Culture=neutral, PublicKeyToken=null",
+                    "assemblyQualifiedName": "UiPath.IntegrationService.Activities.Runtime.Activities.ConnectorActivity, UiPath.IntegrationService.Activities.Runtime, Version=1.30.0.0, Culture=neutral, PublicKeyToken=null",
                     "description": "Send an email message based on the input parameters",
                     "category": "",
                     "activityColor": "#E56D5C",
@@ -4175,7 +4606,7 @@
         "connector",
         "activity"
       ],
-      "sortOrder": 515,
+      "sortOrder": 520,
       "supportsErrorHandling": true,
       "description": "Updates an existing record in a Data Fabric entity",
       "display": {
@@ -4307,7 +4738,7 @@
                     "packageId": "68444",
                     "svgIconUrl": "icons/98381fa079bbcf73264f551006d6ef7580fb53992f3d9f94361eb5d9e06040cb.svg",
                     "displayName": "Update Entity Record",
-                    "assemblyQualifiedName": "UiPath.IntegrationService.Activities.Runtime.Activities.ConnectorActivity, UiPath.IntegrationService.Activities.Runtime, Version=1.29.0.0, Culture=neutral, PublicKeyToken=null",
+                    "assemblyQualifiedName": "UiPath.IntegrationService.Activities.Runtime.Activities.ConnectorActivity, UiPath.IntegrationService.Activities.Runtime, Version=1.30.0.0, Culture=neutral, PublicKeyToken=null",
                     "description": "Updates an existing record in a Data Fabric entity",
                     "category": "",
                     "activityColor": "#E56D5C",
@@ -4453,7 +4884,6 @@
       {
         "id": "triageAgent.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4488,6 +4918,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "triageAgent",
           "outputId": "error"
@@ -4532,7 +4963,6 @@
       {
         "id": "poMismatchAgent.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4567,6 +4997,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "poMismatchAgent",
           "outputId": "error"
@@ -4575,7 +5006,6 @@
       {
         "id": "missingPodAgent.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4610,6 +5040,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "missingPodAgent",
           "outputId": "error"
@@ -4618,7 +5049,6 @@
       {
         "id": "paymentMisapplicationAgent.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4653,6 +5083,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "paymentMisapplicationAgent",
           "outputId": "error"
@@ -4670,7 +5101,6 @@
       {
         "id": "normalizeProposal.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4705,6 +5135,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "normalizeProposal",
           "outputId": "error"
@@ -4809,7 +5240,6 @@
       {
         "id": "mockUpdateDispute1.output",
         "type": "object",
-        "description": "The return value of the API workflow",
         "schema": {
           "type": "object",
           "properties": {
@@ -4827,6 +5257,7 @@
             }
           }
         },
+        "description": "The return value of the API workflow",
         "binding": {
           "nodeId": "mockUpdateDispute1",
           "outputId": "output"
@@ -4835,7 +5266,6 @@
       {
         "id": "mockUpdateDispute1.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -4870,6 +5300,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "mockUpdateDispute1",
           "outputId": "error"
@@ -5079,7 +5510,6 @@
       {
         "id": "sendEmail1.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -5114,6 +5544,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "sendEmail1",
           "outputId": "error"
@@ -5138,15 +5569,6 @@
         }
       },
       {
-        "id": "recordCreated.output",
-        "type": "object",
-        "description": "The return value of the connector trigger.",
-        "binding": {
-          "nodeId": "recordCreated",
-          "outputId": "output"
-        }
-      },
-      {
         "id": "waitForApprovalUpdate.output",
         "type": "object",
         "description": "The return value of the connector event.",
@@ -5158,7 +5580,6 @@
       {
         "id": "waitForApprovalUpdate.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -5193,24 +5614,15 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "waitForApprovalUpdate",
           "outputId": "error"
         }
       },
       {
-        "id": "persistTriaging1.output",
-        "type": "object",
-        "description": "The return value of the connector.",
-        "binding": {
-          "nodeId": "persistTriaging1",
-          "outputId": "output"
-        }
-      },
-      {
         "id": "persistTriaging1.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -5245,6 +5657,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "persistTriaging1",
           "outputId": "error"
@@ -5262,7 +5675,6 @@
       {
         "id": "persistNeedsManualTriage1.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -5297,24 +5709,15 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "persistNeedsManualTriage1",
           "outputId": "error"
         }
       },
       {
-        "id": "persistAwaitingApproval1.output",
-        "type": "object",
-        "description": "The return value of the connector.",
-        "binding": {
-          "nodeId": "persistAwaitingApproval1",
-          "outputId": "output"
-        }
-      },
-      {
         "id": "persistAwaitingApproval1.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -5349,6 +5752,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "persistAwaitingApproval1",
           "outputId": "error"
@@ -5366,7 +5770,6 @@
       {
         "id": "persistApproved1.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -5401,6 +5804,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "persistApproved1",
           "outputId": "error"
@@ -5418,7 +5822,6 @@
       {
         "id": "persistRejected1.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -5453,6 +5856,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "persistRejected1",
           "outputId": "error"
@@ -5470,7 +5874,6 @@
       {
         "id": "persistUpdating1.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -5505,6 +5908,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "persistUpdating1",
           "outputId": "error"
@@ -5522,7 +5926,6 @@
       {
         "id": "persistResolved1.error",
         "type": "object",
-        "description": "Error information if the node fails",
         "schema": {
           "$schema": "http://json-schema.org/draft-07/schema#",
           "type": "object",
@@ -5557,6 +5960,7 @@
           },
           "additionalProperties": false
         },
+        "description": "Error information if the node fails",
         "binding": {
           "nodeId": "persistResolved1",
           "outputId": "error"
@@ -5596,6 +6000,69 @@
         "binding": {
           "nodeId": "approvalDecisionSupplied1",
           "outputId": "matchedCaseId"
+        }
+      },
+      {
+        "id": "triageAgent.output",
+        "type": "object",
+        "description": "Agent response",
+        "binding": {
+          "nodeId": "triageAgent",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "poMismatchAgent.output",
+        "type": "object",
+        "description": "Agent response",
+        "binding": {
+          "nodeId": "poMismatchAgent",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "missingPodAgent.output",
+        "type": "object",
+        "description": "Agent response",
+        "binding": {
+          "nodeId": "missingPodAgent",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "paymentMisapplicationAgent.output",
+        "type": "object",
+        "description": "Agent response",
+        "binding": {
+          "nodeId": "paymentMisapplicationAgent",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "recordCreated.output",
+        "type": "object",
+        "description": "The return value of the connector trigger.",
+        "binding": {
+          "nodeId": "recordCreated",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "persistTriaging1.output",
+        "type": "object",
+        "description": "The return value of the connector.",
+        "binding": {
+          "nodeId": "persistTriaging1",
+          "outputId": "output"
+        }
+      },
+      {
+        "id": "persistAwaitingApproval1.output",
+        "type": "object",
+        "description": "The return value of the connector.",
+        "binding": {
+          "nodeId": "persistAwaitingApproval1",
+          "outputId": "output"
         }
       }
     ]
@@ -5655,8 +6122,7 @@
       "name": "FolderKey",
       "type": "string",
       "resource": "connection",
-      "resourceKey": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
-      "default": "67fc19c3-e3a7-4523-aac0-fa63ea83d261",
+      "resourceKey": "",
       "propertyAttribute": "FolderKey"
     },
     {
@@ -5665,8 +6131,8 @@
       "type": "string",
       "resource": "connection",
       "resourceKey": "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
-      "propertyAttribute": "ConnectionId",
-      "default": "6cd4c047-ab49-4aad-8cfa-5681db3db20b"
+      "default": "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+      "propertyAttribute": "ConnectionId"
     },
     {
       "id": "bz4c8Jueg",
@@ -5707,11 +6173,11 @@
       "routeByDisputeType": {
         "position": {
           "x": 960,
-          "y": -272
+          "y": -304
         },
         "size": {
           "width": 96,
-          "height": 96
+          "height": 160
         },
         "collapsed": false
       },
@@ -5805,8 +6271,8 @@
       },
       "mockUpdateDispute1": {
         "position": {
-          "x": 3072,
-          "y": -608
+          "x": 3104,
+          "y": -704
         },
         "size": {
           "width": 96,
@@ -5828,7 +6294,7 @@
       "resolved": {
         "position": {
           "x": 3648,
-          "y": -608
+          "y": -704
         },
         "size": {
           "width": 96,
@@ -5838,8 +6304,8 @@
       },
       "sendEmail1": {
         "position": {
-          "x": 3264,
-          "y": -608
+          "x": 3280,
+          "y": -704
         },
         "size": {
           "width": 96,
@@ -5849,8 +6315,8 @@
       },
       "isResolutionApproved": {
         "position": {
-          "x": 2496,
-          "y": -512
+          "x": 2480,
+          "y": -688
         },
         "size": {
           "width": 96,
@@ -5861,22 +6327,24 @@
       "recordCreated": {
         "position": {
           "x": 0,
-          "y": 0
+          "y": -96
         },
         "size": {
           "width": 96,
           "height": 96
-        }
+        },
+        "collapsed": false
       },
       "waitForApprovalUpdate": {
         "position": {
           "x": 1920,
-          "y": -512
+          "y": -240
         },
         "size": {
           "width": 96,
           "height": 96
-        }
+        },
+        "collapsed": false
       },
       "persistTriaging1": {
         "position": {
@@ -5886,7 +6354,8 @@
         "size": {
           "width": 96,
           "height": 96
-        }
+        },
+        "collapsed": false
       },
       "persistNeedsManualTriage1": {
         "position": {
@@ -5896,7 +6365,8 @@
         "size": {
           "width": 96,
           "height": 96
-        }
+        },
+        "collapsed": false
       },
       "persistAwaitingApproval1": {
         "position": {
@@ -5906,17 +6376,19 @@
         "size": {
           "width": 96,
           "height": 96
-        }
+        },
+        "collapsed": false
       },
       "persistApproved1": {
         "position": {
-          "x": 2688,
-          "y": -608
+          "x": 2736,
+          "y": -704
         },
         "size": {
           "width": 96,
           "height": 96
-        }
+        },
+        "collapsed": false
       },
       "persistRejected1": {
         "position": {
@@ -5926,47 +6398,52 @@
         "size": {
           "width": 96,
           "height": 96
-        }
+        },
+        "collapsed": false
       },
       "persistUpdating1": {
         "position": {
-          "x": 2880,
-          "y": -608
+          "x": 2928,
+          "y": -704
         },
         "size": {
           "width": 96,
           "height": 96
-        }
+        },
+        "collapsed": false
       },
       "persistResolved1": {
         "position": {
           "x": 3456,
-          "y": -608
+          "y": -704
         },
         "size": {
           "width": 96,
           "height": 96
-        }
+        },
+        "collapsed": false
       },
       "updatedRecordMatchesThisDispute1": {
         "position": {
-          "x": 2112,
-          "y": -512
+          "x": 2080,
+          "y": -560
         },
         "size": {
           "width": 96,
           "height": 96
-        }
+        },
+        "collapsed": false
       },
       "approvalDecisionSupplied1": {
         "position": {
           "x": 2304,
-          "y": -512
+          "y": -576
         },
         "size": {
           "width": 96,
           "height": 96
-        }
+        },
+        "collapsed": false
       }
     }
   }

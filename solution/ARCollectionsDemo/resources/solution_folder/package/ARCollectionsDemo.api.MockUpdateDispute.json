@@ -2,7 +2,7 @@
   "docVersion": "1.0.0",
   "resource": {
     "name": "ARCollectionsDemo.api.MockUpdateDispute",
-    "kind": "Package",
+    "kind": "package",
     "apiVersion": "orchestrator.uipath.com/v1",
     "isOverridable": true,
     "dependencies": [],
