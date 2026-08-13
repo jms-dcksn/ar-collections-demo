@@ -2,7 +2,9 @@ declare module '@uipath/uipath-typescript/entities' {
   export class Entities {
     constructor(sdk: unknown)
     getAll(options?: Record<string, unknown>): Promise<Array<{ id: string; fields?: Array<{ name: string }> }>>
+    getById(entityId: string): Promise<{ id: string; fields?: Array<{ name: string }> }>
     queryRecordsById(entityId: string, options?: Record<string, unknown>): Promise<Array<Record<string, unknown>>>
+    insertRecordById(entityId: string, data: Record<string, any>): Promise<Record<string, unknown>>
     updateRecordById(entityId: string, recordId: string, data: Record<string, unknown>): Promise<Record<string, unknown>>
   }
 }

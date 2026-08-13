@@ -2,6 +2,7 @@ import { Entities } from '@uipath/uipath-typescript/entities'
 import { MaestroProcesses, ProcessInstances } from '@uipath/uipath-typescript/maestro-processes'
 
 import { ENTITY_ID, PROCESS_NAME, SOLUTION_FOLDER_KEY } from '../config'
+import type { CreateDisputePayload } from '../lib/disputeScenarios'
 import { validateEntitySchema } from './dataFabric'
 import type { DisputeRecord, DisputeRow, FlowInstance } from '../types'
 
@@ -86,5 +87,10 @@ export function liveDataFabricClient(sdk: unknown) {
   const entities = new Entities(sdk)
   return {
     updateRecordById: async (entityId: string, recordId: string, data: Record<string, unknown>) => mapRecord(await entities.updateRecordById(entityId, recordId, data)),
+    insertRecordById: async (entityId: string, data: CreateDisputePayload) => {
+      const entity = await entities.getById(entityId)
+      validateEntitySchema((entity.fields ?? []).map((field) => field.name))
+      return mapRecord(await entities.insertRecordById(entityId, data))
+    },
   }
 }

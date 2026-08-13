@@ -1,8 +1,11 @@
 import { ENTITY_ID, REQUIRED_ENTITY_FIELDS } from '../config'
+import { buildDisputePayload } from '../lib/disputeScenarios'
+import type { CreateDisputeInput, CreateDisputePayload } from '../lib/disputeScenarios'
 import type { ApprovalDecision, DisputeRecord } from '../types'
 
 export interface DataFabricClient {
   updateRecordById(entityId: string, recordId: string, data: Record<string, unknown>): Promise<DisputeRecord>
+  insertRecordById(entityId: string, data: CreateDisputePayload): Promise<DisputeRecord>
 }
 
 export function validateEntitySchema(fieldNames: readonly string[]) {
@@ -26,5 +29,9 @@ export class DataFabricService {
       approvalComments: comments.trim(),
       lifecycleState: decision,
     })
+  }
+
+  createDispute(input: CreateDisputeInput, now?: Date, randomUUID?: () => string) {
+    return this.client.insertRecordById(ENTITY_ID, buildDisputePayload(input, now, randomUUID))
   }
 }

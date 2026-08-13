@@ -5,7 +5,8 @@ import type { ReactNode } from 'react'
 import { DataFabricService } from './services/dataFabric'
 import { liveDataFabricClient, loadLiveDisputes } from './services/liveWorkspace'
 import { mockDisputeRows } from './lib/mockData'
-import type { ApprovalDecision, DisputeRow } from './types'
+import type { CreateDisputeInput } from './lib/disputeScenarios'
+import type { ApprovalDecision, DisputeRecord, DisputeRow } from './types'
 
 interface WorkspaceContextValue {
   rows: DisputeRow[]
@@ -15,6 +16,7 @@ interface WorkspaceContextValue {
   login: () => Promise<void>
   logout: () => void
   refresh: () => Promise<void>
+  createDispute: (input: CreateDisputeInput) => Promise<DisputeRecord>
   submitDecision: (row: DisputeRow, decision: ApprovalDecision, comments: string) => Promise<void>
 }
 
@@ -51,13 +53,17 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(async () => { await sdk.initialize(); setAuthenticated(sdk.isAuthenticated()) }, [sdk])
   const logout = useCallback(() => { sdk.logout(); setAuthenticated(false); setRows(mockDisputeRows); setNotice('You are signed out. Showing fictional preview cases.') }, [sdk])
+  const createDispute = useCallback(async (input: CreateDisputeInput) => {
+    if (!sdk.isAuthenticated()) throw new Error('Sign in to create a dispute.')
+    return new DataFabricService(liveDataFabricClient(sdk)).createDispute(input)
+  }, [sdk])
   const submitDecision = useCallback(async (row: DisputeRow, decision: ApprovalDecision, comments: string) => {
     if (row.source === 'mock') return
     const updated = await new DataFabricService(liveDataFabricClient(sdk)).recordDecision(row.record, decision, comments)
     setRows((current) => current.map((candidate) => candidate.record.Id === row.record.Id ? { ...candidate, record: { ...candidate.record, ...updated } } : candidate))
   }, [sdk])
 
-  return <WorkspaceContext.Provider value={{ rows, authenticated, loading, notice, login, logout, refresh, submitDecision }}>{children}</WorkspaceContext.Provider>
+  return <WorkspaceContext.Provider value={{ rows, authenticated, loading, notice, login, logout, refresh, createDispute, submitDecision }}>{children}</WorkspaceContext.Provider>
 }
 
 export function useWorkspace() {

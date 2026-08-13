@@ -4,7 +4,7 @@ export const SOLUTION_FOLDER_KEY = 'bbe64c10-b957-4adf-a535-77109c673e5a'
 
 export const REQUIRED_ENTITY_FIELDS = [
   'caseId', 'customerName', 'customerAccountId', 'invoiceNumber', 'outstandingBalance',
-  'customerReason', 'openedDate', 'evidence', 'lifecycleState', 'disputeType',
+  'customerReason', 'openedDate', 'evidence', 'recipientEmail', 'lifecycleState', 'disputeType',
   'triageRationale', 'triageConfidence', 'evidenceSummary', 'rootCause',
   'recommendedAction', 'actionCode', 'adjustmentAmount', 'specialistConfidence',
   'approvalSummary', 'approvalDecision', 'approvalComments', 'updateResult',
