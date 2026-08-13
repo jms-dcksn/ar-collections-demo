@@ -15,7 +15,11 @@ declare module '@uipath/uipath-typescript/maestro-processes' {
 
   export class ProcessInstances {
     constructor(sdk: unknown)
-    getAll(options?: Record<string, unknown>): Promise<Array<Record<string, unknown>>>
+    getAll(options?: Record<string, unknown>): Promise<{
+      items: Array<Record<string, unknown>>
+      hasNextPage: boolean
+      nextCursor?: { value: string }
+    }>
     getVariables(instanceId: string, folderKey: string): Promise<{ globalVariables?: Record<string, unknown> }>
   }
 }

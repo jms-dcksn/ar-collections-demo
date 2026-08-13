@@ -1,7 +1,7 @@
 import { Entities } from '@uipath/uipath-typescript/entities'
 import { MaestroProcesses, ProcessInstances } from '@uipath/uipath-typescript/maestro-processes'
 
-import { ENTITY_ID, PROCESS_NAME } from '../config'
+import { ENTITY_ID, PROCESS_NAME, SOLUTION_FOLDER_KEY } from '../config'
 import { validateEntitySchema } from './dataFabric'
 import type { DisputeRecord, DisputeRow, FlowInstance } from '../types'
 
@@ -41,6 +41,23 @@ async function caseIdFor(instance: FlowInstance, instances: ProcessInstances) {
   return typeof caseId === 'object' && caseId !== null ? string((caseId as Raw).value) : string(caseId)
 }
 
+async function getAllActiveFlowInstances(instances: ProcessInstances, processKey: string) {
+  const active: FlowInstance[] = []
+  let cursor: { value: string } | undefined
+
+  while (true) {
+    const page = await instances.getAll({
+      processKey,
+      processType: 'Flow',
+      pageSize: 200,
+      ...(cursor ? { cursor } : {}),
+    })
+    active.push(...page.items.map(mapInstance).filter((instance) => instance.folderKey === SOLUTION_FOLDER_KEY && !instance.completedTime))
+    if (!page.hasNextPage || !page.nextCursor) return active
+    cursor = page.nextCursor
+  }
+}
+
 export async function loadLiveDisputes(sdk: unknown): Promise<DisputeRow[]> {
   const entities = new Entities(sdk)
   const entity = (await entities.getAll()).find((candidate) => candidate.id === ENTITY_ID)
@@ -48,11 +65,11 @@ export async function loadLiveDisputes(sdk: unknown): Promise<DisputeRow[]> {
   validateEntitySchema((entity.fields ?? []).map((field) => field.name))
 
   const processes = new MaestroProcesses(sdk)
-  const process = (await processes.getAll()).find((candidate) => [candidate.name, candidate.packageId, candidate.displayName].includes(PROCESS_NAME))
+  const process = (await processes.getAll()).find((candidate) => candidate.folderKey === SOLUTION_FOLDER_KEY && [candidate.name, candidate.packageId, candidate.displayName].includes(PROCESS_NAME))
   if (!process) return []
 
   const instances = new ProcessInstances(sdk)
-  const active = (await instances.getAll({ processKey: process.processKey })).map(mapInstance).filter((instance) => !instance.completedTime)
+  const active = await getAllActiveFlowInstances(instances, string(process.processKey))
   const matches = await Promise.all(active.map(async (instance) => ({ instance, caseId: await caseIdFor(instance, instances) })))
   const caseIds = new Set(matches.map((match) => match.caseId).filter(Boolean))
   if (!caseIds.size) return []
