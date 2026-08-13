@@ -10,6 +10,21 @@ Flow debug as part of this procedure.
 
 ## Create a dispute record
 
+Create one fresh record for a specialist demo scenario with the matching
+script. The recipient email is mandatory:
+
+```bash
+./scripts/create-payment-misapplication-record.sh james.dickson@uipath.com
+./scripts/create-missing-pod-record.sh james.dickson@uipath.com
+./scripts/create-po-mismatch-record.sh james.dickson@uipath.com
+```
+
+Each invocation creates one record in the tenant-level
+`JDARCollectionsEntity` and can start the deployed record-created Flow. The
+current Flow may replace the script-generated `caseId` with its Maestro
+instance ID after insertion. Use the Data Fabric-generated record `Id` for
+correlation.
+
 In the Process App, create one `JDARCollectionsEntity` record with all required
 case-packet fields and a safe demo recipient:
 
