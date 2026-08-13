@@ -21,6 +21,7 @@
 - Treat an instance as active only when `completedTime === null`; filter completed instances before Data Fabric correlation and metric calculation.
 - Correlate a Flow instance to a record only with exact `caseId`; never infer from customer, invoice, or display name.
 - Enable decisions only when `lifecycleState === 'Awaiting approval'`; write only `approvalDecision`, `approvalComments`, and `lifecycleState` via `updateRecordById`.
+- Include fictional mock cases for visual inspection when the entity is unavailable, empty, or an active instance lacks `caseId`; render a persistent demo banner and never submit actions for mock rows.
 - After every JavaScript or TypeScript change run `npm test`; before completion run `npm run build`.
 
 ---
@@ -41,6 +42,7 @@ ar-collections-app/
 │   ├── types.ts                         # SDK-independent domain/view-model types
 │   ├── lib/paginate.ts                  # typed cursor loop and page-slice helper
 │   ├── lib/evidence.ts                  # safe evidence parsing and display rows
+│   ├── lib/mockData.ts                  # fictional, read-only visual-preview fixtures
 │   ├── services/dataFabric.ts           # schema, entity records, and approval write boundary
 │   ├── services/maestro.ts              # process discovery, active instance pages, variables
 │   ├── services/correlation.ts          # bounded page correlation by exact caseId
@@ -305,7 +307,7 @@ git commit -m "feat: correlate active Flow instances to disputes"
 ### Task 4: Build the Apollo dashboard and persistent app shell
 
 **Files:**
-- Create: `ar-collections-app/src/hooks/usePolling.ts`, `ar-collections-app/src/hooks/useDisputeDashboard.ts`, `ar-collections-app/src/components/AppShell.tsx`, `MetricCard.tsx`, `StatusBadge.tsx`, `DisputeTable.tsx`, `ar-collections-app/src/pages/DashboardPage.tsx`, `PlaceholderPage.tsx`, and component tests
+- Create: `ar-collections-app/src/lib/mockData.ts`, `ar-collections-app/src/hooks/usePolling.ts`, `ar-collections-app/src/hooks/useDisputeDashboard.ts`, `ar-collections-app/src/components/AppShell.tsx`, `MetricCard.tsx`, `StatusBadge.tsx`, `DisputeTable.tsx`, `ar-collections-app/src/pages/DashboardPage.tsx`, `PlaceholderPage.tsx`, and component tests
 - Modify: `ar-collections-app/src/App.tsx`, `src/index.css`, `src/main.tsx`
 
 **Interfaces:**
@@ -325,6 +327,13 @@ it('filters rows by lifecycle and opens the selected detail route', async () => 
   await user.click(screen.getByRole('link', { name: /AR-PAY-003/i }))
   expect(mockNavigate).toHaveBeenCalledWith('/disputes/instance-1')
 })
+
+it('labels the fictional fallback and keeps its actions read-only', async () => {
+  render(<DashboardPage loader={noLiveRecordsLoader} />)
+  expect(screen.getByText('Demo data preview')).toBeVisible()
+  expect(screen.getByText('Demo — Contoso Supply Co.')).toBeVisible()
+  expect(screen.getByRole('button', { name: 'Approve resolution' })).toBeDisabled()
+})
 ```
 
 - [ ] **Step 2: Run the dashboard test to verify it fails**
@@ -338,6 +347,8 @@ Expected: FAIL because the page and table components do not exist.
 Use Apollo `Button`, `Card`, `Badge`, `Input`, `Tabs`, `EmptyState`, `Skeleton`, `Alert`, and `Toaster` primitives. Use semantic classes such as `bg-background`, `bg-card`, `text-muted-foreground`, and `border-border`; add only minimal layout utilities to `index.css`.
 
 The polling hook must retain visible table data during refresh and update state only when the serialized response changes. `DashboardPage` polls at 15 seconds when authenticated, exposes a refresh button, filters by lifecycle in memory after correlation, and searches case ID/customer name. Render 25-row previous/next pagination controls with “Showing X–Y of Z”. Status badges use semantic variants for `Awaiting approval`, `Approved`, `Rejected`, `Resolved`, `Failed`, and non-final Flow statuses.
+
+Create three complete fictional cases in `lib/mockData.ts` with distinct `caseId`, customer, balance, lifecycle, triage, evidence, and recommendation fields. When a Data Fabric entity/schema read fails, the live record query returns zero records, or every visible instance lacks a usable `caseId`, project these cases to `DisputeRow` values with `source: 'mock'`. Display a persistent `Demo data preview` `Alert` naming the fallback reason. Pass `isMock` to the detail page and `ApprovalCard`; it must render disabled actions and never invoke `recordDecision`.
 
 - [ ] **Step 4: Run component tests and all JavaScript tests**
 
@@ -396,7 +407,7 @@ Expected: FAIL because `ApprovalCard` does not exist.
 
 Render case, resolution, Flow monitor, evidence, and audit sections as labelled cards. Parse `evidence` only when it is JSON; flatten a valid object into key/value display rows and show “Evidence details are unavailable” for malformed or non-object values. Do not render raw JSON.
 
-`useDisputeDetail` must use `instanceId` as a polling dependency and key. It resolves the instance, case ID, and entity record; surfaces an actionable missing-record state; posts exactly the decision payload defined in Task 2; disables both decision buttons during submission; then refetches the record and instance.
+`useDisputeDetail` must use `instanceId` as a polling dependency and key. It resolves the instance, case ID, and entity record; surfaces an actionable missing-record state; posts exactly the decision payload defined in Task 2; disables both decision buttons during submission; then refetches the record and instance. For a mock route, it resolves the fixture locally, retains the `Demo data preview` banner, and never creates a `recordDecision` call.
 
 - [ ] **Step 4: Run detail tests, all JavaScript tests, and the bundle build**
 

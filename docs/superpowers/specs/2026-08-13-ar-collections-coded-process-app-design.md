@@ -44,6 +44,12 @@ The entity has no stored Maestro instance identifier. The application correlates
 
 The dashboard must not infer a record from customer, invoice, or display text. If a correlation cannot be established, it shows the instance with a clear “Record unavailable” state and does not permit an approval action.
 
+### Visual demo fallback
+
+The app includes a small, fictional mock-data fixture set for local testing and visual inspection. It activates when the Data Fabric entity is unavailable, returns no case records, or an active Flow instance has no usable `caseId`. The dashboard then shows the fictional cases with a persistent “Demo data preview” banner and an explicit read-only state.
+
+Mock records never call Data Fabric or Maestro mutation APIs. Their approve/reject controls are disabled and explain that a live correlated record is required. This preserves a useful visual preview without making an outage or missing correlation appear to be a real operational decision.
+
 ## User experience
 
 ### App shell
@@ -65,6 +71,7 @@ The default route is an instance-first operations workspace. It includes:
 - A “Live” indicator, last-updated time, and manual refresh. Data refreshes without tearing down the table or flickering rows.
 - A paginated table of active Flow instances. Its columns are case ID, customer, outstanding balance, lifecycle state, Flow run status, elapsed time, and triage confidence.
 - Clear loading, no-results, missing-correlation, and service-error states.
+- A distinct demo-data preview state when live correlation cannot supply a displayable case.
 
 Selecting an instance opens its detail route.
 
@@ -98,6 +105,7 @@ All list APIs paginate. Dynamic tables use a page size of 25–50 and show a “
 - Startup validates that the entity exists and includes all required read/write fields. A missing or renamed field produces a specific configuration error instead of silently dropping writes.
 - Authentication and authorization failures guide the user to sign in again without exposing tokens.
 - A failed Flow lookup, record correlation, Data Fabric read, or approval update stays isolated to the relevant panel and preserves safely rendered data.
+- A Data Fabric schema/read failure or zero-record result can fall back to the fictional, read-only preview data; the banner identifies the reason for the fallback.
 - Approval requires a valid decision, prevents duplicate submissions, and refreshes the record and Flow status after success.
 - Multiline evidence is parsed defensively and rendered in labeled key/value sections when valid; malformed evidence is shown as a concise unavailable state.
 
