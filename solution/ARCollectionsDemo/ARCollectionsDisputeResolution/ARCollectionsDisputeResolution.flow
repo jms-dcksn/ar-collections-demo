@@ -383,7 +383,8 @@
       "typeVersion": "1.3",
       "display": {
         "label": "Payment Misapplication Specialist",
-        "icon": "autonomous-agent"
+        "icon": "autonomous-agent",
+        "subLabel": ""
       },
       "inputs": {
         "source": "1c6b5289-1ff4-45f1-b48c-e613f8fd917f",

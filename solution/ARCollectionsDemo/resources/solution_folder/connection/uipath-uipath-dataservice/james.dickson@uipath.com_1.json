@@ -13,7 +13,7 @@
       "connectorName": "UiPath Data Fabric",
       "name": "james.dickson@uipath.com_1",
       "authenticationType": "AuthenticateAfterDeployment",
-      "connectorVersion": "1.70.0",
+      "connectorVersion": "1.72.0",
       "connectorKey": "uipath-uipath-dataservice",
       "pollingInterval": 5
     },
