@@ -8,11 +8,7 @@
     "isOverridable": true,
     "dependencies": [],
     "runtimeDependencies": [],
-    "folders": [
-      {
-        "fullyQualifiedName": "solution_folder"
-      }
-    ],
+    "folders": [],
     "spec": {
       "connectorName": "UiPath Data Fabric",
       "name": "james.dickson@uipath.com_1",
