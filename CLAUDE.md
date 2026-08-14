@@ -1,0 +1,150 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+`AGENTS.md` in this directory holds the working agreements (platform contracts, ownership
+rules, live-action policy) and is authoritative where the two overlap.
+`solution/ARCollectionsDemo/AGENTS.md` is authoritative for anything under the UiPath
+solution directory.
+
+## What this is
+
+A demo-grade, event-driven accounts-receivable dispute resolution solution on UiPath.
+Creating a Data Fabric record starts a Maestro Flow that triages the dispute, routes it to a
+specialist agent, persists a proposal, waits for a human decision made in a React Coded App,
+and completes the approved or rejected path with auditable state.
+
+Prefer simple implementations that demonstrate the product integration. Do not add
+production hardening unless the demo needs it.
+
+## Commands
+
+```bash
+# Python contract tests (uv only — never pip)
+UV_CACHE_DIR=/private/tmp/ar-collections-uv-cache uv run pytest -q
+UV_CACHE_DIR=/private/tmp/ar-collections-uv-cache uv run pytest tests/flow/test_flow_contract.py -q
+UV_CACHE_DIR=/private/tmp/ar-collections-uv-cache uv run pytest -q -k mock_update   # single test by name
+
+# Coded App (from repo root)
+npm --prefix ar-collections-app test -- --run          # vitest, one shot
+npm --prefix ar-collections-app test -- --run src/services/liveWorkspace.test.ts
+npm --prefix ar-collections-app run build              # tsc -b && vite build
+npm --prefix ar-collections-app run lint               # oxlint
+npm --prefix ar-collections-app run dev                # localhost:5173, the registered OAuth redirect
+
+# Artifact validation (offline, no login required)
+UIPATH_CLI_DISABLE_VERSION_SYNC=1 uip maestro flow validate \
+  solution/ARCollectionsDemo/ARCollectionsDisputeResolution/ARCollectionsDisputeResolution.flow --output json
+UIPATH_CLI_DISABLE_VERSION_SYNC=1 uip api-workflow validate \
+  solution/ARCollectionsDemo/LookupPaymentApplication/Workflow.json --output json
+UIPATH_CLI_DISABLE_VERSION_SYNC=1 uip api-workflow validate \
+  solution/ARCollectionsDemo/MockUpdateDispute/Workflow.json --output json
+```
+
+Run checks proportional to the change. Documentation-only edits need only path/identifier
+verification plus `git diff --check`. Run the JS suite after touching any `.ts`/`.tsx`.
+
+`UIPATH_CLI_DISABLE_VERSION_SYNC=1` is used on every `uip` invocation in this repo.
+
+## Architecture
+
+Three cooperating artifacts share one Data Fabric entity as the system of record.
+
+**Data Fabric entity `JDARCollectionsEntity`** (tenant-level, ID
+`bc0fc734-bf94-f111-9b32-000d3ab5d4c4`) — the case packet plus every lifecycle field. Its
+full field contract is checked in at `config/platform-resources.json`; the Coded App mirrors
+the subset it needs in `ar-collections-app/src/config.ts`. Entity record CRUD is
+tenant-scoped: never pass a folder key.
+
+**Maestro Flow `ARCollectionsDisputeResolution`** — the orchestrator, a single 6.6k-line
+`.flow` JSON. Node graph:
+
+```
+recordCreated (Data Fabric record-created trigger) -> updateEntityRecord1
+  -> triageAgent            (context: triageTaxonomyContext index)
+  -> persistTriaging1 -> isSupportedTriage
+       [false] -> persistNeedsManualTriage1 -> needsManualTriage (end)
+       [true]  -> routeByDisputeType
+                    -> poMismatchAgent | missingPodAgent | paymentMisapplicationAgent
+                       (payment agent also gets paymentResolutionContext + lookupPaymentTool)
+  -> normalizeProposal (script) -> persistAwaitingApproval1
+  -> waitForApprovalUpdate (record-updated event)
+       updatedRecordMatchesThisDispute1 [false] -> back to wait
+       approvalDecisionSupplied1        [false] -> back to wait
+  -> isResolutionApproved
+       [false] -> persistRejected1 -> needsRework (end)
+       [true]  -> persistApproved1 -> persistUpdating1
+                  -> mockUpdateDispute1 -> sendEmail1 (Outlook 365)
+                  -> persistResolved1 -> resolved (end)
+```
+
+The four inline low-code agents live in GUID-named subdirectories of the Flow project;
+`config/agent-projects.json` maps logical names (`triage`, `poMismatch`, `missingPod`,
+`paymentMisapplication`) to those GUIDs and pins the model. Tests read that mapping, so
+change it and the agent directories together.
+
+**API Workflows** — `LookupPaymentApplication` (mock cash-application evidence, exposed to
+the payment agent as a tool) and `MockUpdateDispute` (simulated downstream write). Both are
+deterministic JSON workflows; neither touches a real financial system.
+
+**Coded App `ar-collections-app`** — React 19 / Vite / TypeScript, published as a UiPath
+Coded App. `WorkspaceProvider` (`src/workspace.tsx`) owns all state and holds the `UiPath`
+SDK instance; OAuth is PKCE with the public external app in `uipath.json`, no client secret.
+`src/services/liveWorkspace.ts` lists active Maestro instances, reads each instance's
+`caseId` global variable, and joins it to entity records. `src/services/dataFabric.ts`
+validates the entity schema before writes. When no correlated live data exists the app falls
+back to `src/lib/mockData.ts` with an explicit on-screen notice — that fallback is
+deliberate, keep it labeled and read-only.
+
+### The two identifiers
+
+The Data Fabric record `Id` is the only correlation key for mutations and for the Flow's
+wait/resume match. `caseId` is a business identifier used solely to join a Maestro instance
+to a record for display. Never substitute `caseId` for `Id` in an update or a correlation
+check — the Flow may even overwrite `caseId` with its instance ID after insertion.
+
+### Field ownership
+
+The Flow owns lifecycle, triage, proposal, update-result, email, and audit fields. The Coded
+App writes only `approvalDecision`, `approvalComments`, and the matching `lifecycleState`,
+via `updateRecordById`. Nothing else writes to the entity.
+
+Only an approved, correctly correlated case invokes `MockUpdateDispute` and sends Outlook
+mail. Rejection and manual triage perform neither side effect.
+
+## Tests
+
+`tests/` is Python (pytest + jsonschema) contract testing over the checked-in JSON artifacts
+— there is no Python runtime code here. `tests/flow/test_flow_contract.py` is the heavyweight
+one: it walks the `.flow` node graph and asserts reachability, exclusive specialist routing,
+the exact proposal field contract, wait/resume correlation and isolation, and that manual
+triage and rejection paths are side-effect free. `tests/platform/` asserts the checked-in
+manifests and demo scripts still match. Changing Flow structure means updating this test.
+
+The Coded App uses Vitest + Testing Library with a jsdom environment.
+
+## Live platform actions
+
+`scripts/create-{po-mismatch,missing-pod,payment-misapplication}-record.sh <recipient-email>`
+insert a real record into the tenant entity, which starts the deployed Flow and can end in a
+real email to the recipient address. Use only a monitored demo mailbox. Treat record
+creation, publish, deploy, upload, and live Flow debug as live actions — do not perform them
+unless the task explicitly calls for it.
+
+Verify actual repository state, `uip` CLI behavior, active login target, and folder scope
+before making platform claims. Update `config/platform-resources.json` whenever an approved
+resource identifier or scope changes.
+
+## Docs
+
+- `docs/context/data-fabric-record-creation.md` — entity identity and both record-creation paths
+- `docs/runbooks/ar-collections-data-fabric-lifecycle.md` — the end-to-end demo procedure
+- `docs/superpowers/specs/` — approved designs; `docs/superpowers/plans/` — implementation plans
+- `docs/build-evidence/` — deployment, smoke, and Context Grounding evidence
+
+Keep documentation concise and free of emojis.
+
+## GitHub issues
+
+Well-scoped implementation issues get both `enhancement` and `ready for agent`. Use
+`ready for human` instead when human access, approval, or a decision is the blocking step.
