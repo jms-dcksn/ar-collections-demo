@@ -1,6 +1,7 @@
 import importlib.util
 import json
 import re
+import subprocess
 from pathlib import Path
 
 
@@ -87,6 +88,24 @@ def load_verifier_module():
     return module
 
 
+def run_lookup_script(workflow_input):
+    workflow = json.loads(WORKFLOW_PATH.read_text(encoding="utf-8"))
+    script = workflow["do"][0]["Sequence_1"]["do"][1]["Javascript_1"]["run"][
+        "script"
+    ]["code"]
+    program = (
+        "const $workflow = { input: JSON.parse(process.argv[1]) };"
+        f"const result = (() => {{ {script} }})();"
+        "process.stdout.write(JSON.stringify(result));"
+    )
+    return subprocess.run(
+        ["node", "-e", program, json.dumps(workflow_input)],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+
 def test_lookup_payment_has_exact_contract_and_no_external_calls():
     workflow = json.loads(WORKFLOW_PATH.read_text(encoding="utf-8"))
     objects = [node for node in walk_json(workflow) if isinstance(node, dict)]
@@ -130,6 +149,38 @@ def test_lookup_payment_entry_point_exposes_the_workflow_argument_contract():
 
     assert entry_point["input"] == workflow["input"]["schema"]["document"]
     assert entry_point["output"] == workflow["output"]["schema"]["document"]
+
+
+def test_lookup_payment_accepts_a_fresh_script_case_id():
+    result = run_lookup_script(
+        {
+            "caseId": "AR-PAY-20260814-A1B2C3D4",
+            "customerAccountId": "SUMMIT-4402",
+            "invoiceNumber": "INV-30915",
+            "paymentReference": "PAY-77821",
+        }
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout) == json.loads(
+        Path(__file__).with_name("lookup-payment-expected.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+
+def test_lookup_payment_rejects_a_fresh_case_with_an_unrelated_fixture():
+    result = run_lookup_script(
+        {
+            "caseId": "AR-PAY-20260814-A1B2C3D4",
+            "customerAccountId": "SUMMIT-4402",
+            "invoiceNumber": "INV-99999",
+            "paymentReference": "PAY-77821",
+        }
+    )
+
+    assert result.returncode != 0
+    assert "supports only the curated payment demo fixture" in result.stderr
 
 
 def test_verifier_normalizes_pascal_case_business_keys_exactly():

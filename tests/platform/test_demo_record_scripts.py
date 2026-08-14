@@ -24,6 +24,13 @@ SCENARIOS = {
         "evidence": {
             "reportedPaymentAmount": 36800,
             "paymentReference": "PAY-77821",
+            "paymentAmount": 36800,
+            "paymentDate": "2026-07-02",
+            "appliedInvoiceNumber": "INV-30909",
+            "targetInvoiceNumber": "INV-30915",
+            "applicationStatus": "MISAPPLIED",
+            "matchedRemittance": True,
+            "sourceSystem": "MockCashApplication",
         },
     },
     "create-missing-pod-record.sh": {

@@ -19,7 +19,7 @@ body=$(jq -cn \
     outstandingBalance: 36800,
     customerReason: "We paid this invoice, but the balance is still open.",
     openedDate: "2026-07-14",
-    evidence: "{\"reportedPaymentAmount\":36800,\"paymentReference\":\"PAY-77821\"}",
+    evidence: "{\"reportedPaymentAmount\":36800,\"paymentReference\":\"PAY-77821\",\"paymentAmount\":36800,\"paymentDate\":\"2026-07-02\",\"appliedInvoiceNumber\":\"INV-30909\",\"targetInvoiceNumber\":\"INV-30915\",\"applicationStatus\":\"MISAPPLIED\",\"matchedRemittance\":true,\"sourceSystem\":\"MockCashApplication\"}",
     recipientEmail: $recipient_email
   }')
 
