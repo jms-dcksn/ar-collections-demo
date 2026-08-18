@@ -1,0 +1,32 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "ARCollectionsDemo.api.LookupPaymentApplication",
+    "kind": "package",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "isOverridable": true,
+    "dependencies": [],
+    "runtimeDependencies": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "fileName": "ARCollectionsDemo.api.LookupPaymentApplication.1.0.1.nupkg",
+      "fileReference": "ARCollectionsDemo.api.LookupPaymentApplication_1.0.1",
+      "name": "ARCollectionsDemo.api.LookupPaymentApplication"
+    },
+    "locks": [],
+    "key": "ARCollectionsDemo.api.LookupPaymentApplication:1.0.1",
+    "files": [
+      {
+        "key": "ARCollectionsDemo.api.LookupPaymentApplication_1.0.1",
+        "name": "ARCollectionsDemo.api.LookupPaymentApplication.1.0.1.nupkg",
+        "url": "https://cloud.uipath.com/uipathlabs/Playground/orchestrator_/odata/Processes/UiPath.Server.Configuration.OData.DownloadPackage(key='ARCollectionsDemo.api.LookupPaymentApplication:1.0.1')?feedId=93949a13-9388-45bb-af90-5783a67e1b33",
+        "kind": "Package",
+        "version": "1.0.1"
+      }
+    ]
+  }
+}
