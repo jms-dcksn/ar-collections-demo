@@ -1,0 +1,22 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "ar-dispute-triage-index",
+    "kind": "index",
+    "apiVersion": "ecs.uipath.com/v2",
+    "dependencies": [],
+    "runtimeDependencies": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "name": "ar-dispute-triage-index",
+      "indexConfigurationJson": ""
+    },
+    "locks": [],
+    "key": "190ba27f-9b30-40e9-98f9-b78f70df8b11",
+    "files": []
+  }
+}

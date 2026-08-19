@@ -102,6 +102,46 @@
         "Operation": "CREATED",
         "FilterExpression": ""
       }
+    },
+    {
+      "resource": "index",
+      "key": "ar-dispute-triage-index",
+      "value": {
+        "name": {
+          "defaultValue": "ar-dispute-triage-index",
+          "isExpression": false,
+          "displayName": "Index Name"
+        },
+        "folderPath": {
+          "defaultValue": "JD_Demos/demos/ARCollectionsDemo",
+          "isExpression": false,
+          "displayName": "Folder path"
+        }
+      },
+      "metadata": {
+        "bindingsVersion": "2.2",
+        "solutionsSupport": "true"
+      }
+    },
+    {
+      "resource": "index",
+      "key": "ar-payment-resolution-index",
+      "value": {
+        "name": {
+          "defaultValue": "ar-payment-resolution-index",
+          "isExpression": false,
+          "displayName": "Index Name"
+        },
+        "folderPath": {
+          "defaultValue": "JD_Demos/demos/ARCollectionsDemo",
+          "isExpression": false,
+          "displayName": "Folder path"
+        }
+      },
+      "metadata": {
+        "bindingsVersion": "2.2",
+        "solutionsSupport": "true"
+      }
     }
   ]
 }

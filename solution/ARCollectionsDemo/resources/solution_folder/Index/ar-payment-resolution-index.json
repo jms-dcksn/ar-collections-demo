@@ -1,0 +1,22 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "ar-payment-resolution-index",
+    "kind": "index",
+    "apiVersion": "ecs.uipath.com/v2",
+    "dependencies": [],
+    "runtimeDependencies": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "name": "ar-payment-resolution-index",
+      "indexConfigurationJson": ""
+    },
+    "locks": [],
+    "key": "4a4b7a7d-f792-4096-b1f4-d811d6af3742",
+    "files": []
+  }
+}

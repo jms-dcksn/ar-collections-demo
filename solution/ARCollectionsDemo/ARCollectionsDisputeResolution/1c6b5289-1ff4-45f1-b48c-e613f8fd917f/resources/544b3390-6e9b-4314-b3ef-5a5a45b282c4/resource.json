@@ -1,7 +1,7 @@
 {
   "$resourceType": "tool",
   "name": "LookupPaymentApplication",
-  "description": "",
+  "description": "A read-only lookup for cash-application evidence used to verify a suspected payment misapplication.",
   "location": "solution",
   "type": "api",
   "inputSchema": {
