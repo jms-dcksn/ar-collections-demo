@@ -1,0 +1,38 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "ar-dispute-triage-index_1",
+    "kind": "index",
+    "apiVersion": "ecs.uipath.com/v2",
+    "isOverridable": true,
+    "dependencies": [
+      {
+        "kind": "Bucket",
+        "name": "ar-dispute-triage-kb"
+      }
+    ],
+    "runtimeDependencies": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "name": "ar-dispute-triage-index_1",
+      "description": "AR dispute triage taxonomy and worked examples.",
+      "storageBucketReference": {
+        "name": "ar-dispute-triage-kb",
+        "key": "6a30bffd-5a68-4348-b66d-fea899e8a7af",
+        "folderKey": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c"
+      },
+      "fileNameGlob": "All",
+      "dataSourceType": "StorageBucket",
+      "includeSubfolders": true,
+      "ingestionType": "Advanced",
+      "encrypted": false
+    },
+    "locks": [],
+    "key": "a1b7fb4e-cfb3-43a8-b29e-08defd736a4b",
+    "files": []
+  }
+}

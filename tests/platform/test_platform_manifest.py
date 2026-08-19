@@ -7,7 +7,7 @@ ROOT = Path(__file__).parents[2]
 MANIFEST = ROOT / "config" / "platform-resources.json"
 
 EXPECTED = {
-    "folderPath": "JD_Demos/demos",
+    "folderPath": "JD/demos",
     "outlookConnection": "james.dickson@uipath.com",
     "resources": [
         {
@@ -25,8 +25,13 @@ EXPECTED = {
 
 ALLOWED_MANIFEST_KEYS = {
     "folderPath",
+    "folderKey",
+    "connectionFolderPath",
+    "connectionFolderKey",
     "outlookConnection",
     "connectionKey",
+    "dataFabricConnection",
+    "dataFabricConnectionKey",
     "dataFabricEntities",
     "resources",
 }
@@ -91,7 +96,7 @@ def test_platform_manifest_declares_the_approved_data_fabric_entity():
     assert entity["folderKey"] is None
     assert entity["displayName"] == "JD AR Collections Entity"
     assert entity["systemName"] == "JDARCollectionsEntity"
-    assert entity["entityKey"] == "bc0fc734-bf94-f111-9b32-000d3ab5d4c4"
+    assert entity["entityKey"] == "81a5f874-d79b-f111-9b33-6045bdd6658d"
     assert entity["fields"] == [
         {"name": "caseId", "type": "STRING", "required": True, "unique": True},
         {"name": "customerName", "type": "STRING", "required": True, "unique": False},

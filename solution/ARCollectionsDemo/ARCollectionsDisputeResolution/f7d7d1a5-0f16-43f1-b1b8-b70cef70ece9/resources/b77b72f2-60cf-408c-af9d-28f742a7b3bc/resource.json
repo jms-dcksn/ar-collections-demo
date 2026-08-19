@@ -1,10 +1,10 @@
 {
   "$resourceType": "context",
   "name": "ar-dispute-triage-index",
-  "description": "",
-  "folderPath": "JD_Demos/demos/ARCollectionsDemo",
+  "description": "AR dispute triage taxonomy and worked examples.",
+  "folderPath": "JD/demos",
   "indexName": "ar-dispute-triage-index",
-  "id": "1148f840-b261-4d67-9473-1a6171a571cf",
+  "id": "b77b72f2-60cf-408c-af9d-28f742a7b3bc",
   "referenceKey": "",
   "settings": {
     "query": {

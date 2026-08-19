@@ -158,7 +158,7 @@ def test_payment_agent_has_exact_context_and_api_resources():
     assert context.get("isEnabled", True) is True
     assert context["referenceKey"] in {None, ""}
     assert context["contextType"] == "index"
-    assert context["folderPath"] == "JD_Demos/demos/ARCollectionsDemo"
+    assert context["folderPath"] == "JD/demos"
     assert context["indexName"] == "ar-payment-resolution-index"
     settings = context["settings"]
     assert settings["retrievalMode"] == "semantic"
@@ -197,7 +197,7 @@ def test_payment_agent_has_exact_context_and_api_resources():
     assert tool["guardrail"] == {"policies": []}
     assert tool["properties"] == {
         "processName": "LookupPaymentApplication",
-        "folderPath": "JD_Demos/demos/ARCollectionsDemo",
+        "folderPath": "JD/demos",
     }
     assert tool["argumentProperties"] == {}
 

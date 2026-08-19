@@ -55,7 +55,7 @@
   },
   "settings": {},
   "properties": {
-    "folderPath": "JD_Demos/demos/ARCollectionsDemo",
+    "folderPath": "JD/demos",
     "processName": "LookupPaymentApplication"
   },
   "guardrail": {

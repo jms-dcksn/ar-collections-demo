@@ -2,6 +2,15 @@
 
 Date: 2026-08-07
 
+> **Retired environment.** This record describes the `cloud.uipath.com`
+> deployment. The solution moved twice on 2026-08-19 — first to
+> `https://staging.uipath.com` (`uipathlabs / Playground`, folder
+> `JD_Demos/demos/ARCollections`), then to `https://staging.uipath.com`
+> (`uipathstgSS_updated / UiPathDefault`, folder `JD/demos`) — and has not been
+> published or deployed in either. Every identifier below belongs to the retired
+> `cloud.uipath.com` environment; the current contract is
+> `config/platform-resources.json`.
+
 ## Deployment
 
 - UiPath CLI: `1.198.0`

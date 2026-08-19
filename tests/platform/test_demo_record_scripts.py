@@ -9,7 +9,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT / "scripts"
-ENTITY_ID = "bc0fc734-bf94-f111-9b32-000d3ab5d4c4"
+ENTITY_ID = "81a5f874-d79b-f111-9b33-6045bdd6658d"
 RECIPIENT = "james.dickson@uipath.com"
 
 SCENARIOS = {
@@ -160,6 +160,100 @@ def test_each_invocation_generates_a_distinct_case_id(tmp_path: Path) -> None:
     }
     assert len(calls) == 2
     assert len(case_ids) == 2
+
+
+APPROVAL_SCRIPT = "supply-approval-decision.sh"
+RECORD_ID = "2D7F2D6A-1897-F111-9B33-7C1E522150AC"
+
+
+def run_approval(env: dict[str, str], *args: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [str(SCRIPTS / APPROVAL_SCRIPT), *args],
+        cwd=ROOT,
+        env=env,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+
+def sole_update_body(capture_path: Path) -> dict[str, object]:
+    calls = [json.loads(line) for line in capture_path.read_text().splitlines()]
+    assert len(calls) == 1
+    args = calls[0]["args"]
+    assert args[:4] == ["df", "records", "update", ENTITY_ID]
+    assert args[-2:] == ["--output", "json"]
+    assert args.count("--body") == 1
+    # Entity record CRUD is tenant-scoped; a folder key would break correlation.
+    assert "--folder-key" not in args
+    assert calls[0]["version_sync"] == "1"
+    return json.loads(args[args.index("--body") + 1])
+
+
+@pytest.mark.parametrize("decision", ["approved", "rejected"])
+def test_approval_script_writes_only_the_app_owned_fields(
+    tmp_path: Path, decision: str
+) -> None:
+    capture_path, env = install_fake_uip(tmp_path)
+
+    result = run_approval(env, RECORD_ID, decision, "Reviewed at the desk.")
+
+    assert result.returncode == 0, result.stderr
+    assert sole_update_body(capture_path) == {
+        "Id": RECORD_ID,
+        "approvalDecision": decision,
+        "approvalComments": "Reviewed at the desk.",
+        "lifecycleState": decision,
+    }
+
+
+def test_approval_script_defaults_to_approved(tmp_path: Path) -> None:
+    capture_path, env = install_fake_uip(tmp_path)
+
+    result = run_approval(env, RECORD_ID)
+
+    assert result.returncode == 0, result.stderr
+    body = sole_update_body(capture_path)
+    assert body["approvalDecision"] == "approved"
+    assert body["lifecycleState"] == "approved"
+    assert body["approvalComments"]
+
+
+def test_approval_script_omits_approved_by_unless_supplied(tmp_path: Path) -> None:
+    capture_path, env = install_fake_uip(tmp_path)
+
+    assert run_approval(env, RECORD_ID, "approved").returncode == 0
+    assert "approvedBy" not in sole_update_body(capture_path)
+
+
+def test_approval_script_includes_approved_by_when_supplied(tmp_path: Path) -> None:
+    capture_path, env = install_fake_uip(tmp_path)
+
+    result = run_approval(env, RECORD_ID, "approved", "Fine.", RECIPIENT)
+
+    assert result.returncode == 0, result.stderr
+    assert sole_update_body(capture_path)["approvedBy"] == RECIPIENT
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        (),
+        (RECORD_ID, "Approved!"),
+        (RECORD_ID, "approve"),
+        (RECORD_ID, "APPROVED"),
+        (RECORD_ID, "a", "b", "c", "d"),
+    ],
+)
+def test_approval_script_rejects_input_the_flow_would_not_resume_on(
+    tmp_path: Path, args: tuple[str, ...]
+) -> None:
+    capture_path, env = install_fake_uip(tmp_path)
+
+    result = run_approval(env, *args)
+
+    assert result.returncode != 0
+    assert not capture_path.exists()
 
 
 @pytest.mark.parametrize("script_name", SCENARIOS)

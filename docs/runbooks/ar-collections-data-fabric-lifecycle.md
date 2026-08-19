@@ -56,7 +56,7 @@ Its update must be ignored by the waiting instance; the first record remains
 event `Id` to the original record `Id`, then loops back to the wait for an
 unrelated or decisionless event.
 
-In the Process App, update the original record with all three approval fields:
+Update the original record with the approval fields:
 
 | Field | Approved example | Rejected example |
 | --- | --- | --- |
@@ -64,9 +64,22 @@ In the Process App, update the original record with all three approval fields:
 | `approvedBy` | `Demo Collector` | `Demo Collector` |
 | `approvalComments` | `Approved during demo verification.` | `Needs correction before approval.` |
 
-The update must be made through the Process App against the original Data
-Fabric record. This is the action that resumes the Flow; it is not a new record
-and it must retain the same `Id`.
+The update must be made against the original Data Fabric record. This is the
+action that resumes the Flow; it is not a new record and it must retain the same
+`Id`.
+
+Either surface can supply it. From the CLI:
+
+```bash
+./scripts/supply-approval-decision.sh <record-id> approved "Approved during demo verification." "Demo Collector"
+./scripts/supply-approval-decision.sh <record-id> rejected "Needs correction before approval."
+```
+
+The `<record-id>` is the Data Fabric record `Id`, not `caseId`. The script
+accepts only `approved` or `rejected` — those are the two values
+`approvalDecisionSupplied1` matches on, and any other value leaves the Flow
+waiting. `approvedBy` is optional; omit it and the field persists empty, which is
+also what the Coded App does today.
 
 ## Verify terminal behavior
 

@@ -702,7 +702,7 @@ def test_mock_update_uses_the_deployed_api_workflow_folder():
         if binding["key"] == flow_binding["resourceKey"]
     )
 
-    assert flow_binding["default"] == "JD_Demos/demos/ARCollectionsDemo"
+    assert flow_binding["default"] == "JD/demos"
     assert solution_binding["value"]["folderPath"]["defaultValue"] == "solution_folder"
 
 
@@ -738,13 +738,13 @@ def test_agent_resources_registry_bindings_and_generated_variables_are_complete(
     flow, _, nodes = load_contract()
     expected_resources = {
         "arDisputeTriageIndex1": (
-            "uipath.agent.resource.context.index.ar-dispute-triage-index.39da4378-991c-4099-e2d8-08defd669eef",
-            "1148f840-b261-4d67-9473-1a6171a571cf",
+            "uipath.agent.resource.context.index.ar-dispute-triage-index.a1b7fb4e-cfb3-43a8-b29e-08defd736a4b",
+            "b77b72f2-60cf-408c-af9d-28f742a7b3bc",
             "triageAgent",
             "context",
         ),
         "arPaymentResolutionIndex1": (
-            "uipath.agent.resource.context.index.ar-payment-resolution-index.9c3d6d90-ee16-4ec8-f719-08def7887a02",
+            "uipath.agent.resource.context.index.ar-payment-resolution-index.9745fa62-cff9-45d4-b29f-08defd736a4b",
             "1ad2e73a-662b-4fbc-8efe-771a5c4f4897",
             "paymentMisapplicationAgent",
             "context",
@@ -780,7 +780,7 @@ def test_agent_resources_registry_bindings_and_generated_variables_are_complete(
         assert definition["model"]["source"] is True
         assert (parent_id, parent_port, node_id, "input") in artifact_edges
 
-    api_resource_key = "JD_Demos/demos/ARCollectionsDemo.LookupPaymentApplication"
+    api_resource_key = "JD/demos.LookupPaymentApplication"
     api_definition = definitions[
         (expected_resources["lookuppaymentapplication1"][0], "1.0.0")
     ]
@@ -799,13 +799,13 @@ def test_agent_resources_registry_bindings_and_generated_variables_are_complete(
         if binding["resource"] == "process"
     ] == [
         (mock_update_key, "name", "MockUpdateDispute", "Api"),
-        (mock_update_key, "folderPath", "JD_Demos/demos/ARCollectionsDemo", "Api"),
+        (mock_update_key, "folderPath", "JD/demos", "Api"),
         (api_resource_key, "name", "LookupPaymentApplication", "Api"),
-        (api_resource_key, "folderPath", "JD_Demos/demos/ARCollectionsDemo", "Api"),
+        (api_resource_key, "folderPath", "JD/demos", "Api"),
         (
             api_resource_key,
             "folderKey",
-            "bbe64c10-b957-4adf-a535-77109c673e5a",
+            "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
             "Api",
         ),
     ]
@@ -819,22 +819,22 @@ def test_agent_resources_registry_bindings_and_generated_variables_are_complete(
     ] == [
         (
             "uipath-microsoft-outlook365 connection",
-            "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+            "8643408a-62b4-4d36-ba1e-bc9b68d4fce9",
             "ConnectionId",
         ),
         (
             "FolderKey",
-            "",
+            "8643408a-62b4-4d36-ba1e-bc9b68d4fce9",
             "FolderKey",
         ),
         (
             "uipath-uipath-dataservice connection",
-            "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+            "b2a02899-3708-4bb6-810a-02321afb77f6",
             "ConnectionId",
         ),
         (
             "FolderKey",
-            "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+            "b2a02899-3708-4bb6-810a-02321afb77f6",
             "FolderKey",
         ),
     ]

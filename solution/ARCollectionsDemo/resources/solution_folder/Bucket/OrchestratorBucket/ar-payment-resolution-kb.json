@@ -1,0 +1,26 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "ar-payment-resolution-kb",
+    "kind": "bucket",
+    "type": "orchestratorBucket",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "isOverridable": true,
+    "dependencies": [],
+    "runtimeDependencies": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "type": "Orchestrator",
+      "name": "ar-payment-resolution-kb",
+      "description": "Payment misapplication resolution playbook for the payment specialist agent.",
+      "tags": []
+    },
+    "locks": [],
+    "key": "306dcb5e-6cf3-4c03-bcff-64633cd9c174",
+    "files": []
+  }
+}

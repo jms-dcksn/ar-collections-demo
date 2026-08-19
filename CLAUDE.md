@@ -51,7 +51,7 @@ verification plus `git diff --check`. Run the JS suite after touching any `.ts`/
 Three cooperating artifacts share one Data Fabric entity as the system of record.
 
 **Data Fabric entity `JDARCollectionsEntity`** (tenant-level, ID
-`bc0fc734-bf94-f111-9b32-000d3ab5d4c4`) — the case packet plus every lifecycle field. Its
+`81a5f874-d79b-f111-9b33-6045bdd6658d`) — the case packet plus every lifecycle field. Its
 full field contract is checked in at `config/platform-resources.json`; the Coded App mirrors
 the subset it needs in `ar-collections-app/src/config.ts`. Entity record CRUD is
 tenant-scoped: never pass a folder key.
@@ -103,6 +103,22 @@ wait/resume match. `caseId` is a business identifier used solely to join a Maest
 to a record for display. Never substitute `caseId` for `Id` in an update or a correlation
 check — the Flow may even overwrite `caseId` with its instance ID after insertion.
 
+### The deferred Coded App
+
+`ar-collections-app` was excluded from both 2026-08-19 migrations. Its
+`src/config.ts` still pins the original `cloud.uipath.com` entity ID
+`bc0fc734-bf94-f111-9b32-000d3ab5d4c4`, now two environments stale, so the app
+cannot read or approve records in `uipathstgSS_updated / UiPathDefault`.
+`config/platform-resources.json` is the authority.
+
+The entity ID is not the only blocker. The app reads `lifecycleState` as
+display-style strings (`'Awaiting approval'`, `'Approved'`) that the Flow never
+writes — it writes `awaiting_approval`, `approved`. That disables the approve
+controls, the dashboard filters, and the badges on live records, and the app's own
+tests miss it because `lib/mockData.ts` uses the same invented vocabulary. See
+`AGENTS.md`, "Known blocker: the app reads a lifecycle vocabulary the Flow never
+writes".
+
 ### Field ownership
 
 The Flow owns lifecycle, triage, proposal, update-result, email, and audit fields. The Coded
@@ -127,9 +143,18 @@ The Coded App uses Vitest + Testing Library with a jsdom environment.
 
 `scripts/create-{po-mismatch,missing-pod,payment-misapplication}-record.sh <recipient-email>`
 insert a real record into the tenant entity, which starts the deployed Flow and can end in a
-real email to the recipient address. Use only a monitored demo mailbox. Treat record
-creation, publish, deploy, upload, and live Flow debug as live actions — do not perform them
-unless the task explicitly calls for it.
+real email to the recipient address.
+
+`scripts/supply-approval-decision.sh <record-id> [approved|rejected] [comments] [approved-by]`
+is the CLI stand-in for the Coded App's approval gate: it updates the record so
+`waitForApprovalUpdate` resumes. It writes only the app-owned fields — `approvalDecision`,
+`approvalComments`, and the matching `lifecycleState` — plus `approvedBy` when you pass it.
+An `approved` decision drives the Flow through `MockUpdateDispute` and a real Outlook send;
+`rejected` ends at `needsRework` with no side effects.
+
+Use only a monitored demo mailbox. Treat record creation, approval supply, publish, deploy,
+upload, and live Flow debug as live actions — do not perform them unless the task explicitly
+calls for it.
 
 Verify actual repository state, `uip` CLI behavior, active login target, and folder scope
 before making platform claims. Update `config/platform-resources.json` whenever an approved
@@ -137,6 +162,7 @@ resource identifier or scope changes.
 
 ## Docs
 
+- `docs/MIGRATE.md` — the org/tenant migration procedure and the editor churn it provokes
 - `docs/context/data-fabric-record-creation.md` — entity identity and both record-creation paths
 - `docs/runbooks/ar-collections-data-fabric-lifecycle.md` — the end-to-end demo procedure
 - `docs/superpowers/specs/` — approved designs; `docs/superpowers/plans/` — implementation plans

@@ -1,8 +1,8 @@
 {
   "$resourceType": "context",
   "name": "ar-payment-resolution-index",
-  "description": "",
-  "folderPath": "JD_Demos/demos/ARCollectionsDemo",
+  "description": "Payment misapplication resolution playbook.",
+  "folderPath": "JD/demos",
   "indexName": "ar-payment-resolution-index",
   "id": "1ad2e73a-662b-4fbc-8efe-771a5c4f4897",
   "referenceKey": "",

@@ -1,13 +1,18 @@
 {
-  "folderPath": "JD_Demos/demos",
+  "folderPath": "JD/demos",
+  "folderKey": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+  "connectionFolderPath": "JD/demos",
+  "connectionFolderKey": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
   "outlookConnection": "james.dickson@uipath.com",
-  "connectionKey": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+  "connectionKey": "8643408a-62b4-4d36-ba1e-bc9b68d4fce9",
+  "dataFabricConnection": "james.dickson@uipath.com",
+  "dataFabricConnectionKey": "b2a02899-3708-4bb6-810a-02321afb77f6",
   "dataFabricEntities": [
     {
       "folderKey": null,
       "displayName": "JD AR Collections Entity",
       "systemName": "JDARCollectionsEntity",
-      "entityKey": "bc0fc734-bf94-f111-9b32-000d3ab5d4c4",
+      "entityKey": "81a5f874-d79b-f111-9b33-6045bdd6658d",
       "fields": [
         {
           "name": "caseId",
@@ -194,16 +199,16 @@
     {
       "source": "knowledge/triage/ar-dispute-taxonomy-and-examples.txt",
       "bucket": "ar-dispute-triage-kb",
-      "bucketKey": "9ebe576c-c8b9-4e82-bd47-32be23a1cdc0",
+      "bucketKey": "6a30bffd-5a68-4348-b66d-fea899e8a7af",
       "index": "ar-dispute-triage-index",
-      "indexKey": "9e46f4a3-6c15-4cab-9030-08def39d8059"
+      "indexKey": "a1b7fb4e-cfb3-43a8-b29e-08defd736a4b"
     },
     {
       "source": "knowledge/payment/payment-misapplication-resolution-playbook.txt",
       "bucket": "ar-payment-resolution-kb",
-      "bucketKey": "8bdec5fc-9b40-4053-b879-a74ab933b9bc",
+      "bucketKey": "306dcb5e-6cf3-4c03-bcff-64633cd9c174",
       "index": "ar-payment-resolution-index",
-      "indexKey": "469965c2-8382-4521-9031-08def39d8059"
+      "indexKey": "9745fa62-cff9-45d4-b29f-08defd736a4b"
     }
   ]
 }

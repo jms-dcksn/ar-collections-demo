@@ -11,6 +11,9 @@
   "inputSchema": {
     "type": "object",
     "properties": {
+      "recordCreated__output": {
+        "type": "object"
+      },
       "triageAgent__output__disputeType": {
         "type": "string"
       },
@@ -19,10 +22,6 @@
       },
       "triageAgent__output__confidence": {
         "type": "number"
-      },
-      "recordCreated__output": {
-        "type": "object",
-        "description": "Bound from $vars.recordCreated.output"
       }
     }
   },

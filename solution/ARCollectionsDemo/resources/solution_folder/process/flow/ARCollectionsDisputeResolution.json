@@ -36,10 +36,10 @@
       },
       {
         "bindingType": "connection",
-        "bindingKey": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+        "bindingKey": "8643408a-62b4-4d36-ba1e-bc9b68d4fce9",
         "bindingValues": {
           "connectionId": {
-            "defaultValue": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+            "defaultValue": "8643408a-62b4-4d36-ba1e-bc9b68d4fce9",
             "isExpression": false
           }
         },
@@ -51,16 +51,16 @@
         },
         "resourceKind": "Connection",
         "resourceType": "uipath-microsoft-outlook365",
-        "resourceKey": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+        "resourceKey": "8643408a-62b4-4d36-ba1e-bc9b68d4fce9",
         "resourceName": "james.dickson@uipath.com",
-        "folderKey": "67fc19c3-e3a7-4523-aac0-fa63ea83d261"
+        "folderKey": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c"
       },
       {
         "bindingType": "connection",
-        "bindingKey": "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+        "bindingKey": "b2a02899-3708-4bb6-810a-02321afb77f6",
         "bindingValues": {
           "connectionId": {
-            "defaultValue": "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+            "defaultValue": "b2a02899-3708-4bb6-810a-02321afb77f6",
             "isExpression": false
           }
         },
@@ -72,9 +72,9 @@
         },
         "resourceKind": "Connection",
         "resourceType": "uipath-uipath-dataservice",
-        "resourceKey": "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+        "resourceKey": "b2a02899-3708-4bb6-810a-02321afb77f6",
         "resourceName": "james.dickson@uipath.com_1",
-        "folderKey": "bbe64c10-b957-4adf-a535-77109c673e5a"
+        "folderKey": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c"
       },
       {
         "bindingType": "process",
@@ -93,10 +93,10 @@
       },
       {
         "bindingType": "EventTrigger",
-        "bindingKey": "6cd4c047-ab49-4aad-8cfa-5681db3db20b_recordCreated",
+        "bindingKey": "b2a02899-3708-4bb6-810a-02321afb77f6_recordCreated",
         "bindingValues": {
           "connectionId": {
-            "defaultValue": "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+            "defaultValue": "b2a02899-3708-4bb6-810a-02321afb77f6",
             "isExpression": false
           },
           "entryPointUniqueId": {

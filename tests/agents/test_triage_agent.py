@@ -134,7 +134,7 @@ def test_triage_has_exactly_one_enabled_index_context_and_no_tools():
     assert resource.get("isEnabled", True) is True
     assert resource["referenceKey"] in {None, ""}
     assert resource["contextType"] == "index"
-    assert resource["folderPath"] == "JD_Demos/demos/ARCollectionsDemo"
+    assert resource["folderPath"] == "JD/demos"
     assert resource["indexName"] == "ar-dispute-triage-index"
     settings = resource["settings"]
     assert settings["retrievalMode"] == "semantic"

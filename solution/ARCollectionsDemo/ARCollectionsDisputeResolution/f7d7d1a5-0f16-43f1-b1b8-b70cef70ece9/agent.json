@@ -13,7 +13,7 @@
     "properties": {
       "recordCreated__output": {
         "type": "object",
-        "description": "Bound from $vars.recordCreated.output"
+        "description": "Data Fabric dispute record from the Record Created event"
       }
     }
   },

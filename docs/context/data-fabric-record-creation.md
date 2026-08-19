@@ -9,10 +9,10 @@ and the scripts and Coded App source remain the executable definitions.
 
 - System name: `JDARCollectionsEntity`
 - Display name: `JD AR Collections Entity`
-- Entity ID: `bc0fc734-bf94-f111-9b32-000d3ab5d4c4`
+- Entity ID: `81a5f874-d79b-f111-9b33-6045bdd6658d`
 - Scope: tenant-level; record CRUD must not include a folder key
-- Organization / tenant: `uipathlabs / Playground`
-- Solution deployment folder: `JD_Demos/demos`
+- Base URL / organization / tenant: `https://staging.uipath.com` — `uipathstgSS_updated / UiPathDefault`
+- Solution deployment folder: `JD/demos`
 
 Creating a record in this entity emits the event that starts the deployed
 `ARCollectionsDisputeResolution` Flow. Record creation is therefore a live
@@ -47,7 +47,7 @@ payload with `jq` and performs one tenant-level insertion:
 
 ```bash
 UIPATH_CLI_DISABLE_VERSION_SYNC=1 uip df records insert \
-  bc0fc734-bf94-f111-9b32-000d3ab5d4c4 \
+  81a5f874-d79b-f111-9b33-6045bdd6658d \
   --body "$body" \
   --output json
 ```

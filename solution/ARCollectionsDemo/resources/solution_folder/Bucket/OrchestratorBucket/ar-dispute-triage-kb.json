@@ -1,0 +1,26 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "ar-dispute-triage-kb",
+    "kind": "bucket",
+    "type": "orchestratorBucket",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "isOverridable": true,
+    "dependencies": [],
+    "runtimeDependencies": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "type": "Orchestrator",
+      "name": "ar-dispute-triage-kb",
+      "description": "Triage taxonomy knowledge for the AR collections triage agent.",
+      "tags": []
+    },
+    "locks": [],
+    "key": "6a30bffd-5a68-4348-b66d-fea899e8a7af",
+    "files": []
+  }
+}

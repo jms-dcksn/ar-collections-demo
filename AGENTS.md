@@ -47,6 +47,7 @@ to work.
 | `knowledge` | Context Grounding source content for triage and payment resolution |
 | `tests` | Python contract tests for agents, Flow, API Workflows, knowledge, and platform manifests |
 | `docs/runbooks` | Demo operation and verification procedures |
+| `docs/MIGRATE.md` | Organization / tenant migration procedure and expected editor churn |
 | `docs/context/data-fabric-record-creation.md` | Entity identity, demo record scripts, and Coded App creation flow |
 | `docs/superpowers/specs` | Approved architecture and feature designs |
 
@@ -86,26 +87,79 @@ comments, and the matching approval lifecycle value through
 
 ## Platform Contracts
 
-- Organization / tenant: `uipathlabs / Playground`.
-- Solution deployment folder: `JD_Demos/demos`.
+- Base URL / organization / tenant: `https://staging.uipath.com` — `uipathstgSS_updated /
+  UiPathDefault`.
+- Solution deployment folder: `JD/demos`
+  (`e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c`).
 - Data Fabric entity: `JDARCollectionsEntity` / `JD AR Collections Entity`.
 - Entity scope: tenant-level; do not pass a folder key for entity record CRUD.
-- Entity ID: `bc0fc734-bf94-f111-9b32-000d3ab5d4c4`.
-- Outlook connection: `james.dickson@uipath.com`.
-- Integration Service connection key: `c61c5442-c5d6-4cb2-9c02-f4a541f01e4c`.
+- Entity ID: `81a5f874-d79b-f111-9b33-6045bdd6658d`.
+- Outlook connection: `james.dickson@uipath.com`
+  (`8643408a-62b4-4d36-ba1e-bc9b68d4fce9`).
+- Data Fabric connection: `james.dickson@uipath.com`
+  (`b2a02899-3708-4bb6-810a-02321afb77f6`).
+- Both connections live in `JD/demos` (`e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c`) —
+  the same folder as the resources, so the Flow's `connectionFolderKey` and its
+  index / process `folderKey` are all the one key.
 - Canonical checked-in resource contract: `config/platform-resources.json`.
+
+### Coded App Migration Pending
+
+`ar-collections-app` was excluded from both 2026-08-19 migrations. Its
+`src/config.ts` still carries the `cloud.uipath.com` entity ID
+`bc0fc734-bf94-f111-9b32-000d3ab5d4c4` — two environments stale, since the
+interim `uipathlabs / Playground` entity `d22e70b2-cc9b-f111-9b32-000d3a69a13b`
+is also retired — and the `uipath.json` OAuth app still targets the original
+org. The app therefore cannot read or approve records created in the current
+tenant until it is migrated. Do not treat the app's config as authoritative;
+`config/platform-resources.json` is.
+
+#### Known blocker: the app reads a lifecycle vocabulary the Flow never writes
+
+Independent of the entity ID, the app will not work against live records. The
+Flow persists snake_case lifecycle values — `triaging`, `awaiting_approval`,
+`approved`, `rejected`, `updating`, `resolved`, `needs_manual_triage` — while the
+app compares `lifecycleState` against display-style strings it invented:
+
+| Site | Compares against | Consequence on live data |
+| --- | --- | --- |
+| `src/config.ts` `canDecide` | `'Awaiting approval'` | Approve/reject controls never enable |
+| `src/pages/DashboardPage.tsx` `lifecycleFilters` | `'Awaiting approval'`, `'In review'`, `'New'` | Filter chips match nothing |
+| `src/pages/DashboardPage.tsx` `badgeClass` | `'Awaiting approval'`, `'Approved'`, `'Running'`, `'Waiting'` | Every record renders `neutral` |
+| `src/pages/DashboardPage.tsx` awaiting count | `'Awaiting approval'` | Always `0` |
+
+None of these strings can ever match, so fixing the entity ID alone will produce
+a dashboard that loads live records and refuses to act on any of them.
+
+The write path is unaffected but only by accident. `types.ts` declares
+`ApprovalDecision = 'Approved' | 'Rejected'` and `dataFabric.ts` writes that
+value into both `approvalDecision` and `lifecycleState`. The Flow's
+`approvalDecisionSupplied1` and `isResolutionApproved` both call `.toLowerCase()`
+before comparing, so `'Approved'` resumes the Flow correctly. The capitalised
+`lifecycleState` it writes alongside is transient — `persistApproved1` overwrites
+it with `approved`.
+
+The app's own tests do not catch any of this: `config.test.ts`,
+`ApprovalCard.test.tsx`, and `lib/mockData.ts` all use the same display-style
+vocabulary, so the mock fallback path is internally consistent and green. The
+mismatch only appears against real Data Fabric records.
+
+The Flow is authoritative. Fix the app to read the snake_case values, and treat
+this as part of the Coded App migration, not a separate cleanup.
 
 ### Verified Sample Record
 
 - Entity: `JDARCollectionsEntity`
-  (`bc0fc734-bf94-f111-9b32-000d3ab5d4c4`), tenant-level.
-- Record ID: `2D7F2D6A-1897-F111-9B33-7C1E522150AC`.
-- Case ID: `AR-PAY-20260813-01`.
-- Scenario: payment misapplication for Summit Medical Distribution, invoice
-  `INV-30915`, balance `36800.00`, payment reference `PAY-77821`.
-- Recipient: `james.dickson@uipath.com`.
+  (`81a5f874-d79b-f111-9b33-6045bdd6658d`), tenant-level.
+- No sample record exists yet in `uipathstgSS_updated / UiPathDefault`. The
+  entity was created empty during the 2026-08-19 move; run one of the
+  `scripts/create-*-record.sh` scripts to seed one.
+- Samples from both retired environments (`cloud.uipath.com` record
+  `2D7F2D6A-1897-F111-9B33-7C1E522150AC`, case `AR-PAY-20260813-01`, and
+  anything created under `uipathlabs / Playground`) are no longer reachable.
 
-This is current test data, not a reusable constant. The Flow may update the row.
+Record data is current test data, not a reusable constant. The Flow may update
+the row.
 Creating another record can start the deployed record-created trigger and must
 be treated as a live platform action.
 

@@ -17,12 +17,12 @@
       "connectorName": "Microsoft Outlook 365",
       "name": "james.dickson@uipath.com",
       "authenticationType": "AuthenticateAfterDeployment",
-      "connectorVersion": "1.40.3",
+      "connectorVersion": "1.42.1",
       "connectorKey": "uipath-microsoft-outlook365",
-      "pollingInterval": 5
+      "pollingInterval": 1
     },
     "locks": [],
-    "key": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+    "key": "8643408a-62b4-4d36-ba1e-bc9b68d4fce9",
     "files": []
   }
 }
