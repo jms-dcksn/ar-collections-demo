@@ -7,7 +7,7 @@
       "id": "processe0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
       "value": {
         "folderPath": {
-          "defaultValue": "solution_folder",
+          "defaultValue": "JD/demos",
           "isExpression": false,
           "displayName": "Folder path"
         },
@@ -18,7 +18,7 @@
         }
       },
       "metadata": {
-        "ActivityName": "Mock Update Dispute",
+        "ActivityName": "MockUpdateDispute",
         "BindingsVersion": "2.2",
         "DisplayLabel": "name",
         "SolutionsSupport": "true",
@@ -65,8 +65,14 @@
     },
     {
       "resource": "process",
-      "key": "LookupPaymentApplication",
+      "key": "JD/demos.LookupPaymentApplication",
+      "id": "processJD/demos.LookupPaymentApplication",
       "value": {
+        "folderPath": {
+          "defaultValue": "JD/demos",
+          "isExpression": false,
+          "displayName": "Folder path"
+        },
         "name": {
           "defaultValue": "LookupPaymentApplication",
           "isExpression": false,
@@ -74,9 +80,30 @@
         }
       },
       "metadata": {
-        "subType": "api",
-        "bindingsVersion": "2.2",
-        "solutionsSupport": "true"
+        "ActivityName": "MockUpdateDispute",
+        "BindingsVersion": "2.2",
+        "DisplayLabel": "name",
+        "SolutionsSupport": "true",
+        "subType": "Api"
+      }
+    },
+    {
+      "resource": "connection",
+      "key": "21b6f09d-3128-46e3-933f-43882d153829",
+      "id": "connection21b6f09d-3128-46e3-933f-43882d153829",
+      "value": {
+        "ConnectionId": {
+          "defaultValue": "21b6f09d-3128-46e3-933f-43882d153829",
+          "isExpression": false,
+          "displayName": "uipath-microsoft-azureaifoundry connection"
+        }
+      },
+      "metadata": {
+        "ActivityName": "Manual Handling Summary",
+        "BindingsVersion": "2.2",
+        "DisplayLabel": "uipath-microsoft-azureaifoundry connection",
+        "UseConnectionService": "true",
+        "Connector": "uipath-microsoft-azureaifoundry"
       }
     },
     {
@@ -139,6 +166,47 @@
         }
       },
       "metadata": {
+        "bindingsVersion": "2.2",
+        "solutionsSupport": "true"
+      }
+    },
+    {
+      "resource": "mcpServer",
+      "key": "remittance-advice-service",
+      "value": {
+        "name": {
+          "defaultValue": "remittance-advice-service",
+          "isExpression": false,
+          "displayName": "Slug"
+        },
+        "folderPath": {
+          "defaultValue": "JD/demos",
+          "isExpression": false,
+          "displayName": "Folder path"
+        }
+      },
+      "metadata": {
+        "bindingsVersion": "2.2",
+        "solutionsSupport": "true"
+      }
+    },
+    {
+      "resource": "process",
+      "key": "LookupPaymentApplication",
+      "value": {
+        "name": {
+          "defaultValue": "LookupPaymentApplication",
+          "isExpression": false,
+          "displayName": "Process name"
+        },
+        "folderPath": {
+          "defaultValue": "JD/demos",
+          "isExpression": false,
+          "displayName": "Folder path"
+        }
+      },
+      "metadata": {
+        "subType": "api",
         "bindingsVersion": "2.2",
         "solutionsSupport": "true"
       }

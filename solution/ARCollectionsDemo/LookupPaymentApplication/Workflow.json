@@ -3,7 +3,8 @@
     "dsl": "1.0.0",
     "name": "Workflow",
     "tags": {
-      "projectId": "2ef7af88-fc77-4555-9e2c-b60462c352fe"
+      "projectId": "e3f28205-a683-4ebb-9323-da3535bb3910",
+      "solutionId": "87ef25b1-a4a1-460c-e55f-08defde97196"
     },
     "version": "0.0.1",
     "namespace": "default",
@@ -116,7 +117,7 @@
                 "script": {
                   "code": "const { caseId, customerAccountId, invoiceNumber, paymentReference } = $workflow.input;\nconst supportedCaseId = caseId === 'AR-PAY-003' || /^AR-PAY-\\d{8}-[A-F0-9]{8}$/.test(caseId);\nconst supportedFixture = customerAccountId === 'SUMMIT-4402'\n  && invoiceNumber === 'INV-30915'\n  && paymentReference === 'PAY-77821';\nif (!supportedCaseId || !supportedFixture) {\n  throw new Error('LookupPaymentApplication supports only the curated payment demo fixture.');\n}\nreturn {\n  paymentReference: 'PAY-77821',\n  paymentAmount: 36800,\n  paymentDate: '2026-07-02',\n  appliedInvoiceNumber: 'INV-30909',\n  targetInvoiceNumber: 'INV-30915',\n  applicationStatus: 'MISAPPLIED',\n  matchedRemittance: true,\n  recommendedAction: 'REALLOCATE_PAYMENT',\n  sourceSystem: 'MockCashApplication'\n};",
                   "language": "javascript",
-                  "arguments": "${{ \"$context\": $context, \"$workflow\": $workflow, \"$input\": $input }}"
+                  "arguments": "${{\n                        \"$context\": $context,\n                        \"$workflow\": $workflow,\n                        \"$input\": $input,\n                    }}"
                 }
               },
               "export": {

@@ -7,8 +7,8 @@
     "isOverridable": true,
     "dependencies": [
       {
-        "kind": "Bucket",
-        "name": "ar-dispute-triage-kb"
+        "name": "ar-dispute-triage-kb",
+        "kind": "Bucket"
       }
     ],
     "runtimeDependencies": [],

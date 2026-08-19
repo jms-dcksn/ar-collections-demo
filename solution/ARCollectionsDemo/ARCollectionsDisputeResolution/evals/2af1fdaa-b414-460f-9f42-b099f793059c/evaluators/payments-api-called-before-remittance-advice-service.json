@@ -1,0 +1,20 @@
+{
+  "version": "1.0",
+  "id": "payments-api-called-before-remittance-advice-service",
+  "name": "Payments API called before Remittance Advice Service",
+  "description": "Verify tool calls occur in expected order",
+  "evaluatorTypeId": "uipath-tool-call-order",
+  "evaluatorConfig": {
+    "strict": true,
+    "defaultEvaluationCriteria": {
+      "toolCallsOrder": [
+        "lookuppaymentapplication1",
+        "ar-payment-resolution-index",
+        "mcp-remittance_advice_service-tool-get_remittance_advice"
+      ]
+    }
+  },
+  "fileName": "payments-api-called-before-remittance-advice-service.json",
+  "createdAt": "2026-08-19T16:26:13.459Z",
+  "updatedAt": "2026-08-19T18:30:00.000Z"
+}

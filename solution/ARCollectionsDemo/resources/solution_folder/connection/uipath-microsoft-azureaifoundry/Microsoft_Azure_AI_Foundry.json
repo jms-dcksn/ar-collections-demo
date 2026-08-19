@@ -1,9 +1,9 @@
 {
   "docVersion": "1.0.0",
   "resource": {
-    "name": "james.dickson@uipath.com",
+    "name": "Microsoft Azure AI Foundry",
     "kind": "connection",
-    "type": "uipath-microsoft-outlook365",
+    "type": "uipath-microsoft-azureaifoundry",
     "apiVersion": "integrationservice.uipath.com/v1",
     "isOverridable": true,
     "dependencies": [],
@@ -14,15 +14,15 @@
       }
     ],
     "spec": {
-      "connectorName": "Microsoft Outlook 365",
-      "name": "james.dickson@uipath.com",
+      "connectorName": "Microsoft Azure AI Foundry",
+      "name": "Microsoft Azure AI Foundry",
       "authenticationType": "AuthenticateAfterDeployment",
-      "connectorVersion": "1.42.6",
-      "connectorKey": "uipath-microsoft-outlook365",
+      "connectorVersion": "1.2.1",
+      "connectorKey": "uipath-microsoft-azureaifoundry",
       "pollingInterval": 1
     },
     "locks": [],
-    "key": "8643408a-62b4-4d36-ba1e-bc9b68d4fce9",
+    "key": "21b6f09d-3128-46e3-933f-43882d153829",
     "files": []
   }
 }

@@ -9,8 +9,8 @@
     "isOverridable": true,
     "dependencies": [
       {
-        "kind": "package",
-        "name": "MockUpdateDispute"
+        "name": "MockUpdateDispute",
+        "kind": "package"
       }
     ],
     "runtimeDependencies": [],
@@ -25,7 +25,7 @@
       "package": {
         "key": "cfb060f2-d77f-4a66-8a50-1d5f92935529"
       },
-      "packageName": "ARCollectionsDemo.api.MockUpdateDispute",
+      "packageName": "AR.Collections.Dispute.Flow.api.MockUpdateDispute",
       "targetFrameworkValue": "Portable",
       "retentionAction": "Delete",
       "retentionPeriod": 30,

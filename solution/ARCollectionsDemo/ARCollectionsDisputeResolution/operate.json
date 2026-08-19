@@ -1,6 +1,7 @@
 {
   "$schema": "https://cloud.uipath.com/draft/2024-12/operate",
-  "projectId": "2af1fdaa-b414-460f-9f42-b099f793059c",
+  "projectId": "3dfdf682-e191-4968-9d13-f3b6817cd587",
+  "main": "content/ARCollectionsDisputeResolution.bpmn#recordCreated",
   "contentType": "Flow",
   "targetFramework": "Portable",
   "runtimeOptions": {

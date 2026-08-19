@@ -1,0 +1,17 @@
+{
+  "SolutionId": "87ef25b1-a4a1-460c-e55f-08defde97196",
+  "Projects": [
+    {
+      "ProjectId": "ab6ee860-6628-42f5-a9c0-ae0070a5a54b",
+      "ProjectRelativePath": "MockUpdateDispute/project.uiproj"
+    },
+    {
+      "ProjectId": "e3f28205-a683-4ebb-9323-da3535bb3910",
+      "ProjectRelativePath": "LookupPaymentApplication/project.uiproj"
+    },
+    {
+      "ProjectId": "3dfdf682-e191-4968-9d13-f3b6817cd587",
+      "ProjectRelativePath": "ARCollectionsDisputeResolution/project.uiproj"
+    }
+  ]
+}

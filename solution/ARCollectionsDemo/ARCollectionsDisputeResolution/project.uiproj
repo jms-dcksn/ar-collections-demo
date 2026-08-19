@@ -1,4 +1,6 @@
 {
+  "ProjectType": "Flow",
   "Name": "ARCollectionsDisputeResolution",
-  "ProjectType": "Flow"
+  "Description": null,
+  "MainFile": null
 }

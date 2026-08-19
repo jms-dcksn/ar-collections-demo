@@ -4,6 +4,7 @@
     "name": "ar-payment-resolution-index",
     "kind": "index",
     "apiVersion": "ecs.uipath.com/v2",
+    "isOverridable": true,
     "dependencies": [],
     "runtimeDependencies": [],
     "folders": [

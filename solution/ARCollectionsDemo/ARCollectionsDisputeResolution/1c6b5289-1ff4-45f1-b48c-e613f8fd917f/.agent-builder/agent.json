@@ -148,5 +148,139 @@
   ],
   "projectId": "1c6b5289-1ff4-45f1-b48c-e613f8fd917f",
   "id": "1c6b5289-1ff4-45f1-b48c-e613f8fd917f",
-  "name": "Payment Misapplication Specialist"
+  "name": "Payment Misapplication Specialist",
+  "resources": [
+    {
+      "$resourceType": "context",
+      "name": "ar-payment-resolution-index",
+      "description": "Payment misapplication resolution playbook.",
+      "folderPath": "JD/demos",
+      "indexName": "ar-payment-resolution-index",
+      "id": "1ad2e73a-662b-4fbc-8efe-771a5c4f4897",
+      "referenceKey": "",
+      "settings": {
+        "query": {
+          "description": "The query for the Semantic strategy",
+          "variant": "dynamic"
+        },
+        "folderPathPrefix": {
+          "variant": "static",
+          "value": ""
+        },
+        "threshold": 0,
+        "resultCount": 3,
+        "retrievalMode": "semantic",
+        "fileExtension": {
+          "value": "All"
+        }
+      },
+      "contextType": "index"
+    },
+    {
+      "$resourceType": "mcp",
+      "id": "7688a739-fae4-47ac-a15e-9324330b580e",
+      "name": "remittance-advice-service",
+      "description": "",
+      "slug": "remittance-advice-service",
+      "folderPath": "JD/demos",
+      "availableTools": [
+        {
+          "name": "get_remittance_advice",
+          "description": "Look up the remittance advice the payer sent with a payment.\n\nUse this to establish payer intent when a payment appears to have been applied to the\nwrong invoice. The remittance advice lists the invoice numbers the payer named, the\namount allocated to each, and any deduction they took. Compare the invoice numbers\nhere against the invoice the ERP actually credited: a mismatch is direct evidence of\na misapplication rather than a customer error.\n\nArgs:\n    payment_reference: The payment reference from the case packet, e.g. \"PAY-77821\".\n\nReturns:\n    A dict with `found` set to True and the remittance advice detail — payer,\n    receipt channel, total remitted, and a `lineItems` list of the invoices the payer\n    named. When no advice exists for the reference, `found` is False and `reason`\n    explains the miss; an absent remittance advice is itself meaningful, since it\n    means payer intent cannot be established from documentation.\n",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "payment_reference": {
+                "type": "string",
+                "title": "Payment Reference"
+              }
+            },
+            "required": [
+              "payment_reference"
+            ]
+          },
+          "outputSchema": null,
+          "argumentProperties": {}
+        }
+      ],
+      "solutionProperties": {
+        "resourceKey": "1615d121-a674-4a4b-9209-bdb395ea6d7c"
+      },
+      "toolsConfiguration": {
+        "discoveryMode": {
+          "type": "cached",
+          "refreshSchemaBeforeCall": true
+        }
+      }
+    },
+    {
+      "$resourceType": "tool",
+      "name": "LookupPaymentApplication",
+      "description": "A read-only lookup for cash-application evidence used to verify a suspected payment misapplication.",
+      "type": "api",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "caseId": {
+            "type": "string"
+          },
+          "customerAccountId": {
+            "type": "string"
+          },
+          "invoiceNumber": {
+            "type": "string"
+          },
+          "paymentReference": {
+            "type": "string"
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "paymentReference": {
+            "type": "string"
+          },
+          "paymentAmount": {
+            "type": "number"
+          },
+          "paymentDate": {
+            "type": "string"
+          },
+          "appliedInvoiceNumber": {
+            "type": "string"
+          },
+          "targetInvoiceNumber": {
+            "type": "string"
+          },
+          "applicationStatus": {
+            "type": "string"
+          },
+          "matchedRemittance": {
+            "type": "boolean"
+          },
+          "recommendedAction": {
+            "type": "string"
+          },
+          "sourceSystem": {
+            "type": "string"
+          }
+        }
+      },
+      "settings": {},
+      "properties": {
+        "folderPath": "JD/demos",
+        "processName": "LookupPaymentApplication"
+      },
+      "guardrail": {
+        "policies": []
+      },
+      "id": "544b3390-6e9b-4314-b3ef-5a5a45b282c4",
+      "referenceKey": "e2a2f52e-30ba-4ce0-a1b0-0a45a7b04898",
+      "isEnabled": true,
+      "argumentProperties": {},
+      "canvasNodeId": "lookuppaymentapplication1"
+    }
+  ],
+  "features": []
 }

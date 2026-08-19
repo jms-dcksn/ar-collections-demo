@@ -1,0 +1,51 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "remittance-advice",
+    "kind": "process",
+    "type": "mcpServer",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "isOverridable": true,
+    "dependencies": [
+      {
+        "name": "remittance-advice",
+        "kind": "Package"
+      }
+    ],
+    "runtimeDependencies": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "type": "McpServer",
+      "environmentVariables": "",
+      "name": "remittance-advice",
+      "description": "Mock remittance-advice lookup exposed to the AR collections payment-misapplication agent over MCP",
+      "package": {
+        "name": "remittance-advice",
+        "key": "remittance-advice:0.0.1"
+      },
+      "packageName": "remittance-advice",
+      "packageVersion": "0.0.1",
+      "entryPointUniqueId": "044cff08-2606-4eee-b9dd-dae8c4cb14ab",
+      "entryPointName": "remittance-advice",
+      "inputArgumentsSchemaV2": "{\n  \"type\": \"object\",\n  \"properties\": {}\n}",
+      "outputArgumentsSchemaV2": "{\n  \"type\": \"object\",\n  \"properties\": {}\n}",
+      "hiddenForAttendedUser": false,
+      "alwaysRunning": false,
+      "autoStartProcess": false,
+      "targetFrameworkValue": "Portable",
+      "retentionAction": "Delete",
+      "retentionPeriod": 30,
+      "staleRetentionAction": "Delete",
+      "staleRetentionPeriod": 180,
+      "entryPoints": "[{\"UniqueId\":\"044cff08-2606-4eee-b9dd-dae8c4cb14ab\",\"Path\":\"remittance-advice\",\"DisplayName\":null,\"InputArguments\":\"{\\n  \\\"type\\\": \\\"object\\\",\\n  \\\"properties\\\": {}\\n}\",\"OutputArguments\":\"{\\n  \\\"type\\\": \\\"object\\\",\\n  \\\"properties\\\": {}\\n}\",\"Type\":7,\"TargetRuntime\":null,\"ContentRoot\":null,\"DataVariation\":null,\"Id\":128759}]",
+      "tags": []
+    },
+    "locks": [],
+    "key": "934d6a65-6754-4790-b284-c7d40ea92786",
+    "files": []
+  }
+}
