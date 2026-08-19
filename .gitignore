@@ -8,3 +8,5 @@ dist/
 *.nupkg
 *.zip
 .DS_Store
+.env
+.uipath/

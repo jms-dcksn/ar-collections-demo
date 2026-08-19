@@ -1,0 +1,9 @@
+[project]
+name = "remittance-advice"
+version = "0.0.1"
+description = "Mock remittance-advice lookup exposed to the AR collections payment-misapplication agent over MCP"
+authors = [{ name = "James Dickson", email = "james.dickson@uipath.com" }]
+dependencies = [
+    "uipath-mcp>=0.3.0,<0.4.0",
+]
+requires-python = ">=3.11"

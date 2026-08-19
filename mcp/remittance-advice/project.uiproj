@@ -1,0 +1,6 @@
+{
+  "ProjectType": "Mcpserver",
+  "Name": "remittance-advice",
+  "Description": "Mock remittance-advice lookup exposed to the AR collections payment-misapplication agent over MCP",
+  "MainFile": null
+}
