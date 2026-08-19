@@ -194,10 +194,15 @@ def test_data_fabric_record_created_trigger_starts_the_dispute_lifecycle():
     assert not nodes_of_type(flow, "uipath.human-in-the-loop.quick-form")
 
     triage = node_with_label(flow, "Grounded Dispute Triage")
+    stamp_case_id = node_with_label(flow, "Update Case ID on record")
     start_edges = outgoing(flow, created[0]["id"], "output")
     assert len(start_edges) == 1
-    assert start_edges[0]["targetNodeId"] == triage["id"]
+    assert start_edges[0]["targetNodeId"] == stamp_case_id["id"]
     assert start_edges[0]["targetPort"] == "input"
+    stamp_edges = outgoing(flow, stamp_case_id["id"], "output")
+    assert len(stamp_edges) == 1
+    assert stamp_edges[0]["targetNodeId"] == triage["id"]
+    assert stamp_edges[0]["targetPort"] == "input"
 
 
 def test_flow_uses_all_mapped_inline_agents_with_exact_runtime_contracts():
@@ -211,10 +216,10 @@ def test_flow_uses_all_mapped_inline_agents_with_exact_runtime_contracts():
     triage_inputs = {
         item["id"]: item for item in triage["inputs"]["agentInputVariables"]
     }
-    assert set(triage_inputs) == {"recordCreated__output__output"}
-    assert triage_inputs["recordCreated__output__output"]["type"] == "object"
+    assert set(triage_inputs) == {"recordCreated__output"}
+    assert triage_inputs["recordCreated__output"]["type"] == "object"
     assert (
-        triage_inputs["recordCreated__output__output"]["binding"]
+        triage_inputs["recordCreated__output"]["binding"]
         == "=$vars.recordCreated.output"
     )
     assert {item["id"]: item["type"] for item in triage["inputs"]["agentOutputVariables"]} == {
@@ -224,7 +229,7 @@ def test_flow_uses_all_mapped_inline_agents_with_exact_runtime_contracts():
     }
 
     specialist_inputs = {
-        "recordCreated__output__output": ("object", "=$vars.recordCreated.output"),
+        "recordCreated__output": ("object", "=$vars.recordCreated.output"),
         "triageAgent__output__disputeType": (
             "string",
             "=$vars.triageAgent.output.disputeType",
@@ -473,11 +478,16 @@ def test_data_fabric_approval_events_are_correlated_persisted_and_isolated():
         "Persist Rejected",
         "Persist Updating",
         "Persist Resolved",
+        "Update Case ID on record",
     }
     for data_fabric_update in data_fabric_updates:
         record_ids = values_named(data_fabric_update, "recordId")
         assert record_ids, f"missing recordId input on {data_fabric_update['id']}"
-        assert "=js:$vars.recordCreated.output.Id" in json.dumps(record_ids)
+        # the editor may or may not parenthesize the expression body
+        assert re.search(
+            r"=js:\(?\$vars\.recordCreated\.output\.Id\)?",
+            json.dumps(record_ids),
+        ), data_fabric_update["id"]
 
     triage = node_with_label(flow, "Grounded Dispute Triage")
     triaging_persistence = node_with_label(flow, "Persist Triaging")
@@ -670,6 +680,15 @@ def test_data_fabric_approval_events_are_correlated_persisted_and_isolated():
 
 
 def test_mock_update_uses_the_deployed_api_workflow_folder():
+    """The flow resolves MockUpdateDispute in the deployed solution folder, but the
+    solution binding must stay solution-relative.
+
+    Naming the live folder in bindings_v2.json makes `uip solution pack` look the
+    process up in Orchestrator and bind to the release the deployment already owns
+    (resource `MockUpdateDispute_1`). Deploying that package back over the same
+    deployment fails with Orchestrator 4010 — "contains resources which have already
+    been installed by the current deployment".
+    """
     flow, _, _ = load_contract()
     flow_binding = next(
         binding
@@ -684,9 +703,7 @@ def test_mock_update_uses_the_deployed_api_workflow_folder():
     )
 
     assert flow_binding["default"] == "JD_Demos/demos/ARCollectionsDemo"
-    assert solution_binding["value"]["folderPath"]["defaultValue"] == (
-        "JD_Demos/demos/ARCollectionsDemo"
-    )
+    assert solution_binding["value"]["folderPath"]["defaultValue"] == "solution_folder"
 
 
 def test_mock_update_definition_exposes_the_api_workflow_argument_contract():
@@ -720,21 +737,21 @@ def test_mock_update_definition_exposes_the_api_workflow_argument_contract():
 def test_agent_resources_registry_bindings_and_generated_variables_are_complete():
     flow, _, nodes = load_contract()
     expected_resources = {
-        "triageTaxonomyContext": (
-            "uipath.agent.resource.context.index.ar-dispute-triage-index.9e46f4a3-6c15-4cab-9030-08def39d8059",
-            "deb897d4-bdfb-4ba0-8cbc-63b7d36bb6d3",
+        "arDisputeTriageIndex1": (
+            "uipath.agent.resource.context.index.ar-dispute-triage-index.39da4378-991c-4099-e2d8-08defd669eef",
+            "1148f840-b261-4d67-9473-1a6171a571cf",
             "triageAgent",
             "context",
         ),
-        "paymentResolutionContext": (
-            "uipath.agent.resource.context.index.ar-payment-resolution-index.469965c2-8382-4521-9031-08def39d8059",
-            "3164f987-7d12-47bd-ba72-815bdc1dbbcd",
+        "arPaymentResolutionIndex1": (
+            "uipath.agent.resource.context.index.ar-payment-resolution-index.9c3d6d90-ee16-4ec8-f719-08def7887a02",
+            "1ad2e73a-662b-4fbc-8efe-771a5c4f4897",
             "paymentMisapplicationAgent",
             "context",
         ),
-        "lookupPaymentTool": (
-            "uipath.agent.resource.tool.api.cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
-            "01605eeb-d428-49af-81b4-0d5ca844af2f",
+        "lookuppaymentapplication1": (
+            "uipath.agent.resource.tool.api.e2a2f52e-30ba-4ce0-a1b0-0a45a7b04898",
+            "544b3390-6e9b-4314-b3ef-5a5a45b282c4",
             "paymentMisapplicationAgent",
             "tool",
         ),
@@ -763,59 +780,35 @@ def test_agent_resources_registry_bindings_and_generated_variables_are_complete(
         assert definition["model"]["source"] is True
         assert (parent_id, parent_port, node_id, "input") in artifact_edges
 
-    api_resource_key = "cc99e8d4-57b5-4c6a-b563-29d6fb143b9b"
+    api_resource_key = "JD_Demos/demos/ARCollectionsDemo.LookupPaymentApplication"
     api_definition = definitions[
-        (expected_resources["lookupPaymentTool"][0], "1.0.0")
+        (expected_resources["lookuppaymentapplication1"][0], "1.0.0")
     ]
     assert api_definition["model"]["bindings"]["resourceKey"] == api_resource_key
-    expected_lookup_bindings = [
-        {
-            "id": "bLookupPaymentName",
-            "name": "name",
-            "type": "string",
-            "resource": "process",
-            "resourceKey": api_resource_key,
-            "default": "LookupPaymentApplication",
-            "propertyAttribute": "name",
-            "resourceSubType": "Api",
-        },
-        {
-            "id": "bLookupPaymentFolderPath",
-            "name": "folderPath",
-            "type": "string",
-            "resource": "process",
-            "resourceKey": api_resource_key,
-            "default": "solution_folder",
-            "propertyAttribute": "folderPath",
-            "resourceSubType": "Api",
-        },
-    ]
+    # Binding ids are CLI-generated and churn on every editor save, so the contract
+    # is the semantic tuple, not the id.
     mock_update_key = "e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd"
-    expected_mock_update_bindings = [
-        {
-            "id": "bMockUpdateDisputeName",
-            "name": "name",
-            "type": "string",
-            "resource": "process",
-            "resourceKey": mock_update_key,
-            "default": "MockUpdateDispute",
-            "propertyAttribute": "name",
-            "resourceSubType": "Api",
-        },
-        {
-            "id": "bMockUpdateDisputeFolderPath",
-            "name": "folderPath",
-            "type": "string",
-            "resource": "process",
-            "resourceKey": mock_update_key,
-            "default": "JD_Demos/demos/ARCollectionsDemo",
-            "propertyAttribute": "folderPath",
-            "resourceSubType": "Api",
-        },
-    ]
     assert [
-        binding for binding in flow["bindings"] if binding["resource"] == "process"
-    ] == expected_lookup_bindings + expected_mock_update_bindings
+        (
+            binding["resourceKey"],
+            binding["propertyAttribute"],
+            binding.get("default"),
+            binding["resourceSubType"],
+        )
+        for binding in flow["bindings"]
+        if binding["resource"] == "process"
+    ] == [
+        (mock_update_key, "name", "MockUpdateDispute", "Api"),
+        (mock_update_key, "folderPath", "JD_Demos/demos/ARCollectionsDemo", "Api"),
+        (api_resource_key, "name", "LookupPaymentApplication", "Api"),
+        (api_resource_key, "folderPath", "JD_Demos/demos/ARCollectionsDemo", "Api"),
+        (
+            api_resource_key,
+            "folderKey",
+            "bbe64c10-b957-4adf-a535-77109c673e5a",
+            "Api",
+        ),
+    ]
 
     connection_bindings = [
         binding for binding in flow["bindings"] if binding["resource"] == "connection"
@@ -831,7 +824,7 @@ def test_agent_resources_registry_bindings_and_generated_variables_are_complete(
         ),
         (
             "FolderKey",
-            "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
+            "",
             "FolderKey",
         ),
         (

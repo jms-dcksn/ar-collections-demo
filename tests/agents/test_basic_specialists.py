@@ -10,7 +10,7 @@ FLOW_DIR = ROOT / "solution/ARCollectionsDemo/ARCollectionsDisputeResolution"
 MAPPING_PATH = ROOT / "config/agent-projects.json"
 
 INPUT_FIELDS = {
-    "recordCreated__output__output": "object",
+    "recordCreated__output": "object",
     "triageAgent__output__disputeType": "string",
     "triageAgent__output__rationale": "string",
     "triageAgent__output__confidence": "number",
@@ -62,7 +62,7 @@ OUTPUT_SCHEMA = {
 }
 
 EXPECTED_INPUT_TOKENS = {
-    "input.recordCreated__output__output",
+    "input.recordCreated__output",
     "input.triageAgent__output__disputeType",
     "input.triageAgent__output__rationale",
     "input.triageAgent__output__confidence",
