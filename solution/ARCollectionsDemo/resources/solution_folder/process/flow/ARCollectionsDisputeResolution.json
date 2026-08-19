@@ -16,19 +16,19 @@
     "runtimeDependencies": [
       {
         "bindingType": "process",
-        "bindingKey": "cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
+        "bindingKey": "e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
         "bindingValues": {
           "folderPath": {
             "defaultValue": "solution_folder",
             "isExpression": false
           },
           "name": {
-            "defaultValue": "LookupPaymentApplication",
+            "defaultValue": "MockUpdateDispute",
             "isExpression": false
           }
         },
         "bindingMetadata": {
-          "activityName": "Lookup Payment Application",
+          "activityName": "Mock Update Dispute",
           "bindingsVersion": "2.2",
           "solutionsSupport": "true"
         },
@@ -54,6 +54,66 @@
         "resourceKey": "c61c5442-c5d6-4cb2-9c02-f4a541f01e4c",
         "resourceName": "james.dickson@uipath.com",
         "folderKey": "67fc19c3-e3a7-4523-aac0-fa63ea83d261"
+      },
+      {
+        "bindingType": "connection",
+        "bindingKey": "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+        "bindingValues": {
+          "connectionId": {
+            "defaultValue": "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+            "isExpression": false
+          }
+        },
+        "bindingMetadata": {
+          "activityName": "Record Created",
+          "bindingsVersion": "2.2",
+          "connector": "uipath-uipath-dataservice",
+          "useConnectionService": "true"
+        },
+        "resourceKind": "Connection",
+        "resourceType": "uipath-uipath-dataservice",
+        "resourceKey": "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+        "resourceName": "james.dickson@uipath.com_1",
+        "folderKey": "bbe64c10-b957-4adf-a535-77109c673e5a"
+      },
+      {
+        "bindingType": "process",
+        "bindingKey": "LookupPaymentApplication",
+        "bindingValues": {
+          "name": {
+            "defaultValue": "LookupPaymentApplication",
+            "isExpression": false
+          }
+        },
+        "bindingMetadata": {
+          "bindingsVersion": "2.2",
+          "solutionsSupport": "true"
+        },
+        "resourceKind": "Process"
+      },
+      {
+        "bindingType": "EventTrigger",
+        "bindingKey": "6cd4c047-ab49-4aad-8cfa-5681db3db20b_recordCreated",
+        "bindingValues": {
+          "connectionId": {
+            "defaultValue": "6cd4c047-ab49-4aad-8cfa-5681db3db20b",
+            "isExpression": false
+          },
+          "entryPointUniqueId": {
+            "defaultValue": "c53b2611-0852-4811-9b4a-4c4974e07bfa",
+            "isExpression": false
+          }
+        },
+        "bindingMetadata": {
+          "activityName": "Record Created",
+          "bindingsVersion": "2.2",
+          "connector": "uipath-uipath-dataservice",
+          "operation": "CREATED",
+          "objectName": "JDARCollectionsEntity",
+          "filterExpression": ""
+        },
+        "resourceKind": "Connection",
+        "resourceType": "uipath-uipath-dataservice"
       }
     ],
     "folders": [

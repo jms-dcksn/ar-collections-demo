@@ -3,35 +3,11 @@
   "resources": [
     {
       "resource": "process",
-      "key": "cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
-      "id": "processcc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
-      "value": {
-        "folderPath": {
-          "defaultValue": "solution_folder",
-          "isExpression": false,
-          "displayName": "Folder path"
-        },
-        "name": {
-          "defaultValue": "LookupPaymentApplication",
-          "isExpression": false,
-          "displayName": "Process name"
-        }
-      },
-      "metadata": {
-        "ActivityName": "Lookup Payment Application",
-        "BindingsVersion": "2.2",
-        "DisplayLabel": "name",
-        "SolutionsSupport": "true",
-        "subType": "Api"
-      }
-    },
-    {
-      "resource": "process",
       "key": "e0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
       "id": "processe0be5a37-e1a7-4871-ae3c-d9a0e8398cbd",
       "value": {
         "folderPath": {
-          "defaultValue": "JD_Demos/demos/ARCollectionsDemo",
+          "defaultValue": "solution_folder",
           "isExpression": false,
           "displayName": "Folder path"
         },
@@ -88,6 +64,22 @@
       }
     },
     {
+      "resource": "process",
+      "key": "LookupPaymentApplication",
+      "value": {
+        "name": {
+          "defaultValue": "LookupPaymentApplication",
+          "isExpression": false,
+          "displayName": "Process name"
+        }
+      },
+      "metadata": {
+        "subType": "api",
+        "bindingsVersion": "2.2",
+        "solutionsSupport": "true"
+      }
+    },
+    {
       "resource": "EventTrigger",
       "key": "6cd4c047-ab49-4aad-8cfa-5681db3db20b_recordCreated",
       "id": "EventTrigger6cd4c047-ab49-4aad-8cfa-5681db3db20b_recordCreated",
@@ -109,62 +101,6 @@
         "ObjectName": "JDARCollectionsEntity",
         "Operation": "CREATED",
         "FilterExpression": ""
-      }
-    },
-    {
-      "resource": "index",
-      "key": "ar-dispute-triage-index",
-      "value": {
-        "name": {
-          "defaultValue": "ar-dispute-triage-index",
-          "isExpression": false,
-          "displayName": "Index Name"
-        },
-        "folderPath": {
-          "defaultValue": "JD_Demos/demos",
-          "isExpression": false,
-          "displayName": "Folder path"
-        }
-      },
-      "metadata": {
-        "bindingsVersion": "2.2",
-        "solutionsSupport": "true"
-      }
-    },
-    {
-      "resource": "process",
-      "key": "LookupPaymentApplication",
-      "value": {
-        "name": {
-          "defaultValue": "LookupPaymentApplication",
-          "isExpression": false,
-          "displayName": "Process name"
-        }
-      },
-      "metadata": {
-        "subType": "api",
-        "bindingsVersion": "2.2",
-        "solutionsSupport": "true"
-      }
-    },
-    {
-      "resource": "index",
-      "key": "ar-payment-resolution-index",
-      "value": {
-        "name": {
-          "defaultValue": "ar-payment-resolution-index",
-          "isExpression": false,
-          "displayName": "Index Name"
-        },
-        "folderPath": {
-          "defaultValue": "JD_Demos/demos",
-          "isExpression": false,
-          "displayName": "Folder path"
-        }
-      },
-      "metadata": {
-        "bindingsVersion": "2.2",
-        "solutionsSupport": "true"
       }
     }
   ]

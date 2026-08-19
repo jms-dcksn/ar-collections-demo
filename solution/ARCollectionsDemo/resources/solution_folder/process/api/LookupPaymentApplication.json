@@ -5,7 +5,7 @@
     "kind": "process",
     "type": "api",
     "apiVersion": "orchestrator.uipath.com/v1",
-    "projectKey": "61301115-9557-4ff8-98d0-ff4230ba479f",
+    "projectKey": "58309b58-8d62-4e1a-a2db-d0ddb1b7a4e9",
     "isOverridable": true,
     "dependencies": [
       {
@@ -23,9 +23,8 @@
       "type": "Api",
       "name": "LookupPaymentApplication",
       "package": {
-        "key": "63e36735-efb4-4788-9bfe-f748a72d471e"
+        "key": "ec9e0e10-e02b-41bd-8d4d-520f3f00d5a3"
       },
-      "packageName": "ARCollectionsDemo.api.LookupPaymentApplication",
       "targetFrameworkValue": "Portable",
       "retentionAction": "Delete",
       "retentionPeriod": 30,
@@ -33,7 +32,7 @@
       "staleRetentionPeriod": 180
     },
     "locks": [],
-    "key": "cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
+    "key": "e2a2f52e-30ba-4ce0-a1b0-0a45a7b04898",
     "files": []
   }
 }

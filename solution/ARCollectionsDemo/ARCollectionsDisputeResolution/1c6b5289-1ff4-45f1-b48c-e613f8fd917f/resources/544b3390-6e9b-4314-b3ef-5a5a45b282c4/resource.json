@@ -1,7 +1,7 @@
 {
   "$resourceType": "tool",
   "name": "LookupPaymentApplication",
-  "description": "A read-only lookup for cash-application evidence used to verify a suspected payment misapplication.",
+  "description": "",
   "location": "solution",
   "type": "api",
   "inputSchema": {
@@ -18,18 +18,8 @@
       },
       "paymentReference": {
         "type": "string"
-      },
-      "guardrails": {
-        "type": "array"
       }
-    },
-    "required": [
-      "caseId",
-      "customerAccountId",
-      "invoiceNumber",
-      "paymentReference",
-      "guardrails"
-    ]
+    }
   },
   "outputSchema": {
     "type": "object",
@@ -61,31 +51,19 @@
       "sourceSystem": {
         "type": "string"
       }
-    },
-    "required": [
-      "paymentReference",
-      "paymentAmount",
-      "paymentDate",
-      "appliedInvoiceNumber",
-      "targetInvoiceNumber",
-      "applicationStatus",
-      "matchedRemittance",
-      "recommendedAction",
-      "sourceSystem"
-    ]
+    }
   },
   "settings": {},
   "properties": {
-    "folderPath": "solution_folder",
-    "processName": "LookupPaymentApplication",
-    "exampleCalls": []
+    "folderPath": "JD_Demos/demos/ARCollectionsDemo",
+    "processName": "LookupPaymentApplication"
   },
   "guardrail": {
     "policies": []
   },
-  "id": "01605eeb-d428-49af-81b4-0d5ca844af2f",
-  "referenceKey": "cc99e8d4-57b5-4c6a-b563-29d6fb143b9b",
+  "id": "544b3390-6e9b-4314-b3ef-5a5a45b282c4",
+  "referenceKey": "e2a2f52e-30ba-4ce0-a1b0-0a45a7b04898",
   "isEnabled": true,
   "argumentProperties": {},
-  "canvasNodeId": "lookupPaymentTool"
+  "canvasNodeId": "lookuppaymentapplication1"
 }
