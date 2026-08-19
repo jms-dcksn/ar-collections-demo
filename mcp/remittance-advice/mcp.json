@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "remittance-advice": {
+        "transport": "stdio",
+        "command": "python",
+        "args": ["server.py"]
+    }
+  }
+}

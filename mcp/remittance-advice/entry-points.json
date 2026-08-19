@@ -1,0 +1,20 @@
+{
+    "$schema": "https://cloud.uipath.com/draft/2024-12/entry-point",
+    "$id": "entry-points.json",
+    "entryPoints": [
+        {
+            "filePath": "remittance-advice",
+            "uniqueId": "044cff08-2606-4eee-b9dd-dae8c4cb14ab",
+            "type": "mcpserver",
+            "input": {
+                "type": "object",
+                "properties": {}
+            },
+            "output": {
+                "type": "object",
+                "properties": {}
+            },
+            "graph": null
+        }
+    ]
+}
