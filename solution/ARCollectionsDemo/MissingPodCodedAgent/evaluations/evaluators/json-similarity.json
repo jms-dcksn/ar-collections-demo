@@ -1,0 +1,9 @@
+{
+  "version": "1.0",
+  "id": "JsonSimilarityEvaluator",
+  "evaluatorTypeId": "uipath-json-similarity",
+  "evaluatorConfig": {
+    "name": "JsonSimilarityEvaluator",
+    "description": "Scores the deterministic half of the 12-field proposal contract: preserved identifiers and the fixed missing-POD action."
+  }
+}

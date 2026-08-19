@@ -3,7 +3,15 @@
   "agents": {
     "triage": "f7d7d1a5-0f16-43f1-b1b8-b70cef70ece9",
     "poMismatch": "30427850-3685-4d58-9c41-8dfb95163182",
-    "missingPod": "81cc5d04-87bf-4a19-9a5f-ba1a2dbf006a",
     "paymentMisapplication": "1c6b5289-1ff4-45f1-b48c-e613f8fd917f"
+  },
+  "codedAgents": {
+    "missingPod": {
+      "projectDir": "MissingPodCodedAgent",
+      "projectKey": "31b8d38c-5b5e-4b3f-9a3b-efa1d06a55a5",
+      "resourceKey": "10decc6b-2867-4dd3-af0b-1d9dd9c3fe6d",
+      "nodeType": "uipath.core.agent.10decc6b-2867-4dd3-af0b-1d9dd9c3fe6d",
+      "entryPoint": "agent"
+    }
   }
 }

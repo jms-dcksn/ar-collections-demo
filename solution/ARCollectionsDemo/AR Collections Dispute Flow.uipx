@@ -1,13 +1,8 @@
 {
     "DocVersion": "1.0.0",
-    "StudioMinVersion": "2025.10.0",
+    "StudioMinVersion": "2025.04.0",
     "SolutionId": "87ef25b1-a4a1-460c-e55f-08defde97196",
     "Projects": [
-        {
-            "Type": "Flow",
-            "ProjectRelativePath": "ARCollectionsDisputeResolution/project.uiproj",
-            "Id": "0db80011-c481-493c-b4da-aa6944b3373b"
-        },
         {
             "Type": "Api",
             "ProjectRelativePath": "MockUpdateDispute/project.uiproj",
@@ -17,6 +12,17 @@
             "Type": "Api",
             "ProjectRelativePath": "LookupPaymentApplication/project.uiproj",
             "Id": "58309b58-8d62-4e1a-a2db-d0ddb1b7a4e9"
+        },
+        {
+            "Type": "Flow",
+            "ProjectRelativePath": "ARCollectionsDisputeResolution/project.uiproj",
+            "Id": "0db80011-c481-493c-b4da-aa6944b3373b"
+        },
+        {
+            "Type": "Agent",
+            "ProjectRelativePath": "MissingPodCodedAgent/project.uiproj",
+            "Id": "31b8d38c-5b5e-4b3f-9a3b-efa1d06a55a5"
         }
-    ]
+    ],
+    "AutomationHubIdeaUrl": null
 }

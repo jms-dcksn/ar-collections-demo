@@ -8,3 +8,8 @@ dist/
 *.nupkg
 *.zip
 .DS_Store
+__uipath/
+# Spurious stub manifest the uip CLI regenerates from the directory name;
+# the real manifest is 'AR Collections Dispute Flow.uipx'.
+solution/ARCollectionsDemo/ARCollectionsDemo.uipx
+.env

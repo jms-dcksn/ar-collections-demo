@@ -68,6 +68,9 @@ EXPECTED_INPUT_TOKENS = {
     "input.triageAgent__output__confidence",
 }
 
+# missingPod is deliberately absent: it is now an in-solution coded agent, not an
+# inline low-code project. Its contract is covered by
+# tests/agents/test_missing_pod_coded_agent.py.
 SPECIALISTS = {
     "poMismatch": {
         "project_id": "30427850-3685-4d58-9c41-8dfb95163182",
@@ -77,16 +80,6 @@ SPECIALISTS = {
             "1,500",
             "ISSUE_CREDIT",
             "adjustmentAmount=1500",
-        ),
-    },
-    "missingPod": {
-        "project_id": "81cc5d04-87bf-4a19-9a5f-ba1a2dbf006a",
-        "prompt_terms": (
-            "2026-06-18",
-            "M. Chen",
-            "matching quantities",
-            "PROVIDE_POD",
-            "adjustmentAmount=0",
         ),
     },
 }

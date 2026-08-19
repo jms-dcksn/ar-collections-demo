@@ -78,10 +78,27 @@ recordCreated (Data Fabric record-created trigger) -> updateEntityRecord1
                   -> persistResolved1 -> resolved (end)
 ```
 
-The four inline low-code agents live in GUID-named subdirectories of the Flow project;
-`config/agent-projects.json` maps logical names (`triage`, `poMismatch`, `missingPod`,
+Three inline low-code agents live in GUID-named subdirectories of the Flow project;
+`config/agent-projects.json` maps logical names (`triage`, `poMismatch`,
 `paymentMisapplication`) to those GUIDs and pins the model. Tests read that mapping, so
 change it and the agent directories together.
+
+`missingPodAgent` is **not** inline — it is an in-solution Python coded agent, the sibling
+project `solution/ARCollectionsDemo/MissingPodCodedAgent`. LangChain/LangGraph, with the
+smallest possible topology (`START -> agent -> END`, where `agent` is the compiled
+`create_agent()` subgraph); input-message construction and structured-result validation
+live in `before_agent` / `after_agent` middleware inside that subgraph. The model is
+`UiPathAzureChatOpenAI(model="gpt-5.6-terra", temperature=0)`, built inside the
+`make_graph()` factory so importing `main.py` needs no auth. The Flow references it as
+`uipath.core.agent.<resourceKey>`, where `<resourceKey>` is the local key minted by
+`uip solution projects add` and recorded under `codedAgents` in
+`config/agent-projects.json`. Never hand-invent that key — read it from
+`resources/solution_folder/process/agent/MissingPodCodedAgent.json` or
+`uip maestro flow registry list --local`.
+
+The solution manifest is `AR Collections Dispute Flow.uipx` (the Studio Web name). Some
+`uip` commands regenerate a junk `ARCollectionsDemo.uipx` stub named after the directory —
+it is gitignored; delete it if a `uip solution` command complains about multiple manifests.
 
 **API Workflows** — `LookupPaymentApplication` (mock cash-application evidence, exposed to
 the payment agent as a tool) and `MockUpdateDispute` (simulated downstream write). Both are

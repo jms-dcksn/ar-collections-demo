@@ -1,0 +1,37 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "MissingPodCodedAgent",
+    "kind": "process",
+    "type": "agent",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "projectKey": "31b8d38c-5b5e-4b3f-9a3b-efa1d06a55a5",
+    "dependencies": [
+      {
+        "kind": "package",
+        "name": "MissingPodCodedAgent"
+      }
+    ],
+    "runtimeDependencies": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "type": "Agent",
+      "name": "MissingPodCodedAgent",
+      "package": {
+        "key": "ad0412d3-0f05-4bf6-accf-5374c9b05c6c"
+      },
+      "targetFrameworkValue": "Portable",
+      "retentionAction": "Delete",
+      "retentionPeriod": 30,
+      "staleRetentionAction": "Delete",
+      "staleRetentionPeriod": 180
+    },
+    "locks": [],
+    "key": "10decc6b-2867-4dd3-af0b-1d9dd9c3fe6d",
+    "files": []
+  }
+}

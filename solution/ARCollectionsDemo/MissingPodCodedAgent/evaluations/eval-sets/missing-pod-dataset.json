@@ -1,0 +1,171 @@
+{
+  "version": "1.0",
+  "id": "missing-pod-dataset",
+  "name": "Missing POD Specialist Dataset",
+  "description": "Five routed cases for the missing proof-of-delivery specialist: two valid routes that must produce the fixed PROVIDE_POD proposal, and three degraded inputs that must be flagged rather than guessed.",
+  "evaluatorRefs": [
+    "JsonSimilarityEvaluator",
+    "LLMJudgeOutputEvaluator"
+  ],
+  "evaluations": [
+    {
+      "id": "test-1-canonical-missing-pod",
+      "name": "Canonical missing-POD case resolves with PROVIDE_POD",
+      "inputs": {
+        "recordCreated__output": {
+          "caseId": "AR-POD-20260819-a1b2c3d4",
+          "customerName": "Riverbend Retail",
+          "customerAccountId": "RIVERBEND-2904",
+          "invoiceNumber": "INV-20482",
+          "outstandingBalance": 22400,
+          "customerReason": "Payment is on hold until proof of delivery is provided.",
+          "openedDate": "2026-07-10",
+          "evidence": "{\"deliveryDate\":\"2026-06-18\",\"signer\":\"M. Chen\",\"shipmentQuantity\":120,\"invoiceQuantity\":120}"
+        },
+        "triageAgent__output__disputeType": "missing_pod",
+        "triageAgent__output__rationale": "Customer withholds payment pending proof of delivery; evidence carries the delivery date, signer, and matching quantities.",
+        "triageAgent__output__confidence": 0.93
+      },
+      "evaluationCriterias": {
+        "JsonSimilarityEvaluator": {
+          "expectedOutput": {
+            "caseId": "AR-POD-20260819-a1b2c3d4",
+            "disputeType": "missing_pod",
+            "actionCode": "PROVIDE_POD",
+            "adjustmentAmount": 0
+          }
+        },
+        "LLMJudgeOutputEvaluator": {
+          "expectedOutput": {
+            "evidenceSummary": "Delivery evidence shows delivery on 2026-06-18, signed by M. Chen, with shipment quantity 120 matching invoice quantity 120.",
+            "recommendedAction": "Provide the delivery date, signer, and matching quantity evidence, and request release of invoice INV-20482 for payment with no financial adjustment.",
+            "emailBody": "Riverbend Retail,\n\nProof of delivery for invoice INV-20482 confirms delivery on 2026-06-18, signed by M. Chen. The shipment quantity of 120 matches the invoice quantity of 120.\n\nPlease release the invoice for payment. No financial adjustment is requested."
+          }
+        }
+      }
+    },
+    {
+      "id": "test-2-second-customer-missing-pod",
+      "name": "A different missing-POD customer still resolves with PROVIDE_POD and no adjustment",
+      "inputs": {
+        "recordCreated__output": {
+          "caseId": "AR-POD-20260819-77c1e0b9",
+          "customerName": "Northwind Grocers",
+          "customerAccountId": "NORTHWIND-1188",
+          "invoiceNumber": "INV-20915",
+          "outstandingBalance": 8750,
+          "customerReason": "We cannot locate a signed delivery receipt for this shipment.",
+          "openedDate": "2026-07-22",
+          "evidence": "{\"deliveryDate\":\"2026-06-18\",\"signer\":\"M. Chen\",\"shipmentQuantity\":45,\"invoiceQuantity\":45}"
+        },
+        "triageAgent__output__disputeType": "missing_pod",
+        "triageAgent__output__rationale": "Customer cannot locate a signed delivery receipt; delivery evidence is present and quantities agree.",
+        "triageAgent__output__confidence": 0.88
+      },
+      "evaluationCriterias": {
+        "JsonSimilarityEvaluator": {
+          "expectedOutput": {
+            "caseId": "AR-POD-20260819-77c1e0b9",
+            "disputeType": "missing_pod",
+            "actionCode": "PROVIDE_POD",
+            "adjustmentAmount": 0
+          }
+        },
+        "LLMJudgeOutputEvaluator": {
+          "expectedOutput": {
+            "evidenceSummary": "Delivery evidence shows delivery on 2026-06-18, signed by M. Chen, with shipment quantity 45 matching invoice quantity 45.",
+            "approvalSummary": "Approve POD response for Northwind Grocers: delivery occurred 2026-06-18, signed by M. Chen, and 45 shipped matches 45 invoiced. Request release of invoice INV-20915 for payment; no adjustment."
+          }
+        }
+      }
+    },
+    {
+      "id": "test-3-missing-triage-rationale",
+      "name": "Absent triage rationale is flagged and confidence drops",
+      "inputs": {
+        "recordCreated__output": {
+          "caseId": "AR-POD-20260819-3fd90a12",
+          "customerName": "Riverbend Retail",
+          "customerAccountId": "RIVERBEND-2904",
+          "invoiceNumber": "INV-20482",
+          "outstandingBalance": 22400,
+          "customerReason": "Payment is on hold until proof of delivery is provided.",
+          "openedDate": "2026-07-10",
+          "evidence": "{\"deliveryDate\":\"2026-06-18\",\"signer\":\"M. Chen\",\"shipmentQuantity\":120,\"invoiceQuantity\":120}"
+        },
+        "triageAgent__output__disputeType": "missing_pod",
+        "triageAgent__output__rationale": "",
+        "triageAgent__output__confidence": 0.41
+      },
+      "evaluationCriterias": {
+        "JsonSimilarityEvaluator": {
+          "expectedOutput": {
+            "caseId": "AR-POD-20260819-3fd90a12",
+            "disputeType": "missing_pod",
+            "actionCode": "PROVIDE_POD",
+            "adjustmentAmount": 0
+          }
+        },
+        "LLMJudgeOutputEvaluator": {
+          "expectedOutput": {
+            "evidenceSummary": "Delivery evidence shows delivery on 2026-06-18, signed by M. Chen, with shipment quantity 120 matching invoice quantity 120. The triage rationale is missing.",
+            "rootCause": "Payment is on hold pending proof of delivery; the delivery evidence supports fulfillment. The missing triage rationale is an input-integrity gap.",
+            "approvalSummary": "Approve POD response for Riverbend Retail: delivery occurred 2026-06-18, signed by M. Chen, and 120 shipped matches 120 invoiced. Request release of invoice INV-20482; no adjustment. Note: the triage rationale was not provided."
+          }
+        }
+      }
+    },
+    {
+      "id": "test-4-conflicting-route",
+      "name": "A PO-mismatch route into the missing-POD specialist is flagged as a conflict",
+      "inputs": {
+        "recordCreated__output": {
+          "caseId": "AR-POD-20260819-b45cc7e1",
+          "customerName": "Riverbend Retail",
+          "customerAccountId": "RIVERBEND-2904",
+          "invoiceNumber": "INV-20482",
+          "outstandingBalance": 22400,
+          "customerReason": "Payment is on hold until proof of delivery is provided.",
+          "openedDate": "2026-07-10",
+          "evidence": "{\"deliveryDate\":\"2026-06-18\",\"signer\":\"M. Chen\",\"shipmentQuantity\":120,\"invoiceQuantity\":120}"
+        },
+        "triageAgent__output__disputeType": "po_mismatch",
+        "triageAgent__output__rationale": "Purchase order pricing does not agree with the invoiced unit price.",
+        "triageAgent__output__confidence": 0.55
+      },
+      "evaluationCriterias": {
+        "LLMJudgeOutputEvaluator": {
+          "expectedOutput": {
+            "disputeType": "po_mismatch",
+            "actionCode": "PROVIDE_POD",
+            "rootCause": "Routing conflict: the customer-stated issue is missing proof of delivery, while the routed dispute type and triage rationale indicate a PO pricing mismatch. No PO pricing evidence is supplied.",
+            "approvalSummary": "Approve POD response for Riverbend Retail: delivery occurred 2026-06-18, signed by M. Chen, and 120 shipped matches 120 invoiced. Request payment release with no adjustment. Confidence is reduced because the routed type po_mismatch conflicts with the missing-POD customer reason.",
+            "confidence": 0.45
+          }
+        }
+      }
+    },
+    {
+      "id": "test-5-empty-case-packet",
+      "name": "An empty case packet is reported as a gap instead of being invented",
+      "inputs": {
+        "recordCreated__output": {},
+        "triageAgent__output__disputeType": "missing_pod",
+        "triageAgent__output__rationale": "Routed as missing proof of delivery.",
+        "triageAgent__output__confidence": 0.6
+      },
+      "evaluationCriterias": {
+        "LLMJudgeOutputEvaluator": {
+          "expectedOutput": {
+            "caseId": "",
+            "actionCode": "PROVIDE_POD",
+            "evidenceSummary": "The case packet is empty; no case ID, customer name, invoice, or shipment details were supplied. Triage routed the case as missing_pod.",
+            "rootCause": "The empty case packet prevents validation against a specific invoice or shipment, so the missing proof-of-delivery basis cannot be confirmed.",
+            "approvalSummary": "Approval requested to provide the POD facts of delivery on 2026-06-18 signed by M. Chen with matching quantities, and request invoice release with no adjustment. The empty case packet lacks case, customer, and invoice identifiers.",
+            "confidence": 0.25
+          }
+        }
+      }
+    }
+  ]
+}

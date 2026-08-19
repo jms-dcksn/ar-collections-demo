@@ -18,12 +18,14 @@ def _load_json(path: Path):
 
 def _triage_project():
     mapping = _load_json(MAPPING_PATH)
+    # missingPod moved to the `codedAgents` section when it became an
+    # in-solution coded agent; the remaining three are still inline low-code.
     assert set(mapping["agents"]) == {
         "triage",
         "poMismatch",
-        "missingPod",
         "paymentMisapplication",
     }
+    assert set(mapping["codedAgents"]) == {"missingPod"}
     project_id = mapping["agents"]["triage"]
     assert str(UUID(project_id)) == project_id
     project_dir = FLOW_DIR / project_id

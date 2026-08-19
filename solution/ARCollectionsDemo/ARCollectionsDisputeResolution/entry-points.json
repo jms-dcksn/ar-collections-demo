@@ -1,0 +1,232 @@
+{
+  "$schema": "https://cloud.uipath.com/draft/2024-12/entry-point",
+  "$id": "entry-points.json",
+  "entryPoints": [
+    {
+      "filePath": "content/ARCollectionsDisputeResolution.bpmn#recordCreated",
+      "uniqueId": "c53b2611-0852-4811-9b4a-4c4974e07bfa",
+      "type": "processorchestration",
+      "input": {
+        "type": "object",
+        "properties": {}
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "status"
+          },
+          "resultCaseId": {
+            "type": "string",
+            "title": "resultCaseId"
+          },
+          "disputeType": {
+            "type": "string",
+            "title": "disputeType"
+          },
+          "triageRationale": {
+            "type": "string",
+            "title": "triageRationale"
+          },
+          "triageConfidence": {
+            "type": "number",
+            "title": "triageConfidence"
+          },
+          "recommendedAction": {
+            "type": "string",
+            "title": "recommendedAction"
+          },
+          "approvalDecision": {
+            "type": "string",
+            "title": "approvalDecision"
+          },
+          "approvalComments": {
+            "type": "string",
+            "title": "approvalComments"
+          },
+          "updateResult": {
+            "type": "object",
+            "title": "updateResult"
+          },
+          "emailSent": {
+            "type": "boolean",
+            "title": "emailSent"
+          },
+          "resourcesUsed": {
+            "type": "string",
+            "title": "resourcesUsed"
+          },
+          "auditSummary": {
+            "type": "string",
+            "title": "auditSummary"
+          }
+        }
+      },
+      "displayName": "Record Created"
+    },
+    {
+      "filePath": "content/f7d7d1a5-0f16-43f1-b1b8-b70cef70ece9/agent.json",
+      "uniqueId": "f7d7d1a5-0f16-43f1-b1b8-b70cef70ece9",
+      "type": "agent",
+      "targetRuntime": "pythonAgent",
+      "input": {
+        "type": "object",
+        "properties": {
+          "recordCreated__output": {
+            "type": "object",
+            "description": "Data Fabric dispute record from the Record Created event"
+          }
+        }
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "disputeType": {
+            "type": "string"
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "number"
+          }
+        }
+      },
+      "displayName": "Grounded Dispute Triage",
+      "hiddenAtDesignTime": true
+    },
+    {
+      "filePath": "content/30427850-3685-4d58-9c41-8dfb95163182/agent.json",
+      "uniqueId": "30427850-3685-4d58-9c41-8dfb95163182",
+      "type": "agent",
+      "targetRuntime": "pythonAgent",
+      "input": {
+        "type": "object",
+        "properties": {
+          "recordCreated__output": {
+            "type": "object"
+          },
+          "triageAgent__output__disputeType": {
+            "type": "string"
+          },
+          "triageAgent__output__rationale": {
+            "type": "string"
+          },
+          "triageAgent__output__confidence": {
+            "type": "number"
+          }
+        }
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "caseId": {
+            "type": "string"
+          },
+          "disputeType": {
+            "type": "string"
+          },
+          "evidenceSummary": {
+            "type": "string"
+          },
+          "rootCause": {
+            "type": "string"
+          },
+          "recommendedAction": {
+            "type": "string"
+          },
+          "actionCode": {
+            "type": "string"
+          },
+          "adjustmentAmount": {
+            "type": "number"
+          },
+          "confidence": {
+            "type": "number"
+          },
+          "approvalSummary": {
+            "type": "string"
+          },
+          "emailSubject": {
+            "type": "string"
+          },
+          "emailBody": {
+            "type": "string"
+          },
+          "resourcesUsed": {
+            "type": "string"
+          }
+        }
+      },
+      "displayName": "PO Mismatch Specialist",
+      "hiddenAtDesignTime": true
+    },
+    {
+      "filePath": "content/1c6b5289-1ff4-45f1-b48c-e613f8fd917f/agent.json",
+      "uniqueId": "1c6b5289-1ff4-45f1-b48c-e613f8fd917f",
+      "type": "agent",
+      "targetRuntime": "pythonAgent",
+      "input": {
+        "type": "object",
+        "properties": {
+          "recordCreated__output": {
+            "type": "object"
+          },
+          "triageAgent__output__disputeType": {
+            "type": "string"
+          },
+          "triageAgent__output__rationale": {
+            "type": "string"
+          },
+          "triageAgent__output__confidence": {
+            "type": "number"
+          }
+        }
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "caseId": {
+            "type": "string"
+          },
+          "disputeType": {
+            "type": "string"
+          },
+          "evidenceSummary": {
+            "type": "string"
+          },
+          "rootCause": {
+            "type": "string"
+          },
+          "recommendedAction": {
+            "type": "string"
+          },
+          "actionCode": {
+            "type": "string"
+          },
+          "adjustmentAmount": {
+            "type": "number"
+          },
+          "confidence": {
+            "type": "number"
+          },
+          "approvalSummary": {
+            "type": "string"
+          },
+          "emailSubject": {
+            "type": "string"
+          },
+          "emailBody": {
+            "type": "string"
+          },
+          "resourcesUsed": {
+            "type": "string"
+          }
+        }
+      },
+      "displayName": "Payment Misapplication Specialist",
+      "hiddenAtDesignTime": true
+    }
+  ]
+}
