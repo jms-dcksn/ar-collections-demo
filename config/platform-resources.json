@@ -203,6 +203,12 @@
     "packageId": "AR.Collections.Dispute.Flow.flow.ARCollectionsDisputeResolution",
     "packageVersion": "1.0.4"
   },
+  "studioWebSolution": {
+    "name": "AR Collections Dispute Flow",
+    "manifest": "solution/ARCollectionsDemo/AR Collections Dispute Flow.uipx",
+    "solutionId": "87ef25b1-a4a1-460c-e55f-08defde97196",
+    "pullCommand": "uip solution download 87ef25b1-a4a1-460c-e55f-08defde97196 --extract"
+  },
   "resources": [
     {
       "source": "knowledge/triage/ar-dispute-taxonomy-and-examples.txt",

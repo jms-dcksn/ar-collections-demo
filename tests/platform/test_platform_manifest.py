@@ -34,6 +34,7 @@ ALLOWED_MANIFEST_KEYS = {
     "dataFabricConnectionKey",
     "dataFabricEntities",
     "deployedProcess",
+    "studioWebSolution",
     "resources",
 }
 ALLOWED_DEPLOYED_PROCESS_KEYS = {
@@ -43,6 +44,12 @@ ALLOWED_DEPLOYED_PROCESS_KEYS = {
     "processKey",
     "packageId",
     "packageVersion",
+}
+ALLOWED_STUDIO_WEB_SOLUTION_KEYS = {
+    "name",
+    "manifest",
+    "solutionId",
+    "pullCommand",
 }
 ALLOWED_RESOURCE_KEYS = {
     "source",
@@ -107,6 +114,22 @@ def test_platform_manifest_declares_the_deployed_maestro_process():
     _assert_canonical_uuid(process["processKey"])
     assert process["processName"] == "ARCollectionsDisputeResolution"
     assert process["packageId"].endswith(f".flow.{process['processName']}")
+
+
+def test_platform_manifest_declares_the_studio_web_solution():
+    manifest = json.loads(MANIFEST.read_text())
+    solution = manifest["studioWebSolution"]
+
+    assert set(solution) == ALLOWED_STUDIO_WEB_SOLUTION_KEYS
+    # The Studio Web solution ID is the only handle `uip solution download` accepts, and the
+    # editor is the source of truth for the artifacts, so it must stay recorded here.
+    _assert_canonical_uuid(solution["solutionId"])
+    assert solution["name"] == "AR Collections Dispute Flow"
+    assert solution["manifest"] == f"solution/ARCollectionsDemo/{solution['name']}.uipx"
+    assert (ROOT / solution["manifest"]).is_file()
+    assert json.loads((ROOT / solution["manifest"]).read_text())["SolutionId"] == solution["solutionId"]
+    assert solution["solutionId"] in solution["pullCommand"]
+    assert solution["pullCommand"].startswith("uip solution download ")
 
 
 def test_platform_manifest_declares_the_approved_data_fabric_entity():

@@ -32,6 +32,10 @@ npm --prefix ar-collections-app run build              # tsc -b && vite build
 npm --prefix ar-collections-app run lint               # oxlint
 npm --prefix ar-collections-app run dev                # localhost:5173, the registered OAuth redirect
 
+# Pull the solution back down from Studio Web (overwrites local artifacts)
+uip solution download 87ef25b1-a4a1-460c-e55f-08defde97196 \
+  -d <scratch-dir> -n solution --extract   # then rsync over solution/ARCollectionsDemo
+
 # Artifact validation (offline, no login required)
 UIPATH_CLI_DISABLE_VERSION_SYNC=1 uip maestro flow validate \
   solution/ARCollectionsDemo/ARCollectionsDisputeResolution/ARCollectionsDisputeResolution.flow --output json
