@@ -1,0 +1,6 @@
+{
+  "ProjectType": "Agent",
+  "Name": "MissingPodCodedAgent",
+  "Description": "Missing proof-of-delivery resolution specialist for the AR Collections dispute demo",
+  "MainFile": null
+}

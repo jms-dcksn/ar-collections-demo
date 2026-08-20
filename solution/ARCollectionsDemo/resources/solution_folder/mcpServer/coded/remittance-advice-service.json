@@ -1,0 +1,45 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "remittance-advice-service",
+    "kind": "mcpServer",
+    "type": "coded",
+    "apiVersion": "agenthub.uipath.com/v1",
+    "isOverridable": true,
+    "dependencies": [
+      {
+        "name": "remittance-advice",
+        "kind": "Process"
+      }
+    ],
+    "runtimeDependencies": [],
+    "files": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "mcpProcessRef": {
+        "name": "remittance-advice",
+        "key": "934d6a65-6754-4790-b284-c7d40ea92786",
+        "folderKey": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+        "lookupStrategy": "solutionAndTarget"
+      },
+      "slug": "remittance-advice-service",
+      "version": "1.0.0",
+      "tools": [
+        {
+          "name": "get_remittance_advice",
+          "title": "get_remittance_advice",
+          "description": "Look up the remittance advice the payer sent with a payment.\n\nUse this to establish payer intent when a payment appears to have been applied to the\nwrong invoice. The remittance advice lists the invoice numbers the payer named, the\namount allocated to each, and any deduction they took. Compare the invoice numbers\nhere against the invoice the ERP actually credited: a mismatch is direct evidence of\na misapplication rather than a customer error.\n\nArgs:\n    payment_reference: The payment reference from the case packet, e.g. \u0022PAY-77821\u0022.\n\nReturns:\n    A dict with \u0060found\u0060 set to True and the remittance advice detail \u2014 payer,\n    receipt channel, total remitted, and a \u0060lineItems\u0060 list of the invoices the payer\n    named. When no advice exists for the reference, \u0060found\u0060 is False and \u0060reason\u0060\n    explains the miss; an absent remittance advice is itself meaningful, since it\n    means payer intent cannot be established from documentation.\n",
+          "inputSchema": "{\u0022properties\u0022: {\u0022payment_reference\u0022: {\u0022title\u0022: \u0022Payment Reference\u0022, \u0022type\u0022: \u0022string\u0022}}, \u0022required\u0022: [\u0022payment_reference\u0022], \u0022title\u0022: \u0022get_remittance_adviceArguments\u0022, \u0022type\u0022: \u0022object\u0022}"
+        }
+      ],
+      "name": "remittance-advice-service",
+      "description": "Remittance advise service"
+    },
+    "locks": [],
+    "key": "1615d121-a674-4a4b-9209-bdb395ea6d7c"
+  }
+}

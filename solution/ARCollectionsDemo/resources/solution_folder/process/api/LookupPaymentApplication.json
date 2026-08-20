@@ -9,11 +9,12 @@
     "isOverridable": true,
     "dependencies": [
       {
-        "kind": "package",
-        "name": "LookupPaymentApplication"
+        "name": "LookupPaymentApplication",
+        "kind": "package"
       }
     ],
     "runtimeDependencies": [],
+    "files": [],
     "folders": [
       {
         "fullyQualifiedName": "solution_folder"
@@ -29,10 +30,10 @@
       "retentionAction": "Delete",
       "retentionPeriod": 30,
       "staleRetentionAction": "Delete",
-      "staleRetentionPeriod": 180
+      "staleRetentionPeriod": 180,
+      "packageName": "AR.Collections.Dispute.Flow.api.LookupPaymentApplication"
     },
     "locks": [],
-    "key": "e2a2f52e-30ba-4ce0-a1b0-0a45a7b04898",
-    "files": []
+    "key": "e2a2f52e-30ba-4ce0-a1b0-0a45a7b04898"
   }
 }

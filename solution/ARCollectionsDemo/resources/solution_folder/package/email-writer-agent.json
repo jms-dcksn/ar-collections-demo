@@ -1,0 +1,33 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "email-writer-agent",
+    "kind": "package",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "isOverridable": true,
+    "dependencies": [],
+    "runtimeDependencies": [],
+    "files": [
+      {
+        "name": "email-writer-agent.1.3.1.nupkg",
+        "kind": "Package",
+        "version": "1.3.1",
+        "url": "https://staging.uipath.com/95baf7a2-59c4-4438-93bb-55967f104904/cf7ae654-02bd-412b-b0cd-a2738b31a9c3/orchestrator_/odata/Processes/UiPath.Server.Configuration.OData.DownloadPackage(key=\u0027email-writer-agent:1.3.1\u0027)?feedId=c1077477-9d60-45ac-8e65-5da761cb775c",
+        "key": "email-writer-agent_1.3.1"
+      }
+    ],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "fileName": "email-writer-agent.1.3.1.nupkg",
+      "fileReference": "email-writer-agent_1.3.1",
+      "name": "email-writer-agent",
+      "description": null
+    },
+    "locks": [],
+    "key": "email-writer-agent:1.3.1"
+  }
+}

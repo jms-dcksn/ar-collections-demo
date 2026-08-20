@@ -4,15 +4,23 @@
   "entryPoints": [
     {
       "filePath": "content/Workflow.json",
-      "uniqueId": "2d4fc5ec-fab3-4bff-8c4d-bbdd3ee8012b",
+      "uniqueId": "2705c2e5-1766-4670-b019-bef929d13f25",
       "type": "Api",
       "input": {
         "type": "object",
         "properties": {
-          "caseId": { "type": "string" },
-          "customerAccountId": { "type": "string" },
-          "invoiceNumber": { "type": "string" },
-          "paymentReference": { "type": "string" }
+          "caseId": {
+            "type": "string"
+          },
+          "customerAccountId": {
+            "type": "string"
+          },
+          "invoiceNumber": {
+            "type": "string"
+          },
+          "paymentReference": {
+            "type": "string"
+          }
         },
         "required": [
           "caseId",
@@ -25,15 +33,33 @@
       "output": {
         "type": "object",
         "properties": {
-          "paymentReference": { "type": "string" },
-          "paymentAmount": { "type": "number" },
-          "paymentDate": { "type": "string" },
-          "appliedInvoiceNumber": { "type": "string" },
-          "targetInvoiceNumber": { "type": "string" },
-          "applicationStatus": { "type": "string" },
-          "matchedRemittance": { "type": "boolean" },
-          "recommendedAction": { "type": "string" },
-          "sourceSystem": { "type": "string" }
+          "paymentReference": {
+            "type": "string"
+          },
+          "paymentAmount": {
+            "type": "number"
+          },
+          "paymentDate": {
+            "type": "string"
+          },
+          "appliedInvoiceNumber": {
+            "type": "string"
+          },
+          "targetInvoiceNumber": {
+            "type": "string"
+          },
+          "applicationStatus": {
+            "type": "string"
+          },
+          "matchedRemittance": {
+            "type": "boolean"
+          },
+          "recommendedAction": {
+            "type": "string"
+          },
+          "sourceSystem": {
+            "type": "string"
+          }
         },
         "required": [
           "paymentReference",

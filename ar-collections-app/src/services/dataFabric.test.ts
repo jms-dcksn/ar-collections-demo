@@ -17,9 +17,9 @@ describe('DataFabricService', () => {
   it('sends only the permitted decision payload through the event-triggering API', async () => {
     const updateRecordById = vi.fn().mockResolvedValue({ Id: 'record-1' })
     const service = new DataFabricService({ updateRecordById } as never)
-    await service.recordDecision({ Id: 'record-1' }, 'Approved', ' Evidence confirmed ')
+    await service.recordDecision({ Id: 'record-1' }, 'approved', ' Evidence confirmed ')
     expect(updateRecordById).toHaveBeenCalledWith(ENTITY_ID, 'record-1', {
-      approvalDecision: 'Approved', approvalComments: 'Evidence confirmed', lifecycleState: 'Approved',
+      approvalDecision: 'approved', approvalComments: 'Evidence confirmed', lifecycleState: 'approved',
     })
   })
 

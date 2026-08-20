@@ -3,10 +3,10 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { ReactNode } from 'react'
 
 import { DataFabricService } from './services/dataFabric'
-import { liveDataFabricClient, loadLiveDisputes } from './services/liveWorkspace'
+import { liveDataFabricClient, loadInstanceVariables, loadLiveDisputes } from './services/liveWorkspace'
 import { mockDisputeRows } from './lib/mockData'
 import type { CreateDisputeInput } from './lib/disputeScenarios'
-import type { ApprovalDecision, DisputeRecord, DisputeRow } from './types'
+import type { ApprovalDecision, DisputeRecord, DisputeRow, FlowVariable } from './types'
 
 interface WorkspaceContextValue {
   rows: DisputeRow[]
@@ -17,6 +17,7 @@ interface WorkspaceContextValue {
   logout: () => void
   refresh: () => Promise<void>
   createDispute: (input: CreateDisputeInput) => Promise<DisputeRecord>
+  instanceVariables: (instanceId: string) => Promise<FlowVariable[]>
   submitDecision: (row: DisputeRow, decision: ApprovalDecision, comments: string) => Promise<void>
 }
 
@@ -57,13 +58,19 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     if (!sdk.isAuthenticated()) throw new Error('Sign in to create a dispute.')
     return new DataFabricService(liveDataFabricClient(sdk)).createDispute(input)
   }, [sdk])
+  // The detail page asks for variables on demand, so a Flow that has not stamped its instance ID
+  // onto caseId costs nothing extra.
+  const instanceVariables = useCallback(async (instanceId: string) => {
+    if (!sdk.isAuthenticated()) return []
+    return loadInstanceVariables(sdk, instanceId)
+  }, [sdk])
   const submitDecision = useCallback(async (row: DisputeRow, decision: ApprovalDecision, comments: string) => {
     if (row.source === 'mock') return
     const updated = await new DataFabricService(liveDataFabricClient(sdk)).recordDecision(row.record, decision, comments)
     setRows((current) => current.map((candidate) => candidate.record.Id === row.record.Id ? { ...candidate, record: { ...candidate.record, ...updated } } : candidate))
   }, [sdk])
 
-  return <WorkspaceContext.Provider value={{ rows, authenticated, loading, notice, login, logout, refresh, createDispute, submitDecision }}>{children}</WorkspaceContext.Provider>
+  return <WorkspaceContext.Provider value={{ rows, authenticated, loading, notice, login, logout, refresh, createDispute, instanceVariables, submitDecision }}>{children}</WorkspaceContext.Provider>
 }
 
 export function useWorkspace() {

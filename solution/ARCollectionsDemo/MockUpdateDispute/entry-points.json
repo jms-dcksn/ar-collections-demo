@@ -4,17 +4,29 @@
   "entryPoints": [
     {
       "filePath": "content/Workflow.json",
-      "uniqueId": "2e586327-1338-4b40-b996-05d905bb9dc8",
+      "uniqueId": "b609a657-e243-4ca6-baa5-ed037dd01360",
       "type": "Api",
       "input": {
         "type": "object",
         "properties": {
-          "caseId": { "type": "string" },
-          "disputeType": { "type": "string" },
-          "actionCode": { "type": "string" },
-          "adjustmentAmount": { "type": "number" },
-          "approvedBy": { "type": "string" },
-          "approvalComments": { "type": "string" }
+          "caseId": {
+            "type": "string"
+          },
+          "disputeType": {
+            "type": "string"
+          },
+          "actionCode": {
+            "type": "string"
+          },
+          "adjustmentAmount": {
+            "type": "number"
+          },
+          "approvedBy": {
+            "type": "string"
+          },
+          "approvalComments": {
+            "type": "string"
+          }
         },
         "required": [
           "caseId",
@@ -29,10 +41,18 @@
       "output": {
         "type": "object",
         "properties": {
-          "updateId": { "type": "string" },
-          "status": { "type": "string" },
-          "updatedAt": { "type": "string" },
-          "message": { "type": "string" }
+          "updateId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
         },
         "required": [
           "updateId",

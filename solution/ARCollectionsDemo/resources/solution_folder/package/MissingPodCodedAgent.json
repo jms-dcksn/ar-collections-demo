@@ -1,0 +1,23 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "MissingPodCodedAgent",
+    "kind": "package",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "projectKey": "31b8d38c-5b5e-4b3f-9a3b-efa1d06a55a5",
+    "isOverridable": true,
+    "dependencies": [],
+    "runtimeDependencies": [],
+    "files": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "name": "MissingPodCodedAgent"
+    },
+    "locks": [],
+    "key": "ad0412d3-0f05-4bf6-accf-5374c9b05c6c"
+  }
+}

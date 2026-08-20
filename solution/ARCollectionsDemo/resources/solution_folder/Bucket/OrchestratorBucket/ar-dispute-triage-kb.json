@@ -8,6 +8,7 @@
     "isOverridable": true,
     "dependencies": [],
     "runtimeDependencies": [],
+    "files": [],
     "folders": [
       {
         "fullyQualifiedName": "solution_folder"
@@ -17,10 +18,10 @@
       "type": "Orchestrator",
       "name": "ar-dispute-triage-kb",
       "description": "Triage taxonomy knowledge for the AR collections triage agent.",
+      "options": null,
       "tags": []
     },
     "locks": [],
-    "key": "6a30bffd-5a68-4348-b66d-fea899e8a7af",
-    "files": []
+    "key": "6a30bffd-5a68-4348-b66d-fea899e8a7af"
   }
 }

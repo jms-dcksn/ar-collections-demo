@@ -4,8 +4,15 @@
     "name": "ar-payment-resolution-index",
     "kind": "index",
     "apiVersion": "ecs.uipath.com/v2",
-    "dependencies": [],
+    "isOverridable": true,
+    "dependencies": [
+      {
+        "name": "ar-payment-resolution-kb",
+        "kind": "Bucket"
+      }
+    ],
     "runtimeDependencies": [],
+    "files": [],
     "folders": [
       {
         "fullyQualifiedName": "solution_folder"
@@ -13,10 +20,19 @@
     ],
     "spec": {
       "name": "ar-payment-resolution-index",
-      "indexConfigurationJson": ""
+      "description": "Payment misapplication resolution playbook.",
+      "storageBucketReference": {
+        "name": "ar-payment-resolution-kb",
+        "key": "306dcb5e-6cf3-4c03-bcff-64633cd9c174",
+        "folderKey": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c"
+      },
+      "fileNameGlob": "All",
+      "dataSourceType": "StorageBucket",
+      "includeSubfolders": true,
+      "ingestionType": "Advanced",
+      "encrypted": false
     },
     "locks": [],
-    "key": "4a4b7a7d-f792-4096-b1f4-d811d6af3742",
-    "files": []
+    "key": "9745fa62-cff9-45d4-b29f-08defd736a4b"
   }
 }

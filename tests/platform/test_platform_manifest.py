@@ -33,7 +33,16 @@ ALLOWED_MANIFEST_KEYS = {
     "dataFabricConnection",
     "dataFabricConnectionKey",
     "dataFabricEntities",
+    "deployedProcess",
     "resources",
+}
+ALLOWED_DEPLOYED_PROCESS_KEYS = {
+    "solutionFolderPath",
+    "solutionFolderKey",
+    "processName",
+    "processKey",
+    "packageId",
+    "packageVersion",
 }
 ALLOWED_RESOURCE_KEYS = {
     "source",
@@ -84,6 +93,20 @@ def test_platform_manifest_has_final_provisioned_identity_fields():
             identity_keys.append(identity_key)
 
     assert len(identity_keys) == len(set(identity_keys))
+
+
+def test_platform_manifest_declares_the_deployed_maestro_process():
+    manifest = json.loads(MANIFEST.read_text())
+    process = manifest["deployedProcess"]
+
+    assert set(process) == ALLOWED_DEPLOYED_PROCESS_KEYS
+    # The deploy created a solution subfolder of JD/demos; the process lives there, not in the parent.
+    assert process["solutionFolderPath"] == "JD/demos/AR Collections Dispute Flow"
+    assert process["solutionFolderKey"] != manifest["folderKey"]
+    _assert_canonical_uuid(process["solutionFolderKey"])
+    _assert_canonical_uuid(process["processKey"])
+    assert process["processName"] == "ARCollectionsDisputeResolution"
+    assert process["packageId"].endswith(f".flow.{process['processName']}")
 
 
 def test_platform_manifest_declares_the_approved_data_fabric_entity():

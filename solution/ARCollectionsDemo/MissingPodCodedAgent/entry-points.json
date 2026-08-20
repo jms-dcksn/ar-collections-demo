@@ -1,0 +1,209 @@
+{
+    "$schema": "https://cloud.uipath.com/draft/2024-12/entry-point",
+    "$id": "entry-points.json",
+    "entryPoints": [
+        {
+            "filePath": "agent",
+            "uniqueId": "94001419-76fc-4447-9870-05df41a6084e",
+            "type": "agent",
+            "input": {
+                "type": "object",
+                "properties": {
+                    "recordCreated__output": {
+                        "additionalProperties": true,
+                        "title": "Recordcreated  Output",
+                        "type": "object"
+                    },
+                    "triageAgent__output__disputeType": {
+                        "default": "",
+                        "title": "Triageagent  Output  Disputetype",
+                        "type": "string"
+                    },
+                    "triageAgent__output__rationale": {
+                        "default": "",
+                        "title": "Triageagent  Output  Rationale",
+                        "type": "string"
+                    },
+                    "triageAgent__output__confidence": {
+                        "default": 0.0,
+                        "title": "Triageagent  Output  Confidence",
+                        "type": "number"
+                    }
+                },
+                "required": []
+            },
+            "output": {
+                "type": "object",
+                "properties": {
+                    "caseId": {
+                        "title": "Caseid",
+                        "type": "string"
+                    },
+                    "disputeType": {
+                        "title": "Disputetype",
+                        "type": "string"
+                    },
+                    "evidenceSummary": {
+                        "title": "Evidencesummary",
+                        "type": "string"
+                    },
+                    "rootCause": {
+                        "title": "Rootcause",
+                        "type": "string"
+                    },
+                    "recommendedAction": {
+                        "title": "Recommendedaction",
+                        "type": "string"
+                    },
+                    "actionCode": {
+                        "title": "Actioncode",
+                        "type": "string"
+                    },
+                    "adjustmentAmount": {
+                        "title": "Adjustmentamount",
+                        "type": "number"
+                    },
+                    "confidence": {
+                        "title": "Confidence",
+                        "type": "number"
+                    },
+                    "approvalSummary": {
+                        "title": "Approvalsummary",
+                        "type": "string"
+                    },
+                    "emailSubject": {
+                        "title": "Emailsubject",
+                        "type": "string"
+                    },
+                    "emailBody": {
+                        "title": "Emailbody",
+                        "type": "string"
+                    },
+                    "resourcesUsed": {
+                        "title": "Resourcesused",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "caseId",
+                    "disputeType",
+                    "evidenceSummary",
+                    "rootCause",
+                    "recommendedAction",
+                    "actionCode",
+                    "adjustmentAmount",
+                    "confidence",
+                    "approvalSummary",
+                    "emailSubject",
+                    "emailBody",
+                    "resourcesUsed"
+                ]
+            },
+            "graph": {
+                "nodes": [
+                    {
+                        "id": "__start__",
+                        "name": "__start__",
+                        "type": "__start__",
+                        "subgraph": null,
+                        "metadata": {}
+                    },
+                    {
+                        "id": "agent",
+                        "name": "agent",
+                        "type": "node",
+                        "subgraph": {
+                            "nodes": [
+                                {
+                                    "id": "__start__",
+                                    "name": "__start__",
+                                    "type": "__start__",
+                                    "subgraph": null,
+                                    "metadata": {}
+                                },
+                                {
+                                    "id": "model",
+                                    "name": "model",
+                                    "type": "model",
+                                    "subgraph": null,
+                                    "metadata": {
+                                        "model_name": "gpt-5.6-terra",
+                                        "max_tokens": 4096
+                                    }
+                                },
+                                {
+                                    "id": "compose_case_brief.before_agent",
+                                    "name": "compose_case_brief.before_agent",
+                                    "type": "node",
+                                    "subgraph": null,
+                                    "metadata": {}
+                                },
+                                {
+                                    "id": "publish_proposal.after_agent",
+                                    "name": "publish_proposal.after_agent",
+                                    "type": "node",
+                                    "subgraph": null,
+                                    "metadata": {}
+                                },
+                                {
+                                    "id": "__end__",
+                                    "name": "__end__",
+                                    "type": "__end__",
+                                    "subgraph": null,
+                                    "metadata": {}
+                                }
+                            ],
+                            "edges": [
+                                {
+                                    "source": "__start__",
+                                    "target": "compose_case_brief.before_agent",
+                                    "label": null
+                                },
+                                {
+                                    "source": "compose_case_brief.before_agent",
+                                    "target": "model",
+                                    "label": null
+                                },
+                                {
+                                    "source": "model",
+                                    "target": "model",
+                                    "label": null
+                                },
+                                {
+                                    "source": "model",
+                                    "target": "publish_proposal.after_agent",
+                                    "label": null
+                                },
+                                {
+                                    "source": "publish_proposal.after_agent",
+                                    "target": "__end__",
+                                    "label": null
+                                }
+                            ]
+                        },
+                        "metadata": {}
+                    },
+                    {
+                        "id": "__end__",
+                        "name": "__end__",
+                        "type": "__end__",
+                        "subgraph": null,
+                        "metadata": {}
+                    }
+                ],
+                "edges": [
+                    {
+                        "source": "__start__",
+                        "target": "agent",
+                        "label": null
+                    },
+                    {
+                        "source": "agent",
+                        "target": "__end__",
+                        "label": null
+                    }
+                ]
+            }
+        }
+    ]
+}

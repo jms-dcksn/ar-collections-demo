@@ -1,0 +1,16 @@
+{
+  "version": "1.0",
+  "id": "LLMJudgeOutputEvaluator",
+  "evaluatorTypeId": "uipath-llm-judge-output-semantic-similarity",
+  "evaluatorConfig": {
+    "name": "LLMJudgeOutputEvaluator",
+    "description": "Scores the collector-facing narrative fields for evidence grounding and gap flagging.",
+    "model": "gpt-4o-mini-2024-07-18",
+    "temperature": 0,
+    "defaultEvaluationCriteria": {
+      "expectedOutput": {
+        "evidenceSummary": "A concise, evidence-grounded summary drawn only from the supplied case packet and triage evidence."
+      }
+    }
+  }
+}

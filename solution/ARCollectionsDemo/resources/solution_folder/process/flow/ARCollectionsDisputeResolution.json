@@ -9,8 +9,8 @@
     "isOverridable": true,
     "dependencies": [
       {
-        "kind": "package",
-        "name": "ARCollectionsDisputeResolution"
+        "name": "ARCollectionsDisputeResolution",
+        "kind": "package"
       }
     ],
     "runtimeDependencies": [
@@ -30,7 +30,8 @@
         "bindingMetadata": {
           "activityName": "Mock Update Dispute",
           "bindingsVersion": "2.2",
-          "solutionsSupport": "true"
+          "solutionsSupport": "true",
+          "isSolutionResource": true
         },
         "resourceKind": "Process"
       },
@@ -46,8 +47,7 @@
         "bindingMetadata": {
           "activityName": "Send Email",
           "bindingsVersion": "2.2",
-          "connector": "uipath-microsoft-outlook365",
-          "useConnectionService": "true"
+          "isSolutionResource": true
         },
         "resourceKind": "Connection",
         "resourceType": "uipath-microsoft-outlook365",
@@ -67,8 +67,7 @@
         "bindingMetadata": {
           "activityName": "Record Created",
           "bindingsVersion": "2.2",
-          "connector": "uipath-uipath-dataservice",
-          "useConnectionService": "true"
+          "isSolutionResource": true
         },
         "resourceKind": "Connection",
         "resourceType": "uipath-uipath-dataservice",
@@ -87,7 +86,8 @@
         },
         "bindingMetadata": {
           "bindingsVersion": "2.2",
-          "solutionsSupport": "true"
+          "solutionsSupport": "true",
+          "isSolutionResource": true
         },
         "resourceKind": "Process"
       },
@@ -107,15 +107,13 @@
         "bindingMetadata": {
           "activityName": "Record Created",
           "bindingsVersion": "2.2",
-          "connector": "uipath-uipath-dataservice",
-          "operation": "CREATED",
-          "objectName": "JDARCollectionsEntity",
-          "filterExpression": ""
+          "isSolutionResource": true
         },
         "resourceKind": "Connection",
         "resourceType": "uipath-uipath-dataservice"
       }
     ],
+    "files": [],
     "folders": [
       {
         "fullyQualifiedName": "solution_folder"
@@ -127,7 +125,7 @@
       "package": {
         "key": "25d0ab5e-5146-40c6-8e9f-2153cec62616"
       },
-      "packageName": "ARCollectionsDemo.flow.ARCollectionsDisputeResolution",
+      "packageName": "AR.Collections.Dispute.Flow.flow.ARCollectionsDisputeResolution",
       "targetFrameworkValue": "Portable",
       "retentionAction": "Delete",
       "retentionPeriod": 30,
@@ -135,7 +133,6 @@
       "staleRetentionPeriod": 180
     },
     "locks": [],
-    "key": "865ea465-3bc7-4f60-b908-839aded022b9",
-    "files": []
+    "key": "865ea465-3bc7-4f60-b908-839aded022b9"
   }
 }

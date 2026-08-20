@@ -8,6 +8,7 @@
     "isOverridable": true,
     "dependencies": [],
     "runtimeDependencies": [],
+    "files": [],
     "folders": [
       {
         "fullyQualifiedName": "solution_folder"
@@ -17,12 +18,11 @@
       "connectorName": "Microsoft Outlook 365",
       "name": "james.dickson@uipath.com",
       "authenticationType": "AuthenticateAfterDeployment",
-      "connectorVersion": "1.42.1",
+      "connectorVersion": "1.42.6",
       "connectorKey": "uipath-microsoft-outlook365",
       "pollingInterval": 1
     },
     "locks": [],
-    "key": "8643408a-62b4-4d36-ba1e-bc9b68d4fce9",
-    "files": []
+    "key": "8643408a-62b4-4d36-ba1e-bc9b68d4fce9"
   }
 }

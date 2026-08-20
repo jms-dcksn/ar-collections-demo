@@ -1,0 +1,69 @@
+{
+  "$schema": "https://cloud.uipath.com/draft/2024-12/entry-point",
+  "$id": "entry-points.json",
+  "entryPoints": [
+    {
+      "filePath": "content/ARCollectionsDisputeResolution.bpmn#recordCreated",
+      "uniqueId": "c53b2611-0852-4811-9b4a-4c4974e07bfa",
+      "type": "processorchestration",
+      "input": {
+        "type": "object",
+        "properties": {}
+      },
+      "output": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "status"
+          },
+          "resultCaseId": {
+            "type": "string",
+            "title": "resultCaseId"
+          },
+          "disputeType": {
+            "type": "string",
+            "title": "disputeType"
+          },
+          "triageRationale": {
+            "type": "string",
+            "title": "triageRationale"
+          },
+          "triageConfidence": {
+            "type": "number",
+            "title": "triageConfidence"
+          },
+          "recommendedAction": {
+            "type": "string",
+            "title": "recommendedAction"
+          },
+          "approvalDecision": {
+            "type": "string",
+            "title": "approvalDecision"
+          },
+          "approvalComments": {
+            "type": "string",
+            "title": "approvalComments"
+          },
+          "updateResult": {
+            "type": "object",
+            "title": "updateResult"
+          },
+          "emailSent": {
+            "type": "boolean",
+            "title": "emailSent"
+          },
+          "resourcesUsed": {
+            "type": "string",
+            "title": "resourcesUsed"
+          },
+          "auditSummary": {
+            "type": "string",
+            "title": "auditSummary"
+          }
+        }
+      },
+      "displayName": "Record Created"
+    }
+  ]
+}

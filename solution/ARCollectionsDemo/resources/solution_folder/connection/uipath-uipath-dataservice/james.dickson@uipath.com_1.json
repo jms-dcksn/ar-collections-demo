@@ -8,7 +8,12 @@
     "isOverridable": true,
     "dependencies": [],
     "runtimeDependencies": [],
-    "folders": [],
+    "files": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
     "spec": {
       "connectorName": "UiPath Data Fabric",
       "name": "james.dickson@uipath.com_1",
@@ -18,7 +23,6 @@
       "pollingInterval": 5
     },
     "locks": [],
-    "key": "b2a02899-3708-4bb6-810a-02321afb77f6",
-    "files": []
+    "key": "b2a02899-3708-4bb6-810a-02321afb77f6"
   }
 }

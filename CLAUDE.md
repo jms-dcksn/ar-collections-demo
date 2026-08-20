@@ -78,10 +78,27 @@ recordCreated (Data Fabric record-created trigger) -> updateEntityRecord1
                   -> persistResolved1 -> resolved (end)
 ```
 
-The four inline low-code agents live in GUID-named subdirectories of the Flow project;
-`config/agent-projects.json` maps logical names (`triage`, `poMismatch`, `missingPod`,
+Three inline low-code agents live in GUID-named subdirectories of the Flow project;
+`config/agent-projects.json` maps logical names (`triage`, `poMismatch`,
 `paymentMisapplication`) to those GUIDs and pins the model. Tests read that mapping, so
 change it and the agent directories together.
+
+`missingPodAgent` is **not** inline — it is an in-solution Python coded agent, the sibling
+project `solution/ARCollectionsDemo/MissingPodCodedAgent`. LangChain/LangGraph, with the
+smallest possible topology (`START -> agent -> END`, where `agent` is the compiled
+`create_agent()` subgraph); input-message construction and structured-result validation
+live in `before_agent` / `after_agent` middleware inside that subgraph. The model is
+`UiPathAzureChatOpenAI(model="gpt-5.6-terra", temperature=0)`, built inside the
+`make_graph()` factory so importing `main.py` needs no auth. The Flow references it as
+`uipath.core.agent.<resourceKey>`, where `<resourceKey>` is the local key minted by
+`uip solution projects add` and recorded under `codedAgents` in
+`config/agent-projects.json`. Never hand-invent that key — read it from
+`resources/solution_folder/process/agent/MissingPodCodedAgent.json` or
+`uip maestro flow registry list --local`.
+
+The solution manifest is `AR Collections Dispute Flow.uipx` (the Studio Web name). Some
+`uip` commands regenerate a junk `ARCollectionsDemo.uipx` stub named after the directory —
+it is gitignored; delete it if a `uip solution` command complains about multiple manifests.
 
 **API Workflows** — `LookupPaymentApplication` (mock cash-application evidence, exposed to
 the payment agent as a tool) and `MockUpdateDispute` (simulated downstream write). Both are
@@ -90,34 +107,50 @@ deterministic JSON workflows; neither touches a real financial system.
 **Coded App `ar-collections-app`** — React 19 / Vite / TypeScript, published as a UiPath
 Coded App. `WorkspaceProvider` (`src/workspace.tsx`) owns all state and holds the `UiPath`
 SDK instance; OAuth is PKCE with the public external app in `uipath.json`, no client secret.
-`src/services/liveWorkspace.ts` lists active Maestro instances, reads each instance's
-`caseId` global variable, and joins it to entity records. `src/services/dataFabric.ts`
+`src/services/liveWorkspace.ts` drives the dashboard from Data Fabric records, filtered to the
+in-flight lifecycle states. It does **not** list Maestro instances — `ProcessInstances.getAll()`
+cannot see this Flow's instances because PIMS scopes that listing by a folder-key header the SDK
+never sends. It instead reads the Maestro instance ID the Flow writes onto the record's `caseId`
+field and calls `getById(instanceId, SOLUTION_FOLDER_KEY)` per in-flight record for real run
+status, and `getVariables` on demand from the detail page for the Flow globals. A record the Flow
+has not stamped yet, or an instance PIMS refuses, degrades to an instance derived from the record
+(`FlowInstance.instanceSource` says which). The app compiles against the real SDK typings; there
+is no `sdk-shims.d.ts` and reintroducing one hides real breakage. See `AGENTS.md`, "SDK traps the Coded App works around". `src/services/dataFabric.ts`
 validates the entity schema before writes. When no correlated live data exists the app falls
 back to `src/lib/mockData.ts` with an explicit on-screen notice — that fallback is
 deliberate, keep it labeled and read-only.
 
 ### The two identifiers
 
-The Data Fabric record `Id` is the only correlation key for mutations and for the Flow's
-wait/resume match. `caseId` is a business identifier used solely to join a Maestro instance
-to a record for display. Never substitute `caseId` for `Id` in an update or a correlation
-check — the Flow may even overwrite `caseId` with its instance ID after insertion.
+The Data Fabric record `Id` is the only correlation key for mutations, for the Flow's
+wait/resume match, and for app routes. `caseId` starts as a business identifier and the Flow
+then overwrites it with its own Maestro instance ID — that is deliberate and is the app's only
+source of an instance ID. Never substitute `caseId` for `Id` in an update or a correlation
+check, and never pass `caseId` to PIMS without `maestroInstanceIdOf()`: before the Flow stamps
+it, the value is still `AR-PO-...` and not an instance ID.
 
-### The deferred Coded App
+### Coded App target
 
-`ar-collections-app` was excluded from both 2026-08-19 migrations. Its
-`src/config.ts` still pins the original `cloud.uipath.com` entity ID
-`bc0fc734-bf94-f111-9b32-000d3ab5d4c4`, now two environments stale, so the app
-cannot read or approve records in `uipathstgSS_updated / UiPathDefault`.
-`config/platform-resources.json` is the authority.
+`ar-collections-app` reads the current tenant. `src/config.ts` pins the live
+entity ID `81a5f874-d79b-f111-9b33-6045bdd6658d`, the solution subfolder key
+`ff31878b-35b2-438f-8051-4e1461534d91`, and the Maestro process key
+`33534c74-5c67-402d-a96f-0f9dc9e156c6`. `uipath.json` targets
+`uipathstgSS_updated / UiPathDefault`. `config/platform-resources.json` remains
+the authority.
 
-The entity ID is not the only blocker. The app reads `lifecycleState` as
-display-style strings (`'Awaiting approval'`, `'Approved'`) that the Flow never
-writes — it writes `awaiting_approval`, `approved`. That disables the approve
-controls, the dashboard filters, and the badges on live records, and the app's own
-tests miss it because `lib/mockData.ts` uses the same invented vocabulary. See
-`AGENTS.md`, "Known blocker: the app reads a lifecycle vocabulary the Flow never
-writes".
+The Flow is deployed to `JD/demos/AR Collections Dispute Flow`, a solution
+subfolder of `JD/demos` — the app must use the child key, not the parent.
+`MaestroProcesses.getAll()` reports each `name` as the `packageId`, so the app
+matches on `processKey` alone.
+
+App and Flow share one lifecycle vocabulary: the snake_case values the Flow
+writes. `LIFECYCLE` in `src/config.ts` is the single source; `lifecycleLabel()`
+renders them for display. `ApprovalDecision` is `'approved' | 'rejected'`.
+
+Sign-in uses the public external application `ar-collections-app`
+(`39a05889-3cc2-4de6-9616-fd847692d2c0`) in `uipathstgSS_updated`, redirect URI
+`http://localhost:5173`. Add the deployed app URL as a second redirect URI before
+publishing.
 
 ### Field ownership
 

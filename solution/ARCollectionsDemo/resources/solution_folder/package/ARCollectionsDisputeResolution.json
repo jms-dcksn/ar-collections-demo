@@ -8,6 +8,7 @@
     "isOverridable": true,
     "dependencies": [],
     "runtimeDependencies": [],
+    "files": [],
     "folders": [
       {
         "fullyQualifiedName": "solution_folder"
@@ -17,7 +18,6 @@
       "name": "ARCollectionsDisputeResolution"
     },
     "locks": [],
-    "key": "25d0ab5e-5146-40c6-8e9f-2153cec62616",
-    "files": []
+    "key": "25d0ab5e-5146-40c6-8e9f-2153cec62616"
   }
 }

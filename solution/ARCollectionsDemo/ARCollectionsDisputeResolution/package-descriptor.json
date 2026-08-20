@@ -1,0 +1,13 @@
+{
+  "$schema": "https://cloud.uipath.com/draft/2024-12/package-descriptor",
+  "files": {
+    "operate.json": "content/operate.json",
+    "entry-points.json": "content/entry-points.json",
+    "bindings.json": "content/bindings_v2.json",
+    "ARCollectionsDisputeResolution.bpmn": "content/ARCollectionsDisputeResolution.bpmn",
+    "ARCollectionsDisputeResolution.flow": "flow_files/ARCollectionsDisputeResolution.flow",
+    "f7d7d1a5-0f16-43f1-b1b8-b70cef70ece9/agent.json": "content/f7d7d1a5-0f16-43f1-b1b8-b70cef70ece9/agent.json",
+    "30427850-3685-4d58-9c41-8dfb95163182/agent.json": "content/30427850-3685-4d58-9c41-8dfb95163182/agent.json",
+    "1c6b5289-1ff4-45f1-b48c-e613f8fd917f/agent.json": "content/1c6b5289-1ff4-45f1-b48c-e613f8fd917f/agent.json"
+  }
+}

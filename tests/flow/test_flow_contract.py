@@ -26,6 +26,10 @@ SUPPORTED_ROUTES = {
     "missing_pod": "missingPod",
     "payment_misapplication": "paymentMisapplication",
 }
+# missingPod is an in-solution coded agent; the other two specialists remain
+# inline low-code agents. Both implementations honour the same Flow I/O contract.
+INLINE_SPECIALISTS = {"poMismatch", "paymentMisapplication"}
+CODED_SPECIALISTS = {"missingPod"}
 PROPOSAL_FIELDS = {
     "caseId": "string",
     "disputeType": "string",
@@ -68,6 +72,25 @@ def load_contract():
     nodes = {node["id"]: node for node in flow["nodes"]}
     assert len(nodes) == len(flow["nodes"]), "Flow node IDs must be unique"
     return flow, mapping, nodes
+
+
+def coded_agent_config(logical_name):
+    return load_json(AGENT_MAPPING_PATH)["codedAgents"][logical_name]
+
+
+def specialist_node(flow, mapping, logical_name):
+    """Resolve a specialist node by logical name, inline or coded."""
+    if logical_name in INLINE_SPECIALISTS:
+        matches = [
+            node
+            for node in flow["nodes"]
+            if node.get("inputs", {}).get("source") == mapping[logical_name]
+        ]
+    else:
+        node_type = coded_agent_config(logical_name)["nodeType"]
+        matches = nodes_of_type(flow, node_type)
+    assert len(matches) == 1, f"expected one {logical_name} specialist node"
+    return matches[0]
 
 
 def nodes_of_type(flow, node_type):
@@ -209,7 +232,7 @@ def test_flow_uses_all_mapped_inline_agents_with_exact_runtime_contracts():
     flow, mapping, _ = load_contract()
     agents = nodes_of_type(flow, "uipath.agent.autonomous")
     by_source = {node.get("inputs", {}).get("source"): node for node in agents}
-    assert len(agents) == 4
+    assert len(agents) == 3
     assert set(by_source) == set(mapping.values())
 
     triage = by_source[mapping["triage"]]
@@ -243,7 +266,7 @@ def test_flow_uses_all_mapped_inline_agents_with_exact_runtime_contracts():
             "=$vars.triageAgent.output.confidence",
         ),
     }
-    for logical_name in SUPPORTED_ROUTES.values():
+    for logical_name in INLINE_SPECIALISTS:
         specialist = by_source[mapping[logical_name]]
         inputs = {
             item["id"]: (item["type"], item["binding"])
@@ -255,6 +278,83 @@ def test_flow_uses_all_mapped_inline_agents_with_exact_runtime_contracts():
         }
         assert inputs == specialist_inputs
         assert outputs == PROPOSAL_FIELDS
+
+
+def test_coded_specialists_receive_the_same_four_flow_inputs():
+    """The coded agent must consume the identical Flow variables the inline
+    specialists do, so routing behaviour is unchanged by the implementation swap."""
+    flow, mapping, _ = load_contract()
+    expected_expressions = {
+        "recordCreated__output": ("object", "{{ $vars.recordCreated.output }}"),
+        "triageAgent__output__disputeType": (
+            "string",
+            "{{ $vars.triageAgent.output.disputeType }}",
+        ),
+        "triageAgent__output__rationale": (
+            "string",
+            "{{ $vars.triageAgent.output.rationale }}",
+        ),
+        "triageAgent__output__confidence": (
+            "number",
+            "{{ $vars.triageAgent.output.confidence }}",
+        ),
+    }
+
+    for logical_name in CODED_SPECIALISTS:
+        node = specialist_node(flow, mapping, logical_name)
+        inputs = node["inputs"]
+        assert {
+            name: (spec["fieldType"], spec["expression"])
+            for name, spec in inputs.items()
+        } == expected_expressions
+        # Agent inputs must use the literal/expression form, never `=js:`.
+        for spec in inputs.values():
+            assert spec["type"] == "literal"
+            assert not spec["expression"].startswith("=js:")
+
+        # The proposal must surface as `output` so Normalize Proposal can read it.
+        assert node["outputs"]["output"]["var"] == "output"
+        assert node["outputs"]["output"]["source"] == "=result.response"
+        assert node["outputs"]["error"]["var"] == "error"
+
+
+def test_coded_specialist_node_is_registered_in_the_solution():
+    """The node type, bindings, and definition must all come from the local
+    resource key minted by `uip solution projects add` — never hand-invented."""
+    flow, _, _ = load_contract()
+    config = coded_agent_config("missingPod")
+    resource_key = config["resourceKey"]
+    assert config["nodeType"] == f"uipath.core.agent.{resource_key}"
+
+    resource = load_json(
+        FLOW_PATH.parents[1]
+        / "resources/solution_folder/process/agent"
+        / f"{config['projectDir']}.json"
+    )
+    assert resource["resource"]["key"] == resource_key
+    assert resource["resource"]["projectKey"] == config["projectKey"]
+    assert resource["resource"]["spec"]["type"] == "Agent"
+
+    definitions = [
+        definition
+        for definition in flow["definitions"]
+        if definition["nodeType"] == config["nodeType"]
+    ]
+    assert len(definitions) == 1
+    definition = definitions[0]
+    assert definition["model"]["serviceType"] == "Orchestrator.StartAgentJob"
+    assert definition["model"]["bindings"]["resourceKey"] == resource_key
+    assert definition["model"]["bindings"]["resourceSubType"] == "Agent"
+
+    bindings = [
+        binding for binding in flow["bindings"] if binding["resourceKey"] == resource_key
+    ]
+    assert {binding["propertyAttribute"] for binding in bindings} == {
+        "name",
+        "folderPath",
+    }
+    assert len(bindings) == 2
+    assert all(binding["resourceSubType"] == "Agent" for binding in bindings)
 
 
 def test_inline_agent_delivery_schema_and_prompt_inputs_are_aligned():
@@ -337,11 +437,7 @@ def test_supported_decision_and_switch_route_exclusively_to_one_specialist():
     }
 
     specialist_ids = {
-        logical_name: next(
-            node["id"]
-            for node in flow["nodes"]
-            if node.get("inputs", {}).get("source") == mapping[logical_name]
-        )
+        logical_name: specialist_node(flow, mapping, logical_name)["id"]
         for logical_name in SUPPORTED_ROUTES.values()
     }
     normalize = node_with_label(flow, "Normalize Proposal")
@@ -366,10 +462,8 @@ def test_normalize_proposal_selects_one_branch_and_verifies_exact_contract():
     normalized = compact(script)
 
     specialist_nodes = [
-        node
-        for node in nodes_of_type(flow, "uipath.agent.autonomous")
-        if node.get("inputs", {}).get("source")
-        in {mapping[name] for name in SUPPORTED_ROUTES.values()}
+        specialist_node(flow, mapping, logical_name)
+        for logical_name in SUPPORTED_ROUTES.values()
     ]
     assert len(specialist_nodes) == 3
     for node in specialist_nodes:

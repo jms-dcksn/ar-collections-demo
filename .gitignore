@@ -10,3 +10,7 @@ dist/
 .DS_Store
 .env
 .uipath/
+__uipath/
+# Spurious stub manifest the uip CLI regenerates from the directory name;
+# the real manifest is 'AR Collections Dispute Flow.uipx'.
+solution/ARCollectionsDemo/ARCollectionsDemo.uipx

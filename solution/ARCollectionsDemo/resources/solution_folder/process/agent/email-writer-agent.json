@@ -1,0 +1,61 @@
+{
+  "docVersion": "1.0.0",
+  "resource": {
+    "name": "email-writer-agent",
+    "kind": "process",
+    "type": "agent",
+    "apiVersion": "orchestrator.uipath.com/v1",
+    "isOverridable": true,
+    "dependencies": [
+      {
+        "name": "email-writer-agent",
+        "kind": "Package"
+      }
+    ],
+    "runtimeDependencies": [],
+    "files": [],
+    "folders": [
+      {
+        "fullyQualifiedName": "solution_folder"
+      }
+    ],
+    "spec": {
+      "type": "Agent",
+      "agentMemory": null,
+      "targetRuntime": "python",
+      "environmentVariables": "UIPATH_MCP_SERVER_URL=https://staging.uipath.com/uipathstgss_updated/UiPathDefault/agenthub_/mcp/9d8d8643-984a-4393-82c5-080cb643c689/llmemailtool",
+      "referencedAssets": null,
+      "isConversational": false,
+      "name": "email-writer-agent",
+      "description": "email-writer-agent that uses mcp and then self-grades the output.",
+      "package": {
+        "name": "email-writer-agent",
+        "key": "email-writer-agent:1.3.1"
+      },
+      "packageName": "email-writer-agent",
+      "packageVersion": "1.3.1",
+      "entryPointUniqueId": "18421227-66f5-4edc-94d4-0914cf62b48d",
+      "entryPointName": "agent",
+      "inputArguments": null,
+      "inputArgumentsSchema": null,
+      "outputArgumentsSchema": null,
+      "inputArgumentsSchemaV2": "{\n  \u0022type\u0022: \u0022object\u0022,\n  \u0022properties\u0022: {\n    \u0022topic\u0022: {\n      \u0022title\u0022: \u0022Topic\u0022,\n      \u0022type\u0022: \u0022string\u0022\n    },\n    \u0022recipient\u0022: {\n      \u0022title\u0022: \u0022Recipient\u0022,\n      \u0022type\u0022: \u0022string\u0022\n    },\n    \u0022signoffName\u0022: {\n      \u0022title\u0022: \u0022Signoffname\u0022,\n      \u0022type\u0022: \u0022string\u0022\n    },\n    \u0022email\u0022: {\n      \u0022default\u0022: \u0022\u0022,\n      \u0022title\u0022: \u0022Email\u0022,\n      \u0022type\u0022: \u0022string\u0022\n    },\n    \u0022grader_score\u0022: {\n      \u0022default\u0022: 0.0,\n      \u0022title\u0022: \u0022Grader Score\u0022,\n      \u0022type\u0022: \u0022number\u0022\n    }\n  },\n  \u0022required\u0022: [\n    \u0022topic\u0022,\n    \u0022recipient\u0022,\n    \u0022signoffName\u0022\n  ]\n}",
+      "outputArgumentsSchemaV2": "{\n  \u0022type\u0022: \u0022object\u0022,\n  \u0022properties\u0022: {\n    \u0022topic\u0022: {\n      \u0022default\u0022: null,\n      \u0022title\u0022: \u0022Topic\u0022,\n      \u0022type\u0022: \u0022string\u0022\n    },\n    \u0022recipient\u0022: {\n      \u0022default\u0022: null,\n      \u0022title\u0022: \u0022Recipient\u0022,\n      \u0022type\u0022: \u0022string\u0022\n    },\n    \u0022signoffName\u0022: {\n      \u0022default\u0022: null,\n      \u0022title\u0022: \u0022Signoffname\u0022,\n      \u0022type\u0022: \u0022string\u0022\n    },\n    \u0022email\u0022: {\n      \u0022default\u0022: null,\n      \u0022title\u0022: \u0022Email\u0022,\n      \u0022type\u0022: \u0022string\u0022\n    },\n    \u0022grader_score\u0022: {\n      \u0022default\u0022: null,\n      \u0022title\u0022: \u0022Grader Score\u0022,\n      \u0022type\u0022: \u0022number\u0022\n    }\n  },\n  \u0022required\u0022: []\n}",
+      "hiddenForAttendedUser": false,
+      "alwaysRunning": false,
+      "autoStartProcess": false,
+      "targetFrameworkValue": "Portable",
+      "retentionAction": "Delete",
+      "retentionPeriod": 30,
+      "retentionBucketRef": null,
+      "staleRetentionAction": "Delete",
+      "staleRetentionPeriod": 180,
+      "staleRetentionBucketRef": null,
+      "entryPoints": "[{\u0022UniqueId\u0022:\u002218421227-66f5-4edc-94d4-0914cf62b48d\u0022,\u0022Path\u0022:\u0022agent\u0022,\u0022DisplayName\u0022:null,\u0022InputArguments\u0022:\u0022{\\n  \\\u0022type\\\u0022: \\\u0022object\\\u0022,\\n  \\\u0022properties\\\u0022: {\\n    \\\u0022topic\\\u0022: {\\n      \\\u0022title\\\u0022: \\\u0022Topic\\\u0022,\\n      \\\u0022type\\\u0022: \\\u0022string\\\u0022\\n    },\\n    \\\u0022recipient\\\u0022: {\\n      \\\u0022title\\\u0022: \\\u0022Recipient\\\u0022,\\n      \\\u0022type\\\u0022: \\\u0022string\\\u0022\\n    },\\n    \\\u0022signoffName\\\u0022: {\\n      \\\u0022title\\\u0022: \\\u0022Signoffname\\\u0022,\\n      \\\u0022type\\\u0022: \\\u0022string\\\u0022\\n    },\\n    \\\u0022email\\\u0022: {\\n      \\\u0022default\\\u0022: \\\u0022\\\u0022,\\n      \\\u0022title\\\u0022: \\\u0022Email\\\u0022,\\n      \\\u0022type\\\u0022: \\\u0022string\\\u0022\\n    },\\n    \\\u0022grader_score\\\u0022: {\\n      \\\u0022default\\\u0022: 0.0,\\n      \\\u0022title\\\u0022: \\\u0022Grader Score\\\u0022,\\n      \\\u0022type\\\u0022: \\\u0022number\\\u0022\\n    }\\n  },\\n  \\\u0022required\\\u0022: [\\n    \\\u0022topic\\\u0022,\\n    \\\u0022recipient\\\u0022,\\n    \\\u0022signoffName\\\u0022\\n  ]\\n}\u0022,\u0022OutputArguments\u0022:\u0022{\\n  \\\u0022type\\\u0022: \\\u0022object\\\u0022,\\n  \\\u0022properties\\\u0022: {\\n    \\\u0022topic\\\u0022: {\\n      \\\u0022default\\\u0022: null,\\n      \\\u0022title\\\u0022: \\\u0022Topic\\\u0022,\\n      \\\u0022type\\\u0022: \\\u0022string\\\u0022\\n    },\\n    \\\u0022recipient\\\u0022: {\\n      \\\u0022default\\\u0022: null,\\n      \\\u0022title\\\u0022: \\\u0022Recipient\\\u0022,\\n      \\\u0022type\\\u0022: \\\u0022string\\\u0022\\n    },\\n    \\\u0022signoffName\\\u0022: {\\n      \\\u0022default\\\u0022: null,\\n      \\\u0022title\\\u0022: \\\u0022Signoffname\\\u0022,\\n      \\\u0022type\\\u0022: \\\u0022string\\\u0022\\n    },\\n    \\\u0022email\\\u0022: {\\n      \\\u0022default\\\u0022: null,\\n      \\\u0022title\\\u0022: \\\u0022Email\\\u0022,\\n      \\\u0022type\\\u0022: \\\u0022string\\\u0022\\n    },\\n    \\\u0022grader_score\\\u0022: {\\n      \\\u0022default\\\u0022: null,\\n      \\\u0022title\\\u0022: \\\u0022Grader Score\\\u0022,\\n      \\\u0022type\\\u0022: \\\u0022number\\\u0022\\n    }\\n  },\\n  \\\u0022required\\\u0022: []\\n}\u0022,\u0022Type\u0022:4,\u0022TargetRuntime\u0022:null,\u0022ContentRoot\u0022:null,\u0022DataVariation\u0022:null,\u0022Id\u0022:64057}]",
+      "connections": null,
+      "tags": []
+    },
+    "locks": [],
+    "key": "79e1c2ed-c966-4c2c-9302-81e99aac124e"
+  }
+}

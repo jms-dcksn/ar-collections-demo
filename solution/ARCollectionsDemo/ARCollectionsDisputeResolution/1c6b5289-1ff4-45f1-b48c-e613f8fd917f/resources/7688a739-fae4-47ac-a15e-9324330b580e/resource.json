@@ -1,0 +1,37 @@
+{
+  "$resourceType": "mcp",
+  "id": "7688a739-fae4-47ac-a15e-9324330b580e",
+  "name": "remittance-advice-service",
+  "description": "",
+  "slug": "remittance-advice-service",
+  "folderPath": "JD/demos",
+  "availableTools": [
+    {
+      "name": "get_remittance_advice",
+      "description": "Look up the remittance advice the payer sent with a payment.\n\nUse this to establish payer intent when a payment appears to have been applied to the\nwrong invoice. The remittance advice lists the invoice numbers the payer named, the\namount allocated to each, and any deduction they took. Compare the invoice numbers\nhere against the invoice the ERP actually credited: a mismatch is direct evidence of\na misapplication rather than a customer error.\n\nArgs:\n    payment_reference: The payment reference from the case packet, e.g. \"PAY-77821\".\n\nReturns:\n    A dict with `found` set to True and the remittance advice detail — payer,\n    receipt channel, total remitted, and a `lineItems` list of the invoices the payer\n    named. When no advice exists for the reference, `found` is False and `reason`\n    explains the miss; an absent remittance advice is itself meaningful, since it\n    means payer intent cannot be established from documentation.\n",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "payment_reference": {
+            "type": "string",
+            "title": "Payment Reference"
+          }
+        },
+        "required": [
+          "payment_reference"
+        ]
+      },
+      "outputSchema": null,
+      "argumentProperties": {}
+    }
+  ],
+  "solutionProperties": {
+    "resourceKey": "1615d121-a674-4a4b-9209-bdb395ea6d7c"
+  },
+  "toolsConfiguration": {
+    "discoveryMode": {
+      "type": "cached",
+      "refreshSchemaBeforeCall": true
+    }
+  }
+}
