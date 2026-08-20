@@ -14,6 +14,7 @@
       }
     ],
     "runtimeDependencies": [],
+    "files": [],
     "folders": [
       {
         "fullyQualifiedName": "solution_folder"
@@ -33,7 +34,6 @@
       "packageName": "AR.Collections.Dispute.Flow.api.LookupPaymentApplication"
     },
     "locks": [],
-    "key": "e2a2f52e-30ba-4ce0-a1b0-0a45a7b04898",
-    "files": []
+    "key": "e2a2f52e-30ba-4ce0-a1b0-0a45a7b04898"
   }
 }

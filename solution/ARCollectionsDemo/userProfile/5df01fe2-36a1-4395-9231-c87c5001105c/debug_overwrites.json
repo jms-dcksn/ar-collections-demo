@@ -1,1 +1,140 @@
-{"docVersion":"1.0","tenants":[{"tenantKey":"cf7ae654-02bd-412b-b0cd-a2738b31a9c3","resources":[{"solutionResourceKey":"b2a02899-3708-4bb6-810a-02321afb77f6","reprovisioningIndex":0,"overwrite":{"resourceKey":"b2a02899-3708-4bb6-810a-02321afb77f6","resourceName":"james.dickson@uipath.com","folderKey":"e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c","folderFullyQualifiedName":"JD/demos","folderPath":"2ab1724d-b04a-4d26-b067-67e3b755c7f1.e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c","type":"Reference","kind":"connection"}},{"solutionResourceKey":"8643408a-62b4-4d36-ba1e-bc9b68d4fce9","reprovisioningIndex":0,"overwrite":{"resourceKey":"8643408a-62b4-4d36-ba1e-bc9b68d4fce9","resourceName":"james.dickson@uipath.com","folderKey":"e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c","folderFullyQualifiedName":"JD/demos","folderPath":"2ab1724d-b04a-4d26-b067-67e3b755c7f1.e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c","type":"Reference","kind":"connection"}},{"solutionResourceKey":"4a4b7a7d-f792-4096-b1f4-d811d6af3742","reprovisioningIndex":0,"overwrite":{"resourceKey":"9745fa62-cff9-45d4-b29f-08defd736a4b","resourceName":"ar-payment-resolution-index","folderKey":"e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c","folderFullyQualifiedName":"JD/demos","folderPath":"2ab1724d-b04a-4d26-b067-67e3b755c7f1.e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c","type":"Reference","kind":"index"}},{"solutionResourceKey":"190ba27f-9b30-40e9-98f9-b78f70df8b11","reprovisioningIndex":0,"overwrite":{"resourceKey":"a1b7fb4e-cfb3-43a8-b29e-08defd736a4b","resourceName":"ar-dispute-triage-index","folderKey":"e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c","folderFullyQualifiedName":"JD/demos","folderPath":"2ab1724d-b04a-4d26-b067-67e3b755c7f1.e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c","type":"Reference","kind":"index"}},{"solutionResourceKey":"21b6f09d-3128-46e3-933f-43882d153829","reprovisioningIndex":0,"overwrite":{"resourceKey":"21b6f09d-3128-46e3-933f-43882d153829","resourceName":"Microsoft Azure AI Foundry","folderKey":"9d8d8643-984a-4393-82c5-080cb643c689","folderFullyQualifiedName":"Shared/FINS","folderPath":"c96a0c4d-b4a7-4513-aef4-860502e57e2d.9d8d8643-984a-4393-82c5-080cb643c689","type":"Reference","kind":"connection"}},{"solutionResourceKey":"1615d121-a674-4a4b-9209-bdb395ea6d7c","reprovisioningIndex":0,"overwrite":{"resourceKey":"1615d121-a674-4a4b-9209-bdb395ea6d7c","resourceName":"remittance-advice-service","folderKey":"e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c","folderFullyQualifiedName":"JD/demos","folderPath":"e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c","type":"Reference","kind":"mcpServer"}},{"solutionResourceKey":"934d6a65-6754-4790-b284-c7d40ea92786","reprovisioningIndex":0,"overwrite":{"resourceKey":"934d6a65-6754-4790-b284-c7d40ea92786","resourceName":"remittance-advice","folderKey":"e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c","folderFullyQualifiedName":"JD/demos","folderPath":"e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c","type":"Reference","kind":"process"}},{"solutionResourceKey":"a1b7fb4e-cfb3-43a8-b29e-08defd736a4b","overwrite":{"resourceKey":"a1b7fb4e-cfb3-43a8-b29e-08defd736a4b","resourceName":"ar-dispute-triage-index","type":"Reference","kind":"Index","folderFullyQualifiedName":"JD/demos","folderKey":"e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c","folderPath":"2ab1724d-b04a-4d26-b067-67e3b755c7f1.e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c"}},{"solutionResourceKey":"6a30bffd-5a68-4348-b66d-fea899e8a7af","overwrite":{"resourceKey":"6a30bffd-5a68-4348-b66d-fea899e8a7af","resourceName":"ar-dispute-triage-kb","type":"Reference","kind":"Bucket","folderFullyQualifiedName":"JD/demos","folderKey":"e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c","folderPath":"2ab1724d-b04a-4d26-b067-67e3b755c7f1.e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c"}},{"solutionResourceKey":"9745fa62-cff9-45d4-b29f-08defd736a4b","overwrite":{"resourceKey":"9745fa62-cff9-45d4-b29f-08defd736a4b","resourceName":"ar-payment-resolution-index","type":"Reference","kind":"Index","folderFullyQualifiedName":"JD/demos","folderKey":"e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c","folderPath":"2ab1724d-b04a-4d26-b067-67e3b755c7f1.e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c"}},{"solutionResourceKey":"306dcb5e-6cf3-4c03-bcff-64633cd9c174","overwrite":{"resourceKey":"306dcb5e-6cf3-4c03-bcff-64633cd9c174","resourceName":"ar-payment-resolution-kb","type":"Reference","kind":"Bucket","folderFullyQualifiedName":"JD/demos","folderKey":"e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c","folderPath":"2ab1724d-b04a-4d26-b067-67e3b755c7f1.e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c"}}]}]}
+{
+  "docVersion": "1.0",
+  "tenants": [
+    {
+      "tenantKey": "cf7ae654-02bd-412b-b0cd-a2738b31a9c3",
+      "resources": [
+        {
+          "solutionResourceKey": "b2a02899-3708-4bb6-810a-02321afb77f6",
+          "reprovisioningIndex": 0,
+          "overwrite": {
+            "resourceKey": "b2a02899-3708-4bb6-810a-02321afb77f6",
+            "resourceName": "james.dickson@uipath.com",
+            "folderKey": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+            "folderFullyQualifiedName": "JD/demos",
+            "folderPath": "2ab1724d-b04a-4d26-b067-67e3b755c7f1.e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+            "type": "Reference",
+            "kind": "connection"
+          }
+        },
+        {
+          "solutionResourceKey": "8643408a-62b4-4d36-ba1e-bc9b68d4fce9",
+          "reprovisioningIndex": 0,
+          "overwrite": {
+            "resourceKey": "8643408a-62b4-4d36-ba1e-bc9b68d4fce9",
+            "resourceName": "james.dickson@uipath.com",
+            "folderKey": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+            "folderFullyQualifiedName": "JD/demos",
+            "folderPath": "2ab1724d-b04a-4d26-b067-67e3b755c7f1.e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+            "type": "Reference",
+            "kind": "connection"
+          }
+        },
+        {
+          "solutionResourceKey": "21b6f09d-3128-46e3-933f-43882d153829",
+          "reprovisioningIndex": 0,
+          "overwrite": {
+            "resourceKey": "21b6f09d-3128-46e3-933f-43882d153829",
+            "resourceName": "Microsoft Azure AI Foundry",
+            "folderKey": "9d8d8643-984a-4393-82c5-080cb643c689",
+            "folderFullyQualifiedName": "Shared/FINS",
+            "folderPath": "c96a0c4d-b4a7-4513-aef4-860502e57e2d.9d8d8643-984a-4393-82c5-080cb643c689",
+            "type": "Reference",
+            "kind": "connection"
+          }
+        },
+        {
+          "solutionResourceKey": "1615d121-a674-4a4b-9209-bdb395ea6d7c",
+          "reprovisioningIndex": 0,
+          "overwrite": {
+            "resourceKey": "1615d121-a674-4a4b-9209-bdb395ea6d7c",
+            "resourceName": "remittance-advice-service",
+            "folderKey": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+            "folderFullyQualifiedName": "JD/demos",
+            "folderPath": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+            "type": "Reference",
+            "kind": "mcpServer"
+          }
+        },
+        {
+          "solutionResourceKey": "934d6a65-6754-4790-b284-c7d40ea92786",
+          "reprovisioningIndex": 0,
+          "overwrite": {
+            "resourceKey": "934d6a65-6754-4790-b284-c7d40ea92786",
+            "resourceName": "remittance-advice",
+            "folderKey": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+            "folderFullyQualifiedName": "JD/demos",
+            "folderPath": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+            "type": "Reference",
+            "kind": "process"
+          }
+        },
+        {
+          "solutionResourceKey": "6a30bffd-5a68-4348-b66d-fea899e8a7af",
+          "reprovisioningIndex": 0,
+          "overwrite": {
+            "resourceKey": "6a30bffd-5a68-4348-b66d-fea899e8a7af",
+            "resourceName": "ar-dispute-triage-kb",
+            "folderKey": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+            "folderFullyQualifiedName": "JD/demos",
+            "folderPath": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+            "type": "Reference",
+            "kind": "bucket"
+          }
+        },
+        {
+          "solutionResourceKey": "306dcb5e-6cf3-4c03-bcff-64633cd9c174",
+          "reprovisioningIndex": 0,
+          "overwrite": {
+            "resourceKey": "306dcb5e-6cf3-4c03-bcff-64633cd9c174",
+            "resourceName": "ar-payment-resolution-kb",
+            "folderKey": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+            "folderFullyQualifiedName": "JD/demos",
+            "folderPath": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+            "type": "Reference",
+            "kind": "bucket"
+          }
+        },
+        {
+          "solutionResourceKey": "a1b7fb4e-cfb3-43a8-b29e-08defd736a4b",
+          "reprovisioningIndex": 0,
+          "overwrite": {
+            "resourceKey": "a1b7fb4e-cfb3-43a8-b29e-08defd736a4b",
+            "resourceName": "ar-dispute-triage-index",
+            "folderKey": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+            "folderFullyQualifiedName": "JD/demos",
+            "folderPath": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+            "type": "Reference",
+            "kind": "index"
+          }
+        },
+        {
+          "solutionResourceKey": "9745fa62-cff9-45d4-b29f-08defd736a4b",
+          "reprovisioningIndex": 0,
+          "overwrite": {
+            "resourceKey": "9745fa62-cff9-45d4-b29f-08defd736a4b",
+            "resourceName": "ar-payment-resolution-index",
+            "folderKey": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+            "folderFullyQualifiedName": "JD/demos",
+            "folderPath": "e716bfc7-4c75-4921-ab5b-e5a3bc0d4c2c",
+            "type": "Reference",
+            "kind": "index"
+          }
+        },
+        {
+          "solutionResourceKey": "79e1c2ed-c966-4c2c-9302-81e99aac124e",
+          "reprovisioningIndex": 0,
+          "overwrite": {
+            "resourceKey": "79e1c2ed-c966-4c2c-9302-81e99aac124e",
+            "resourceName": "email-writer-agent",
+            "folderKey": "9d8d8643-984a-4393-82c5-080cb643c689",
+            "folderFullyQualifiedName": "Shared/FINS",
+            "folderPath": "9d8d8643-984a-4393-82c5-080cb643c689",
+            "type": "Reference",
+            "kind": "process"
+          }
+        }
+      ]
+    }
+  ]
+}

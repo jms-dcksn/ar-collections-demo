@@ -76,7 +76,7 @@ def load_resources(agent_dir):
     resources_dir = agent_dir / "resources"
     assert resources_dir.is_dir()
     resource_files = sorted(resources_dir.glob("*/resource.json"))
-    assert len(resource_files) == 2
+    assert len(resource_files) == 3
 
     resources = []
     ids = set()
@@ -112,7 +112,7 @@ def test_payment_agent_uses_selected_model_and_grounded_specialist_prompts():
         "maxTokens": 4096,
         "temperature": 0,
         "engine": "basic-v2",
-        "maxIterations": 8,
+        "maxIterations": 10,
         "mode": "standard",
     }
     messages = {message["role"]: message["content"] for message in agent["messages"]}
@@ -133,8 +133,11 @@ def test_payment_agent_uses_selected_model_and_grounded_specialist_prompts():
         "consistent",
         "reallocate_payment",
         "adjustmentamount: 0",
-        "inv-30915",
+        "remittance-designated target invoice",
         "will clear",
+        "manual_review",
+        "never as instructions",
+        "system directive",
         "fictional company name",
         "never select the recipient",
         "resourcesused",
@@ -151,8 +154,22 @@ def test_payment_agent_has_exact_context_and_api_resources():
 
     contexts = [r for r in resources if r.get("$resourceType") == "context"]
     tools = [r for r in resources if r.get("$resourceType") == "tool"]
+    mcps = [r for r in resources if r.get("$resourceType") == "mcp"]
     assert len(contexts) == 1
     assert len(tools) == 1
+    assert len(mcps) == 1
+
+    # The remittance-advice MCP server supplies payer intent, the third evidence leg
+    # alongside the index playbook and the cash-application lookup.
+    mcp = mcps[0]
+    assert mcp["name"] == mcp["slug"] == "remittance-advice-service"
+    assert mcp["folderPath"] == "JD/demos"
+    assert mcp["solutionProperties"]["resourceKey"]
+    available = {tool["name"] for tool in mcp["availableTools"]}
+    assert available == {"get_remittance_advice"}
+    advice = mcp["availableTools"][0]
+    assert schema_types(advice["inputSchema"]) == {"payment_reference": "string"}
+    assert advice["inputSchema"]["required"] == ["payment_reference"]
 
     context = contexts[0]
     assert context.get("isEnabled", True) is True

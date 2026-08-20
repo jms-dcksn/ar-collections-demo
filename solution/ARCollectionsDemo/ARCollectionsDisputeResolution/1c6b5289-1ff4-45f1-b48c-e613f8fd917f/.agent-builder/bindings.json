@@ -2,13 +2,13 @@
   "version": "2.0",
   "resources": [
     {
-      "resource": "index",
-      "key": "ar-payment-resolution-index",
+      "resource": "mcpServer",
+      "key": "remittance-advice-service",
       "value": {
         "name": {
-          "defaultValue": "ar-payment-resolution-index",
+          "defaultValue": "remittance-advice-service",
           "isExpression": false,
-          "displayName": "Index Name"
+          "displayName": "Slug"
         },
         "folderPath": {
           "defaultValue": "JD/demos",
@@ -22,13 +22,13 @@
       }
     },
     {
-      "resource": "mcpServer",
-      "key": "remittance-advice-service",
+      "resource": "index",
+      "key": "ar-payment-resolution-index",
       "value": {
         "name": {
-          "defaultValue": "remittance-advice-service",
+          "defaultValue": "ar-payment-resolution-index",
           "isExpression": false,
-          "displayName": "Slug"
+          "displayName": "Index Name"
         },
         "folderPath": {
           "defaultValue": "JD/demos",

@@ -151,32 +151,6 @@
   "name": "Payment Misapplication Specialist",
   "resources": [
     {
-      "$resourceType": "context",
-      "name": "ar-payment-resolution-index",
-      "description": "Payment misapplication resolution playbook.",
-      "folderPath": "JD/demos",
-      "indexName": "ar-payment-resolution-index",
-      "id": "1ad2e73a-662b-4fbc-8efe-771a5c4f4897",
-      "referenceKey": "",
-      "settings": {
-        "query": {
-          "description": "The query for the Semantic strategy",
-          "variant": "dynamic"
-        },
-        "folderPathPrefix": {
-          "variant": "static",
-          "value": ""
-        },
-        "threshold": 0,
-        "resultCount": 3,
-        "retrievalMode": "semantic",
-        "fileExtension": {
-          "value": "All"
-        }
-      },
-      "contextType": "index"
-    },
-    {
       "$resourceType": "mcp",
       "id": "7688a739-fae4-47ac-a15e-9324330b580e",
       "name": "remittance-advice-service",
@@ -212,6 +186,32 @@
           "refreshSchemaBeforeCall": true
         }
       }
+    },
+    {
+      "$resourceType": "context",
+      "name": "ar-payment-resolution-index",
+      "description": "Payment misapplication resolution playbook.",
+      "folderPath": "JD/demos",
+      "indexName": "ar-payment-resolution-index",
+      "id": "10fd29cc-6487-41d7-93ef-1011c4ef52dc",
+      "referenceKey": "",
+      "settings": {
+        "query": {
+          "description": "The query for the Semantic strategy",
+          "variant": "dynamic"
+        },
+        "folderPathPrefix": {
+          "variant": "static",
+          "value": ""
+        },
+        "threshold": 0.03,
+        "resultCount": 3,
+        "retrievalMode": "semantic",
+        "fileExtension": {
+          "value": "All"
+        }
+      },
+      "contextType": "index"
     },
     {
       "$resourceType": "tool",

@@ -3,7 +3,8 @@
     "dsl": "1.0.0",
     "name": "Workflow",
     "tags": {
-      "projectId": "41ef431c-ba82-466e-8783-2959daf28ee8"
+      "projectId": "ab6ee860-6628-42f5-a9c0-ae0070a5a54b",
+      "solutionId": "87ef25b1-a4a1-460c-e55f-08defde97196"
     },
     "version": "0.0.1",
     "namespace": "default",
@@ -104,7 +105,7 @@
                 "script": {
                   "code": "const { caseId, actionCode } = $workflow.input;\nconst allowedActionCodes = new Set(['ISSUE_CREDIT', 'PROVIDE_POD', 'REALLOCATE_PAYMENT']);\nif (!allowedActionCodes.has(actionCode)) {\n  throw new Error(`MockUpdateDispute does not support actionCode ${actionCode}.`);\n}\nreturn {\n  updateId: `UPD-${caseId}-${actionCode}`,\n  status: 'UPDATED',\n  updatedAt: '2026-08-06T12:00:00Z',\n  message: `Recorded ${actionCode} for ${caseId} in MockARDisputeSystem.`\n};",
                   "language": "javascript",
-                  "arguments": "${{ \"$context\": $context, \"$workflow\": $workflow, \"$input\": $input }}"
+                  "arguments": "${{\n                        \"$context\": $context,\n                        \"$workflow\": $workflow,\n                        \"$input\": $input,\n                    }}"
                 }
               },
               "export": {

@@ -195,6 +195,14 @@
       ]
     }
   ],
+  "deployedProcess": {
+    "solutionFolderPath": "JD/demos/AR Collections Dispute Flow",
+    "solutionFolderKey": "ff31878b-35b2-438f-8051-4e1461534d91",
+    "processName": "ARCollectionsDisputeResolution",
+    "processKey": "33534c74-5c67-402d-a96f-0f9dc9e156c6",
+    "packageId": "AR.Collections.Dispute.Flow.flow.ARCollectionsDisputeResolution",
+    "packageVersion": "1.0.4"
+  },
   "resources": [
     {
       "source": "knowledge/triage/ar-dispute-taxonomy-and-examples.txt",

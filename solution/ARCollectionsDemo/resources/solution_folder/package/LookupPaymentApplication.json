@@ -8,6 +8,7 @@
     "isOverridable": true,
     "dependencies": [],
     "runtimeDependencies": [],
+    "files": [],
     "folders": [
       {
         "fullyQualifiedName": "solution_folder"
@@ -17,7 +18,6 @@
       "name": "LookupPaymentApplication"
     },
     "locks": [],
-    "key": "ec9e0e10-e02b-41bd-8d4d-520f3f00d5a3",
-    "files": []
+    "key": "ec9e0e10-e02b-41bd-8d4d-520f3f00d5a3"
   }
 }

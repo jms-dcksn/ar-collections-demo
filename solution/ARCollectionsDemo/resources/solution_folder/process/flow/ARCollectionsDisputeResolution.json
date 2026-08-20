@@ -113,6 +113,7 @@
         "resourceType": "uipath-uipath-dataservice"
       }
     ],
+    "files": [],
     "folders": [
       {
         "fullyQualifiedName": "solution_folder"
@@ -132,7 +133,6 @@
       "staleRetentionPeriod": 180
     },
     "locks": [],
-    "key": "865ea465-3bc7-4f60-b908-839aded022b9",
-    "files": []
+    "key": "865ea465-3bc7-4f60-b908-839aded022b9"
   }
 }

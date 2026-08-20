@@ -2,6 +2,10 @@
   "SolutionId": "87ef25b1-a4a1-460c-e55f-08defde97196",
   "Projects": [
     {
+      "ProjectId": "dccd923c-dcad-4425-8a98-346ff3a405f5",
+      "ProjectRelativePath": "MissingPodCodedAgent/project.uiproj"
+    },
+    {
       "ProjectId": "ab6ee860-6628-42f5-a9c0-ae0070a5a54b",
       "ProjectRelativePath": "MockUpdateDispute/project.uiproj"
     },

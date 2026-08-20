@@ -18,7 +18,7 @@
         }
       },
       "metadata": {
-        "ActivityName": "MockUpdateDispute",
+        "ActivityName": "<>LangChain<>  Missing POD Specialist",
         "BindingsVersion": "2.2",
         "DisplayLabel": "name",
         "SolutionsSupport": "true",
@@ -80,7 +80,7 @@
         }
       },
       "metadata": {
-        "ActivityName": "MockUpdateDispute",
+        "ActivityName": "<>LangChain<>  Missing POD Specialist",
         "BindingsVersion": "2.2",
         "DisplayLabel": "name",
         "SolutionsSupport": "true",
@@ -104,6 +104,58 @@
         "DisplayLabel": "uipath-microsoft-azureaifoundry connection",
         "UseConnectionService": "true",
         "Connector": "uipath-microsoft-azureaifoundry"
+      }
+    },
+    {
+      "resource": "process",
+      "key": "10decc6b-2867-4dd3-af0b-1d9dd9c3fe6d",
+      "id": "process10decc6b-2867-4dd3-af0b-1d9dd9c3fe6d",
+      "value": {
+        "folderPath": {
+          "isExpression": false,
+          "displayName": "Folder path"
+        },
+        "name": {
+          "defaultValue": "MissingPodCodedAgent",
+          "isExpression": false,
+          "displayName": "Process name"
+        }
+      },
+      "metadata": {
+        "ActivityName": "<>LangChain<>  Missing POD Specialist",
+        "BindingsVersion": "2.2",
+        "DisplayLabel": "name",
+        "SolutionsSupport": "true",
+        "subType": "Agent"
+      }
+    },
+    {
+      "resource": "process",
+      "key": "Shared/FINS.email-writer-agent",
+      "id": "processShared/FINS.email-writer-agent",
+      "value": {
+        "folderKey": {
+          "defaultValue": "9d8d8643-984a-4393-82c5-080cb643c689",
+          "isExpression": false,
+          "displayName": "Folder key"
+        },
+        "folderPath": {
+          "defaultValue": "Shared/FINS",
+          "isExpression": false,
+          "displayName": "Folder path"
+        },
+        "name": {
+          "defaultValue": "email-writer-agent",
+          "isExpression": false,
+          "displayName": "Process name"
+        }
+      },
+      "metadata": {
+        "ActivityName": "<>LangChain<>  Missing POD Specialist",
+        "BindingsVersion": "2.2",
+        "DisplayLabel": "name",
+        "SolutionsSupport": "true",
+        "subType": "Agent"
       }
     },
     {
@@ -151,13 +203,13 @@
       }
     },
     {
-      "resource": "index",
-      "key": "ar-payment-resolution-index",
+      "resource": "mcpServer",
+      "key": "remittance-advice-service",
       "value": {
         "name": {
-          "defaultValue": "ar-payment-resolution-index",
+          "defaultValue": "remittance-advice-service",
           "isExpression": false,
-          "displayName": "Index Name"
+          "displayName": "Slug"
         },
         "folderPath": {
           "defaultValue": "JD/demos",
@@ -171,13 +223,13 @@
       }
     },
     {
-      "resource": "mcpServer",
-      "key": "remittance-advice-service",
+      "resource": "index",
+      "key": "ar-payment-resolution-index",
       "value": {
         "name": {
-          "defaultValue": "remittance-advice-service",
+          "defaultValue": "ar-payment-resolution-index",
           "isExpression": false,
-          "displayName": "Slug"
+          "displayName": "Index Name"
         },
         "folderPath": {
           "defaultValue": "JD/demos",

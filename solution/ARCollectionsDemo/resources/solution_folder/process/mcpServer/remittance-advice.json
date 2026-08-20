@@ -13,6 +13,7 @@
       }
     ],
     "runtimeDependencies": [],
+    "files": [],
     "folders": [
       {
         "fullyQualifiedName": "solution_folder"
@@ -31,8 +32,8 @@
       "packageVersion": "0.0.1",
       "entryPointUniqueId": "044cff08-2606-4eee-b9dd-dae8c4cb14ab",
       "entryPointName": "remittance-advice",
-      "inputArgumentsSchemaV2": "{\n  \"type\": \"object\",\n  \"properties\": {}\n}",
-      "outputArgumentsSchemaV2": "{\n  \"type\": \"object\",\n  \"properties\": {}\n}",
+      "inputArgumentsSchemaV2": "{\n  \u0022type\u0022: \u0022object\u0022,\n  \u0022properties\u0022: {}\n}",
+      "outputArgumentsSchemaV2": "{\n  \u0022type\u0022: \u0022object\u0022,\n  \u0022properties\u0022: {}\n}",
       "hiddenForAttendedUser": false,
       "alwaysRunning": false,
       "autoStartProcess": false,
@@ -41,11 +42,10 @@
       "retentionPeriod": 30,
       "staleRetentionAction": "Delete",
       "staleRetentionPeriod": 180,
-      "entryPoints": "[{\"UniqueId\":\"044cff08-2606-4eee-b9dd-dae8c4cb14ab\",\"Path\":\"remittance-advice\",\"DisplayName\":null,\"InputArguments\":\"{\\n  \\\"type\\\": \\\"object\\\",\\n  \\\"properties\\\": {}\\n}\",\"OutputArguments\":\"{\\n  \\\"type\\\": \\\"object\\\",\\n  \\\"properties\\\": {}\\n}\",\"Type\":7,\"TargetRuntime\":null,\"ContentRoot\":null,\"DataVariation\":null,\"Id\":128759}]",
+      "entryPoints": "[{\u0022UniqueId\u0022:\u0022044cff08-2606-4eee-b9dd-dae8c4cb14ab\u0022,\u0022Path\u0022:\u0022remittance-advice\u0022,\u0022DisplayName\u0022:null,\u0022InputArguments\u0022:\u0022{\\n  \\\u0022type\\\u0022: \\\u0022object\\\u0022,\\n  \\\u0022properties\\\u0022: {}\\n}\u0022,\u0022OutputArguments\u0022:\u0022{\\n  \\\u0022type\\\u0022: \\\u0022object\\\u0022,\\n  \\\u0022properties\\\u0022: {}\\n}\u0022,\u0022Type\u0022:7,\u0022TargetRuntime\u0022:null,\u0022ContentRoot\u0022:null,\u0022DataVariation\u0022:null,\u0022Id\u0022:128759}]",
       "tags": []
     },
     "locks": [],
-    "key": "934d6a65-6754-4790-b284-c7d40ea92786",
-    "files": []
+    "key": "934d6a65-6754-4790-b284-c7d40ea92786"
   }
 }

@@ -8,6 +8,7 @@
     "isOverridable": true,
     "dependencies": [],
     "runtimeDependencies": [],
+    "files": [],
     "folders": [
       {
         "fullyQualifiedName": "solution_folder"
@@ -17,10 +18,10 @@
       "type": "Orchestrator",
       "name": "ar-payment-resolution-kb",
       "description": "Payment misapplication resolution playbook for the payment specialist agent.",
+      "options": null,
       "tags": []
     },
     "locks": [],
-    "key": "306dcb5e-6cf3-4c03-bcff-64633cd9c174",
-    "files": []
+    "key": "306dcb5e-6cf3-4c03-bcff-64633cd9c174"
   }
 }

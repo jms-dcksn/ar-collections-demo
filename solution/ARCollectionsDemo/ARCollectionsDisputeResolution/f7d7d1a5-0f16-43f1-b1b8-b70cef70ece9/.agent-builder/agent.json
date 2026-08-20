@@ -78,7 +78,7 @@
       "description": "AR dispute triage taxonomy and worked examples.",
       "folderPath": "JD/demos",
       "indexName": "ar-dispute-triage-index",
-      "id": "b77b72f2-60cf-408c-af9d-28f742a7b3bc",
+      "id": "0f3227af-98bd-4808-8496-7f3e7ab6c59c",
       "referenceKey": "",
       "settings": {
         "query": {
@@ -89,7 +89,7 @@
           "variant": "static",
           "value": ""
         },
-        "threshold": 0,
+        "threshold": 0.1,
         "resultCount": 3,
         "retrievalMode": "semantic",
         "fileExtension": {
