@@ -27,9 +27,13 @@ to work.
 - **Deterministic tools:** `LookupPaymentApplication` supplies mock cash-
   application evidence. `MockUpdateDispute` simulates the approved downstream
   update without writing to an external financial system.
-- **Human decision:** The Coded App presents active Maestro instances and their
-  correlated Data Fabric records. It records approve/reject decisions by Data
-  Fabric record ID, which emits the update event that resumes the Flow.
+- **Human decision:** The Coded App lists the Data Fabric records whose
+  `lifecycleState` is still in flight (`triaging`, `awaiting_approval`,
+  `approved`, `updating`) and records approve/reject decisions by Data Fabric
+  record ID, which emits the update event that resumes the Flow. It does **not**
+  list Maestro instances: `ProcessInstances.getAll()` cannot see this Flow's
+  instances (see "SDK traps"), so the record is the row and the Flow instance
+  shown in the UI is derived from it for display only.
 - **Approved side effect:** Only an approved, correctly correlated case may call
   `MockUpdateDispute` and send the prepared message through the configured
   Microsoft Outlook 365 connection. Rejection and manual triage do neither.
@@ -103,49 +107,121 @@ comments, and the matching approval lifecycle value through
   index / process `folderKey` are all the one key.
 - Canonical checked-in resource contract: `config/platform-resources.json`.
 
-### Coded App Migration Pending
+### Deployed Maestro process
 
-`ar-collections-app` was excluded from both 2026-08-19 migrations. Its
-`src/config.ts` still carries the `cloud.uipath.com` entity ID
-`bc0fc734-bf94-f111-9b32-000d3ab5d4c4` — two environments stale, since the
-interim `uipathlabs / Playground` entity `d22e70b2-cc9b-f111-9b32-000d3a69a13b`
-is also retired — and the `uipath.json` OAuth app still targets the original
-org. The app therefore cannot read or approve records created in the current
-tenant until it is migrated. Do not treat the app's config as authoritative;
-`config/platform-resources.json` is.
+The Flow is deployed to the solution subfolder `JD/demos/AR Collections Dispute
+Flow` (`ff31878b-35b2-438f-8051-4e1461534d91`), not to the parent `JD/demos`.
 
-#### Known blocker: the app reads a lifecycle vocabulary the Flow never writes
+- Process key: `33534c74-5c67-402d-a96f-0f9dc9e156c6` (equals the Orchestrator
+  release key).
+- Package ID: `AR.Collections.Dispute.Flow.flow.ARCollectionsDisputeResolution`.
+- Release name: `ARCollectionsDisputeResolution`.
 
-Independent of the entity ID, the app will not work against live records. The
-Flow persists snake_case lifecycle values — `triaging`, `awaiting_approval`,
-`approved`, `rejected`, `updating`, `resolved`, `needs_manual_triage` — while the
-app compares `lifecycleState` against display-style strings it invented:
+Read these back with
+`uip maestro flow process list --folder-key ff31878b-35b2-438f-8051-4e1461534d91`.
 
-| Site | Compares against | Consequence on live data |
-| --- | --- | --- |
-| `src/config.ts` `canDecide` | `'Awaiting approval'` | Approve/reject controls never enable |
-| `src/pages/DashboardPage.tsx` `lifecycleFilters` | `'Awaiting approval'`, `'In review'`, `'New'` | Filter chips match nothing |
-| `src/pages/DashboardPage.tsx` `badgeClass` | `'Awaiting approval'`, `'Approved'`, `'Running'`, `'Waiting'` | Every record renders `neutral` |
-| `src/pages/DashboardPage.tsx` awaiting count | `'Awaiting approval'` | Always `0` |
+### SDK traps the Coded App works around
 
-None of these strings can ever match, so fixing the entity ID alone will produce
-a dashboard that loads live records and refuses to act on any of them.
+All verified in-browser against the real TypeScript methods on 2026-08-19, in the live
+`uipathstgSS_updated / UiPathDefault` session. Do not "simplify" any of them back.
 
-The write path is unaffected but only by accident. `types.ts` declares
-`ApprovalDecision = 'Approved' | 'Rejected'` and `dataFabric.ts` writes that
-value into both `approvalDecision` and `lifecycleState`. The Flow's
-`approvalDecisionSupplied1` and `isResolutionApproved` both call `.toLowerCase()`
-before comparing, so `'Approved'` resumes the Flow correctly. The capitalised
-`lifecycleState` it writes alongside is transient — `persistApproved1` overwrites
-it with `approved`.
+1. **`sdk-shims.d.ts` is deleted — never reintroduce it.** It re-declared the SDK modules with
+   widened types and thereby hid traps 2 and 3 from `tsc`. The app compiles against the real
+   typings with zero errors. A shim that widens an SDK type converts a compile error into a
+   runtime one.
+2. **`Entities.queryRecordsById()` never resolves to a bare array.** With `pageSize` it is a
+   `PaginatedResponse`, without it a `NonPaginatedResponse`, and *both* wrap rows in `items`.
+   `(await queryRecordsById(...)).map(...)` throws. Read `.items`, follow `hasNextPage` /
+   `nextCursor`.
+3. **`getVariables()` returns `globalVariables` as an ARRAY** of
+   `{ id, name, type, elementId, value }` — 24 entries on a live instance, never indexable by
+   variable name.
+4. **`Entities.getAll()` and `MaestroProcesses.getAll()` are page-capped with no pagination
+   option.** Resolve a known entity with `getById(ENTITY_ID)`. For the process summary, the
+   unfiltered call returned 21 processes excluding this Flow, and `{ processKey }` returned 0 —
+   it can only produce a false negative, so the app never calls it.
+5. **`ProcessInstances.getAll()` cannot see this Flow's instances at all.** PIMS scopes instance
+   listing by the `x-uipath-folderkey` header, which `getAll` never sends and offers no way to
+   supply. Measured:
 
-The app's own tests do not catch any of this: `config.test.ts`,
-`ApprovalCard.test.tsx`, and `lib/mockData.ts` all use the same display-style
-vocabulary, so the mock fallback path is internally consistent and green. The
-mismatch only appears against real Data Fabric records.
+   | call | items | ours |
+   | --- | --- | --- |
+   | `{ processKey, pageSize: 200 }` | 0 | 0 |
+   | `{ packageId, pageSize: 200 }` | 0 | 0 |
+   | `{ folderKey, pageSize: 200 }` (param is ignored) | 200 | 0 |
+   | `{ pageSize: 200 }`, list exhausted over 3 pages | 527 | **0** |
+   | `{}` | 50 (server default cap) | 0 |
 
-The Flow is authoritative. Fix the app to read the snake_case values, and treat
-this as part of the Coded App migration, not a separate cleanup.
+   `getById(instanceId, folderKey)` and `getVariables(instanceId, folderKey)` **do** work — both
+   send the folder header. The missing piece was only ever the ID, and the Flow now supplies it.
+   Note on how this was first verified: the `getById` / `getVariables` check used a single instance
+   ID obtained from `uip maestro flow instance list --folder-key ...`, hard-coded into a temporary
+   diagnostic. It proved those methods work on an ID you already hold.
+
+   **`caseId` is the instance-ID carrier — by decision, not by accident.** The Flow writes its own
+   Maestro instance ID onto the record's `caseId` field once the instance is running. That was
+   originally observed as a destructive overwrite of the business identifier; the demo now relies
+   on it instead of adding a dedicated `maestroInstanceId` field. Consequences the app must own:
+
+   - `maestroInstanceIdOf(caseId)` in `src/config.ts` gates every instance call — a GUID shape is
+     the only signal the value is an instance ID and not the `AR-PO-...` identifier the app
+     inserted. Never hand a non-GUID `caseId` to PIMS.
+   - `liveWorkspace.instanceFor()` calls `getById(instanceId, SOLUTION_FOLDER_KEY)` per in-flight
+     record and falls back to the derived instance when the record is unstamped or PIMS refuses.
+     `FlowInstance.instanceSource` records which of the two produced the row.
+   - `loadInstanceVariables()` calls `getVariables(instanceId, SOLUTION_FOLDER_KEY)`; the detail
+     page requests it on demand, never the dashboard.
+   - `caseId` is no longer a display label. `caseLabel()` renders the invoice number in its place
+     once the value is a GUID, and routes use `record.Id`, which never changes mid-flight.
+
+6. **This Flow declares no `caseId` global.** Confirmed from the live instance: the globals are
+   one `output` / `error` pair per node plus `resultCaseId`, `status`, `resourcesUsed`,
+   `approvalComments`, `emailSent`, and `resultCaseId` is set only on the manual-triage path.
+
+`insertRecordById` and `updateRecordById` return the record directly, so the write path needs no
+unwrapping.
+
+**Verify SDK behaviour with the SDK, not the CLI.** The `uip` CLI hits different endpoints with
+different parameters and PascalCases every object key in its JSON output. The real `getById`
+response is camelCase (`name`, `displayName`, `fields`, `id`), with user field names camelCase
+(`caseId`) and system field names PascalCase (`Id`, `CreateTime`, `RecordOwner`). `mapRecord`
+still reads case-insensitively. Chrome DevTools MCP against the running dev server is the way to
+check this — it exercises the real methods in the real session without handling any token.
+
+### Coded App state
+
+`ar-collections-app` reads the current tenant. `src/config.ts` pins the live
+entity ID, the solution subfolder key, and the process key;
+`ar-collections-app/uipath.json` targets `uipathstgSS_updated / UiPathDefault`.
+The app and the
+Flow now share one lifecycle vocabulary — the snake_case values the Flow writes
+(`triaging`, `awaiting_approval`, `approved`, `rejected`, `updating`, `resolved`,
+`needs_manual_triage`). `LIFECYCLE` in `src/config.ts` is the single source for
+those values; `lifecycleLabel()` renders them for display. Never reintroduce
+display-style lifecycle strings into comparisons.
+
+`ApprovalDecision` is `'approved' | 'rejected'`, which matches what
+`scripts/supply-approval-decision.sh` writes.
+
+#### Known cosmetic mismatch — deliberate, do not "fix" unasked
+
+The dashboard is record-driven but still carries instance-flavoured labels: the metric reads
+"Active resolution flows" (it counts in-flight records), the "FLOW STATUS" column is derived from
+`lifecycleState` by `runStatusFor()` rather than fetched from Maestro, and the detail page's
+"Flow monitor" panel shows the record's `caseId` as "Instance" and its `CreateTime` as "Started".
+Record `c989298e` also renders a raw GUID in the Dispute column because of the `caseId` overwrite
+bug. James chose on 2026-08-19 to leave all of this and narrate it during the demo. Do not
+relabel or filter without asking.
+
+`config/platform-resources.json` stays the canonical platform contract.
+
+#### OAuth client
+
+The app signs in with the public (non-confidential) external application
+`ar-collections-app` (`39a05889-3cc2-4de6-9616-fd847692d2c0`) in
+`uipathstgSS_updated`, redirect URI `http://localhost:5173`, carrying all 21
+`uipath.json` scopes as user (delegated) scopes. Add the deployed app URL as a
+second redirect URI before publishing.
 
 ### Verified Sample Record
 
